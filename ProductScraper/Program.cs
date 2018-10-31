@@ -25,13 +25,13 @@ namespace ProductScraper
 
                 //Get product url's from main categories
                 foreach(string mainCategoryUrl in mainCategoryUrls) {
-                    productUrls.AddRange(GetProductsUrls(mainCategoryUrl, driver));
+                    productUrls.AddRange(GetProductUrls(mainCategoryUrl, driver));
                 }
 
                 //Get product data
-                //foreach(string productUrl in productUrls) {
-                //    products.Add(GetProduct(productUrl, driver));
-                //}
+                foreach(string productUrl in productUrls) {
+                    products.Add(GetProduct(productUrl, driver));
+                }
             }
         }
 
@@ -43,7 +43,7 @@ namespace ProductScraper
                          .ToList();
         }
 
-        static List<string> GetProductsUrls(string url, ChromeDriver driver) {
+        static List<string> GetProductUrls(string url, ChromeDriver driver) {
             var productUrls = new List<string>();
 
             driver.Navigate().GoToUrl(url);
@@ -62,7 +62,7 @@ namespace ProductScraper
             if (productCategoryUrls.Any()) {
                 foreach (string productCategoryUrl in productCategoryUrls)
                 {
-                    productUrls.AddRange(GetProductsUrls(productCategoryUrl, driver));
+                    productUrls.AddRange(GetProductUrls(productCategoryUrl, driver));
                 }
             }
 

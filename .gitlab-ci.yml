@@ -1,0 +1,7 @@
+quality:
+  only:
+    - master
+  script:
+  - dotnet sonarscanner begin /k:"$SONAR_PROJECT" /d:sonar.host.url="$SONAR_HOST" /d:sonar.login="$SONAR_LOGIN"
+  - dotnet build
+  - dotnet sonarscanner end /d:sonar.login="$SONAR_LOGIN"

@@ -15,11 +15,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Scripts\00001 - Create Product table.sql" />
-    <None Remove="Scripts\00002 - Add StoreType to Product.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\00001 - Create Product table.sql" />
-    <EmbeddedResource Include="Scripts\00002 - Add StoreType to Product.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Update="ConnectionStrings.config">

@@ -38,7 +38,7 @@ namespace ProductScraper
                 case StoreType.AlbertHeijn:
                     return new AlbertHeijnScraper(driver);
                 default:
-                    throw new ArgumentNullException("Product scraper for store not found.");
+                    throw new ArgumentException("Product scraper for store not found.");
             }
         }
     }

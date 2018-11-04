@@ -5,7 +5,7 @@ using DbUp;
 
 namespace Database
 {
-    class Program
+    static class Program
     {
         static int Main()
         {

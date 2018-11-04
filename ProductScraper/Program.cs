@@ -17,14 +17,28 @@ namespace ProductScraper
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
-                var scraper = new AlbertHeijnScraper(driver);
-                products.AddRange(scraper.ScrapeAllProducts());
+                var scraper = GetProductScraper(args[0], driver);
+                if (args.Length == 2) {
+                    products.AddRange(scraper.ScrapeCategory(args[1]));
+                }
+                else {
+                    products.AddRange(scraper.ScrapeAll());
+                }
             }
 
             var productService = new ProductService();
-            foreach (Product product in products)
-            {
+            foreach (Product product in products) {
                 productService.Create(product);
+            }
+        }
+
+        static IProductScraper GetProductScraper(string store, ChromeDriver driver) {
+            Enum.TryParse(store, out StoreType storeType);
+            switch (storeType) {
+                case StoreType.AlbertHeijn:
+                    return new AlbertHeijnScraper(driver);
+                default:
+                    throw new Exception("Product scraper for store not found.");
             }
         }
     }

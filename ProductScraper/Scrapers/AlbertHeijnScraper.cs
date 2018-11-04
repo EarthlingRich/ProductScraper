@@ -7,7 +7,7 @@ using ProductScraper.Models;
 
 namespace ProductScraper.Scrapers
 {
-    public class AlbertHeijnScraper
+    public class AlbertHeijnScraper : IProductScraper
     {
         static readonly string URL = "https://www.ah.nl/producten/";
         readonly ChromeDriver _driver;
@@ -17,7 +17,7 @@ namespace ProductScraper.Scrapers
             _driver = driver;
         }
 
-        public IEnumerable<Product> ScrapeAllProducts()
+        public IEnumerable<Product> ScrapeAll()
         {
             var products = new List<Product>();
             var productUrls = new List<string>();
@@ -31,6 +31,23 @@ namespace ProductScraper.Scrapers
             {
                 productUrls.AddRange(GetProductUrls(mainCategoryUrl, _driver));
             }
+
+            //Get product data
+            foreach (string productUrl in productUrls)
+            {
+                products.Add(GetProduct(productUrl, _driver));
+            }
+
+            return products;
+        }
+
+        public IEnumerable<Product> ScrapeCategory(string url)
+        {
+            var products = new List<Product>();
+            var productUrls = new List<string>();
+
+            //Get product url's from category
+            productUrls.AddRange(GetProductUrls(url, _driver));
 
             //Get product data
             foreach (string productUrl in productUrls)

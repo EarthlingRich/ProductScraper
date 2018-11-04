@@ -88,6 +88,7 @@ namespace ProductScraper.Scrapers
 
             var product = new Product
             {
+                StoreType = StoreType.AlbertHeijn,
                 Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text
             };
 

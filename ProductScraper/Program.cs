@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Chrome;
+using ProductScraper.Models;
 using ProductScraper.Scrapers;
+using ProductScraper.Services;
 
 namespace ProductScraper
 {
@@ -17,6 +19,12 @@ namespace ProductScraper
 
                 var scraper = new AlbertHeijnScraper(driver);
                 products.AddRange(scraper.ScrapeAllProducts());
+            }
+
+            var productService = new ProductService();
+            foreach (Product product in products)
+            {
+                productService.Create(product);
             }
         }
     }

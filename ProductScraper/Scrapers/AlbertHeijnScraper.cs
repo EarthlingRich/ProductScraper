@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
+using ProductScraper.Models;
 
 namespace ProductScraper.Scrapers
 {

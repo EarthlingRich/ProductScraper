@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductScraper", "ProductScraper\ProductScraper.csproj", "{8372B12F-02FD-4ABF-8B56-206EDCE280CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{ADDBD23B-6B04-492D-B4A1-7C3A93F42508}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8372B12F-02FD-4ABF-8B56-206EDCE280CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8372B12F-02FD-4ABF-8B56-206EDCE280CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8372B12F-02FD-4ABF-8B56-206EDCE280CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADDBD23B-6B04-492D-B4A1-7C3A93F42508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADDBD23B-6B04-492D-B4A1-7C3A93F42508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADDBD23B-6B04-492D-B4A1-7C3A93F42508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADDBD23B-6B04-492D-B4A1-7C3A93F42508}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

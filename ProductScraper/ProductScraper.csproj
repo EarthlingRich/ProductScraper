@@ -18,8 +18,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Services\" />
+    <Folder Include="Persistance\" />
+    <Folder Include="Persistance\Repositories\" />
+    <Folder Include="Persistance\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="App.config" />

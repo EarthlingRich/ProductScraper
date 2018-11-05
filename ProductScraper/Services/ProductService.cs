@@ -1,46 +1,34 @@
 ﻿using ProductScraper.Models;
-using ProductScraper.Repositories;
+using ProductScraper.Persistance;
 
 namespace ProductScraper.Services
 {
     public class ProductService
     {
-        readonly ProductRepository _productRepository;
-
-        public ProductService()
-        {
-            _productRepository = new ProductRepository();
-        }
-
         public void Add(Product product)
         {
-            _productRepository.Add(product);
-        }
-
-        public void Update(Product product)
-        {
-            _productRepository.Update(product);
+            using (var unitOfWork = new UnitOfWork(new ApplicationContext()))
+            {
+                unitOfWork.Products.Add(product);
+            }
         }
 
         public void UpdateOrAdd(Product product)
         {
-            _productRepository.Update(product);
-
-            var existingProduct = GetProductByUrl(product.Url);
-            if (existingProduct == null)
+            using (var unitOfWork = new UnitOfWork(new ApplicationContext()))
             {
-                Add(product);
-            }
-            else
-            {
-                existingProduct.Name = product.Name;
-                Update(existingProduct);
-            }
-        }
+                var existingProduct = unitOfWork.Products.FirstOrDefault(_ => _.Url == product.Url);
+                if (existingProduct == null)
+                {
+                    Add(product);
+                }
+                else
+                {
+                    existingProduct.Name = product.Name;
+                }
 
-        public Product GetProductByUrl(string url)
-        {
-            return _productRepository.GetByUrl(url);
+                unitOfWork.Complete();
+            }
         }
     }
 }

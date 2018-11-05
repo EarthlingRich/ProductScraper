@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using OpenQA.Selenium.Chrome;
 using ProductScraper.Models;
 using ProductScraper.Scrapers;
-using ProductScraper.Services;
 
 namespace ProductScraper
 {
@@ -11,24 +10,17 @@ namespace ProductScraper
     {
         static void Main(string[] args)
         {
-            var products = new List<Product>();
-
             using (var driver = new ChromeDriver())
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
                 var scraper = GetProductScraper(args[0], driver);
                 if (args.Length == 2) {
-                    products.AddRange(scraper.ScrapeCategory(args[1]));
+                    scraper.ScrapeCategory(args[1]);
                 }
                 else {
-                    products.AddRange(scraper.ScrapeAll());
+                    scraper.ScrapeAll();
                 }
-            }
-
-            var productService = new ProductService();
-            foreach (Product product in products) {
-                productService.Create(product);
             }
         }
 

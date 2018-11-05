@@ -12,9 +12,35 @@ namespace ProductScraper.Services
             _productRepository = new ProductRepository();
         }
 
-        public void Create(Product product)
+        public void Add(Product product)
         {
-            _productRepository.Create(product);
+            _productRepository.Add(product);
+        }
+
+        public void Update(Product product)
+        {
+            _productRepository.Update(product);
+        }
+
+        public void UpdateOrAdd(Product product)
+        {
+            _productRepository.Update(product);
+
+            var existingProduct = GetProductByUrl(product.Url);
+            if (existingProduct == null)
+            {
+                Add(product);
+            }
+            else
+            {
+                existingProduct.Name = product.Name;
+                Update(existingProduct);
+            }
+        }
+
+        public Product GetProductByUrl(string url)
+        {
+            return _productRepository.GetByUrl(url);
         }
     }
 }

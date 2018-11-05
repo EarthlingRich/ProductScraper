@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using ProductScraper.Models;
-
-namespace ProductScraper.Scrapers
+﻿namespace ProductScraper.Scrapers
 {
     public interface IProductScraper
     {
-        IEnumerable<Product> ScrapeAll();
-        IEnumerable<Product> ScrapeCategory(string url);
+        void ScrapeAll();
+        void ScrapeCategory(string url);
     }
 }

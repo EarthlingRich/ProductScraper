@@ -4,6 +4,7 @@ using System.Linq;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using ProductScraper.Models;
+using ProductScraper.Services;
 
 namespace ProductScraper.Scrapers
 {
@@ -11,15 +12,16 @@ namespace ProductScraper.Scrapers
     {
         static readonly string URL = "https://www.ah.nl/producten/";
         readonly ChromeDriver _driver;
+        readonly ProductService _productService;
 
         public AlbertHeijnScraper(ChromeDriver driver)
         {
             _driver = driver;
+            _productService = new ProductService();
         }
 
-        public IEnumerable<Product> ScrapeAll()
+        public void ScrapeAll()
         {
-            var products = new List<Product>();
             var productUrls = new List<string>();
             var mainCategoryUrls = new List<string>();
 
@@ -35,15 +37,12 @@ namespace ProductScraper.Scrapers
             //Get product data
             foreach (string productUrl in productUrls)
             {
-                products.Add(GetProduct(productUrl, _driver));
+                HandleProduct(productUrl, _driver);
             }
-
-            return products;
         }
 
-        public IEnumerable<Product> ScrapeCategory(string url)
+        public void ScrapeCategory(string url)
         {
-            var products = new List<Product>();
             var productUrls = new List<string>();
 
             //Get product url's from category
@@ -52,10 +51,8 @@ namespace ProductScraper.Scrapers
             //Get product data
             foreach (string productUrl in productUrls)
             {
-                products.Add(GetProduct(productUrl, _driver));
+                HandleProduct(productUrl, _driver);
             }
-
-            return products;
         }
 
         static List<string> GetMainCategories(string url, ChromeDriver driver)
@@ -99,7 +96,7 @@ namespace ProductScraper.Scrapers
             return productUrls;
         }
 
-        static Product GetProduct(string url, ChromeDriver driver)
+        void HandleProduct(string url, ChromeDriver driver)
         {
             driver.Navigate().GoToUrl(url);
 
@@ -110,7 +107,7 @@ namespace ProductScraper.Scrapers
                 Url = url
             };
 
-            return product;
+            _productService.UpdateOrAdd(product);
         }
     }
 }

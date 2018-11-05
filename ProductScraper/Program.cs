@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenQA.Selenium.Chrome;
 using ProductScraper.Models;
 using ProductScraper.Scrapers;

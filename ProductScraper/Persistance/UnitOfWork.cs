@@ -1,4 +1,5 @@
-﻿using ProductScraper.Models;
+﻿using System;
+using ProductScraper.Models;
 using ProductScraper.Persistance.Interfaces;
 using ProductScraper.Persistance.Interfaces.Repositories;
 using ProductScraper.Persistance.Repositories;

@@ -28,6 +28,7 @@ namespace ProductScraper.Services
             else
             {
                 existingProduct.Name = product.Name;
+                existingProduct.Ingredients = product.Ingredients;
                 _unitOfWork.Complete();
             }
         }

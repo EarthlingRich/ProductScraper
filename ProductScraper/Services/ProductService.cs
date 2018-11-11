@@ -1,4 +1,5 @@
-﻿using ProductScraper.Models;
+﻿using Model;
+using Model.Models;
 using ProductScraper.Persistance;
 using ProductScraper.Persistance.Interfaces.Repositories;
 
@@ -9,7 +10,7 @@ namespace ProductScraper.Services
         readonly IUnitOfWork _unitOfWork;
 
         public ProductService() {
-            _unitOfWork = new UnitOfWork(new ApplicationContext());
+            _unitOfWork = new UnitOfWork();
         }
 
         public void Add(Product product)

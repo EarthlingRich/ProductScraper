@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProductScraper.Models;
+using Model;
 
-namespace ProductScraper.Migrations
+namespace Database.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20181105195255_CreateDatabase")]
-    partial class CreateDatabase
+    [Migration("20181110221544_AddProduct")]
+    partial class AddProduct
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,11 +20,13 @@ namespace ProductScraper.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ProductScraper.Models.Product", b =>
+            modelBuilder.Entity("Model.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Ingredients");
 
                     b.Property<string>("Name");
 

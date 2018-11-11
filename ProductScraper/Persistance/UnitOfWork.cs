@@ -1,5 +1,7 @@
 ﻿using System;
-using ProductScraper.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Model;
 using ProductScraper.Persistance.Interfaces;
 using ProductScraper.Persistance.Interfaces.Repositories;
 using ProductScraper.Persistance.Repositories;
@@ -10,9 +12,17 @@ namespace ProductScraper.Persistance
     {
         readonly ApplicationContext _context;
 
-        public UnitOfWork(ApplicationContext context)
+        public UnitOfWork()
         {
-            _context = context;
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var builder = new DbContextOptionsBuilder<ApplicationContext>();
+            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+
+            _context = new ApplicationContext(builder.Options);
             Products = new ProductRepository(_context);
         }
 

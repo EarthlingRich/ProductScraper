@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Model.Models;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
-using ProductScraper.Models;
 using ProductScraper.Services;
 
 namespace ProductScraper.Scrapers

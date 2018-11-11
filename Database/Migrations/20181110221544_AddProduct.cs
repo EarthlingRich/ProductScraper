@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ProductScraper.Migrations
+namespace Database.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class AddProduct : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,8 @@ namespace ProductScraper.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     StoreType = table.Column<int>(nullable: false),
-                    Url = table.Column<string>(nullable: true)
+                    Url = table.Column<string>(nullable: true),
+                    Ingredients = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

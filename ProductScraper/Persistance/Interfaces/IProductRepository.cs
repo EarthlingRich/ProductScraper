@@ -1,4 +1,4 @@
-﻿using ProductScraper.Models;
+﻿using Model.Models;
 
 namespace ProductScraper.Persistance.Interfaces
 {

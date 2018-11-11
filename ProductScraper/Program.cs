@@ -1,6 +1,6 @@
 ﻿using System;
+using Model.Models;
 using OpenQA.Selenium.Chrome;
-using ProductScraper.Models;
 using ProductScraper.Scrapers;
 
 namespace ProductScraper

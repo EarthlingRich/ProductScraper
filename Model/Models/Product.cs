@@ -1,4 +1,4 @@
-﻿namespace ProductScraper.Models
+﻿namespace Model.Models
 {
     public class Product
     {

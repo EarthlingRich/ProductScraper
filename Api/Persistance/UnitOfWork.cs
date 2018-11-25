@@ -12,17 +12,9 @@ namespace Api.Persistance
     {
         readonly ApplicationContext _context;
 
-        public UnitOfWork()
+        public UnitOfWork(ApplicationContext context)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var builder = new DbContextOptionsBuilder<ApplicationContext>();
-            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-
-            _context = new ApplicationContext(builder.Options);
+            _context = context;
             Products = new ProductRepository(_context);
         }
 

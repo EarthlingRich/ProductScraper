@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,5 +18,19 @@
     <Folder Include="wwwroot\" />
     <Folder Include="Models\" />
     <Folder Include="Resources\" />
+    <Folder Include="Persistance\" />
+    <Folder Include="Persistance\Interfaces\" />
+    <Folder Include="Persistance\Repositories\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="productscraper\.DS_Store" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

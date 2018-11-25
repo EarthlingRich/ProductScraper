@@ -263,5 +263,5 @@ __pycache__/
 # Mac files
 .DS_Store
 
-# Web project
-Web/wwwroot/dist/
+# Api project
+Api/wwwroot/dist/

@@ -1,0 +1,15 @@
+﻿$sidenav-bg-color: #263238;
+$sidenav-font-color: #fff;
+$sidenav-width: 200px;
+
+@import "~materialize-css/sass/materialize.scss";
+
+header, main, footer {
+    padding-left: 200px;
+}
+
+@media only screen and (max-width : 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}

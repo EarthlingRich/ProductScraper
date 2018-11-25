@@ -4,8 +4,20 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>@ViewData["Title"] - Web</title>
+        <link rel="stylesheet" href="dist/main.css">
+        <script src="dist/main.js"></script>
     </head>
     <body>
-        @RenderBody()
+        <header>
+            <ul id="sidenav" class="sidenav sidenav-fixed">
+                <li><a href="#!">Home</a></li>
+            </ul>
+            <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
+        </header>
+        <main>
+            <div class="container">
+                @RenderBody()
+            </div>
+        </main>
     </body>
 </html>

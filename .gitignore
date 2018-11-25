@@ -259,6 +259,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-\.DS_Store
 
-ProductScraper/ConnectionStrings\.config
+# Mac files
+.DS_Store
+
+# Web project
+Web/wwwroot/dist/

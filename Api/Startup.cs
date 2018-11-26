@@ -9,7 +9,7 @@ using Model;
 using Api.Persistance.Interfaces.Repositories;
 using System;
 
-namespace Web
+namespace Api
 {
     public class Startup
     {

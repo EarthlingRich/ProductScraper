@@ -18,5 +18,12 @@ namespace Api.Controllers
 
             return View(products);
         }
+
+        public IActionResult Edit(int id)
+        {
+            var product = _unitOfWork.Products.Get(id);
+
+            return View(product);
+        }
     }
 }

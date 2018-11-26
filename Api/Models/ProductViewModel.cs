@@ -7,11 +7,13 @@ namespace Api.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Url { get; set; }
 
         public ProductViewModel(Product product)
         {
             Id = product.Id;
             Name = product.Name;
+            Url = product.Url;
         }
     }
 }

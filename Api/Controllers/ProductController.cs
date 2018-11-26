@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Api.Models;
 using Api.Persistance.Interfaces.Repositories;
 using AutoMapper;
@@ -8,8 +8,8 @@ namespace Api.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        readonly IMapper _mapper;
+        readonly IUnitOfWork _unitOfWork;
 
         public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {

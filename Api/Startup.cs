@@ -25,6 +25,7 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
 
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -33,7 +34,6 @@ namespace Api
 
             services.AddDbContext<ApplicationContext>
                 (options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            services.AddAutoMapper();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

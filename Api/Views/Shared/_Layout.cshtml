@@ -1,24 +1,27 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var controller = ViewContext.RouteData.Values["Controller"].ToString();
+}
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - Web</title>
-        <link rel="stylesheet" href="dist/main.css">
-        <script src="dist/main.js"></script>
-    </head>
-    <body>
-        <header>
-            <ul id="sidenav" class="sidenav sidenav-fixed">
-                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
-                <li><a href="@Url.Action("Index", "Product")">Producten</a></li>
-            </ul>
-            <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
-        </header>
-        <main>
-            <div class="container">
-                @RenderBody()
-            </div>
-        </main>
-    </body>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Web</title>
+    <link rel="stylesheet" href="dist/main.css">
+    <script src="dist/main.js"></script>
+</head>
+<body>
+    <header>
+        <ul id="sidenav" class="sidenav sidenav-fixed">
+            <li class="@(controller == "Home" ? "active" : "")"><a href="@Url.Action("Index", "Home")">Home</a></li>
+            <li class="@(controller == "Product" ? "active" : "")"><a href="@Url.Action("Index", "Product")">Producten</a></li>
+        </ul>
+        <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
+    </header>
+    <main>
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+</body>
 </html>

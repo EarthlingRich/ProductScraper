@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Producten";
+}
+<div class="row">
+    <table class="striped">
+        <thead>
+            <tr>
+                <th>Naam</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

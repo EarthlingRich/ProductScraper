@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Model;
 using Api.Persistance.Interfaces.Repositories;
 using System;
+using AutoMapper;
 
 namespace Api
 {
@@ -32,6 +33,7 @@ namespace Api
 
             services.AddDbContext<ApplicationContext>
                 (options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

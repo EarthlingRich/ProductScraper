@@ -16,7 +16,7 @@ namespace Database
                 .Build();
                 
             var builder = new DbContextOptionsBuilder<ApplicationContext>();
-            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), _ => _.MigrationsAssembly("Database"));
 
             return new ApplicationContext(builder.Options);
         }

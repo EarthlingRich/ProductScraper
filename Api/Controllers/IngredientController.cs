@@ -16,11 +16,11 @@ namespace Api.Controllers
         readonly IUnitOfWork _unitOfWork;
         readonly IngredientService _ingredientService;
 
-        public IngredientController(IUnitOfWork unitOfWork, IMapper mapper)
+        public IngredientController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _ingredientService = new IngredientService(_unitOfWork);
+            _unitOfWork = unitOfWork;
+            _ingredientService = new IngredientService(_mapper, _unitOfWork);
         }
 
         public IActionResult Index()
@@ -40,6 +40,21 @@ namespace Api.Controllers
         public IActionResult Create(IngredientViewModel viewmodel)
         {
             _ingredientService.Create(viewmodel);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Update(int id)
+        {
+            var ingredient = _unitOfWork.Ingredients.Get(id);
+            var viewModel = _mapper.Map<IngredientViewModel>(ingredient);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Update(IngredientViewModel viewModel)
+        {
+            _ingredientService.Update(viewModel);
             return RedirectToAction("Index");
         }
     }

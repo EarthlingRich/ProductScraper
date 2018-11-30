@@ -1,0 +1,17 @@
+﻿@model IngredientViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h3>@Model.Name</h3>
+@using (Html.BeginForm("Update", "Ingredient", FormMethod.Post, new { @class = "col s12" }))
+{
+    <div class="row">
+        @Html.HiddenFor(_ => _.Id)
+        <div class="input-field col s12">
+            @Html.TextBoxFor(_ => _.Name)
+            @Html.LabelFor(_ => _.Name)
+        </div>
+    </div>
+    <button class="btn waves-effect waves-light green darken-1" type="submit">Opslaan</button>
+}

@@ -17,7 +17,7 @@
             @foreach (var ingredient in Model)
             {
                 <tr>
-                    <td>@ingredient.Name</td>
+                    <td><a href="@Url.Action("Update", "Ingredient", new { id = ingredient.Id })">@ingredient.Name</a></td>
                 </tr>
             }
         </tbody>

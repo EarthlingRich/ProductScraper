@@ -1,0 +1,21 @@
+﻿@model IEnumerable<IngredientViewModel>
+@{
+    ViewData["Title"] = "Ingrediënten";
+}
+<div class="row">
+    <table class="striped">
+        <thead>
+            <tr>
+                <th>Naam</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ingredient in Model)
+            {
+                <tr>
+                    <td>@ingredient.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

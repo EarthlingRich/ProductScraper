@@ -16,9 +16,11 @@ namespace Api.Persistance
         {
             _context = context;
             Products = new ProductRepository(_context);
+            Ingredients = new IngredientRepository(_context);
         }
 
         public IProductRepository Products { get; private set; }
+        public IIngredientRepository Ingredients { get; private set; }
 
         public int Complete()
         {

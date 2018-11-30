@@ -24,6 +24,7 @@
     <Folder Include="Persistance\Interfaces\" />
     <Folder Include="Persistance\Repositories\" />
     <Folder Include="Views\Product\" />
+    <Folder Include="Views\Ingredient\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />

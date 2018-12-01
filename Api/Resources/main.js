@@ -3,6 +3,6 @@
 require("./main.scss");
 
 document.addEventListener('DOMContentLoaded', function() {
-    var sidenav = document.querySelectorAll('.sidenav');
+    var sidenav = document.querySelector('.sidenav');
     M.Sidenav.init(sidenav);
 });

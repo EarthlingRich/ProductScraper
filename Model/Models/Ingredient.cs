@@ -16,7 +16,7 @@ namespace Model.Models
         [NotMapped]
         public string[] KeyWords
         {
-            get { return _keyWords.Split(";"); }
+            get { return _keyWords != null ? _keyWords.Split(";") : new string[0]; }
             set { _keyWords = string.Join(";", value); }
         }
 

@@ -3,6 +3,24 @@
     ViewData["Title"] = Model.Name;
 }
 
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var chips = document.querySelector('.chips');
+
+        var options = {
+            data: [
+
+                @foreach(var keyWord in Model.KeyWords)
+                {
+                    <text>{tag: '@keyWord'},</text>
+                }
+            ],
+        }
+        var instance = M.Chips.init(chips, options);
+});
+
+</script>
+
 <h3>@Model.Name</h3>
 @using (Html.BeginForm("Update", "Ingredient", FormMethod.Post, new { @class = "col s12" }))
 {
@@ -11,6 +29,11 @@
         <div class="input-field col s12">
             @Html.TextBoxFor(_ => _.Name)
             @Html.LabelFor(_ => _.Name)
+        </div>
+        <div class="col s12">
+            <div class="chips input-field">
+                <input class="input">
+            </div>
         </div>
     </div>
     <button class="btn waves-effect waves-light green darken-1" type="submit">Opslaan</button>

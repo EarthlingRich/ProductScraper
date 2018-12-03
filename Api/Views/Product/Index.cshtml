@@ -13,7 +13,7 @@
             @foreach (var product in Model)
             {
                 <tr>
-                    <td><a href="@Url.Action("Edit", "Product", new { id = product.Id })">@product.Name</a></td>
+                    <td><a href="@Url.Action("Update", "Product", new { id = product.Id })">@product.Name</a></td>
                 </tr>
             }
         </tbody>

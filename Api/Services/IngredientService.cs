@@ -1,7 +1,6 @@
-﻿using System;
-using Api.Models;
-using Api.Persistance.Interfaces.Repositories;
+﻿using Api.Models;
 using AutoMapper;
+using Model;
 using Model.Models;
 
 namespace Api.Services
@@ -9,26 +8,26 @@ namespace Api.Services
     public class IngredientService
     {
         readonly IMapper _mapper;
-        readonly IUnitOfWork _unitOfWork;
+        readonly ApplicationContext _context;
 
-        public IngredientService(IMapper mapper, IUnitOfWork unitOfWork)
+        public IngredientService(ApplicationContext context, IMapper mapper)
         {
+            _context = context;
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
         }
 
         public void Create(IngredientViewModel viewModel)
         {
             var ingredient = _mapper.Map<Ingredient>(viewModel);
-            _unitOfWork.Ingredients.Add(ingredient);
-            _unitOfWork.Complete();
+            _context.Ingredients.Add(ingredient);
+            _context.SaveChanges();
         }
 
         public void Update(IngredientViewModel viewModel)
         {
-            var ingredient = _unitOfWork.Ingredients.Get(viewModel.Id);
+            var ingredient = _context.Ingredients.Find(viewModel.Id);
             _mapper.Map(viewModel, ingredient);
-            _unitOfWork.Complete();
+            _context.SaveChanges();
         }
     }
 }

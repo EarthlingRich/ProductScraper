@@ -16,6 +16,10 @@ namespace Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new IngredientConfiguration());
+            modelBuilder.Entity<ProductIngredient>().HasKey(_ => new { _.ProductId, _.IngredientId });
+            modelBuilder.Entity<ProductIngredient>()
+                .HasOne(_ => _.Product)
+                .WithMany("ProductIngredients");
         }
     }
 }

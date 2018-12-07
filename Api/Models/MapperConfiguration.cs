@@ -1,4 +1,3 @@
-using System;
 using AutoMapper;
 using Model.Models;
 
@@ -10,6 +9,8 @@ namespace Api.Models
         {
             CreateMap<IngredientViewModel, Ingredient>()
                 .ForMember(_ => _.KeyWords, opt => opt.Ignore());
+            //CreateMap<Product, ProductViewModel>()
+                //.ForMember(_ => _.MatchedIngredients, opt => opt.Ignore();
         }
     }
 }

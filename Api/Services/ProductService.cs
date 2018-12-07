@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Api.Persistance.Interfaces.Repositories;
+using System.Threading.Tasks;
+using Api.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Model;
 using Model.Models;
 
 namespace Api.Services
 {
     public class ProductService
     {
-        readonly IMapper _mapper;
-        readonly IUnitOfWork _unitOfWork;
+        readonly ApplicationContext _context;
 
-        public ProductService(IMapper mapper, IUnitOfWork unitOfWork)
+        public ProductService(ApplicationContext context)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            _context = context;
         }
 
-        public Product ProcessMatchedIngredientsForProduct(Product product)
+        public async Task<Product> ProcessMatchedIngredientsForProductAsync(int productId)
         {
-            var ingredients = _unitOfWork.Ingredients.GetAll();
+            var product = await _context.Products.Include("ProductIngredients.Ingredient").SingleOrDefaultAsync(_ => _.Id == productId);
+            var ingredients = _context.Ingredients;
+
+            product.MatchedIngredients.Clear();
 
             foreach(var ingredient in ingredients)
             {
@@ -35,6 +39,7 @@ namespace Api.Services
                 }
             }
 
+            _context.SaveChanges();
             return product;
         }
     }

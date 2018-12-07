@@ -1,28 +1,29 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Api.Models;
-using Api.Persistance.Interfaces.Repositories;
 using Api.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Model;
 
 namespace Api.Controllers
 {
     public class ProductController : Controller
     {
         readonly IMapper _mapper;
-        readonly IUnitOfWork _unitOfWork;
+        readonly ApplicationContext _context;
         readonly ProductService _productService;
 
-        public ProductController(IMapper mapper, IUnitOfWork unitOfWork)
+        public ProductController(ApplicationContext context, IMapper mapper)
         {
+            _context = context;
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
-            _productService = new ProductService(_mapper, _unitOfWork);
+            _productService = new ProductService(_context);
         }
 
         public IActionResult Index()
         {
-            var products = _unitOfWork.Products.GetAll();
+            var products = _context.Products.ToList();
             var viewModel = products.Select(_ => _mapper.Map<ProductViewModel>(_));
 
             return View(viewModel);
@@ -30,18 +31,15 @@ namespace Api.Controllers
 
         public IActionResult Update(int id)
         {
-            var product = _unitOfWork.Products.Get(id);
+            var product = _context.Products.Find(id);
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
             return View(viewModel);
         }
 
-        public IActionResult Process(int id)
+        public async Task<IActionResult> Process(int id)
         {
-            var product = _unitOfWork.Products.Get(id);
-            product = _productService.ProcessMatchedIngredientsForProduct(product);
-            _unitOfWork.Complete();
-
+            var product = await _productService.ProcessMatchedIngredientsForProductAsync(id);
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
             return View("Update", viewModel);

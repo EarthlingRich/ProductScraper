@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Models;
-using Api.Persistance.Interfaces.Repositories;
 using Api.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Model;
 
 namespace Api.Controllers
 {
     public class IngredientController : Controller
     {
         readonly IMapper _mapper;
-        readonly IUnitOfWork _unitOfWork;
+        readonly ApplicationContext _context;
         readonly IngredientService _ingredientService;
 
-        public IngredientController(IMapper mapper, IUnitOfWork unitOfWork)
+        public IngredientController(ApplicationContext context, IMapper mapper)
         {
+            _context = context;
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
-            _ingredientService = new IngredientService(_mapper, _unitOfWork);
+            _ingredientService = new IngredientService(_context, _mapper);
         }
 
         public IActionResult Index()
         {
-            var ingredients = _unitOfWork.Ingredients.GetAll();
+            var ingredients = _context.Ingredients.ToList();
             var viewModel = ingredients.Select(_ => _mapper.Map<IngredientViewModel>(_));
 
             return View(viewModel);
@@ -45,7 +45,7 @@ namespace Api.Controllers
 
         public IActionResult Update(int id)
         {
-            var ingredient = _unitOfWork.Ingredients.Get(id);
+            var ingredient = _context.Ingredients.Find(id);
             var viewModel = _mapper.Map<IngredientViewModel>(ingredient);
 
             return View(viewModel);

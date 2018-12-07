@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Api.Models;
@@ -19,9 +20,9 @@ namespace Api.Services
             _context = context;
         }
 
-        public async Task<Product> ProcessMatchedIngredientsForProductAsync(int productId)
+        public Product ProcessMatchedIngredientsForProduct(int productId)
         {
-            var product = await _context.Products.Include("ProductIngredients.Ingredient").SingleOrDefaultAsync(_ => _.Id == productId);
+            var product =  _context.Products.Include("ProductIngredients.Ingredient").SingleOrDefault(_ => _.Id == productId);
             var ingredients = _context.Ingredients;
 
             product.MatchedIngredients.Clear();

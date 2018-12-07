@@ -37,9 +37,9 @@ namespace Api.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> Process(int id)
+        public IActionResult Process(int id)
         {
-            var product = await _productService.ProcessMatchedIngredientsForProductAsync(id);
+            var product = _productService.ProcessMatchedIngredientsForProduct(id);
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
             return View("Update", viewModel);

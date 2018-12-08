@@ -2,6 +2,9 @@
 $sidenav-font-color: #fff;
 $sidenav-width: 200px;
 
+$primary-color: #43a047 !default;
+$secondary-color: #43a047 !default;
+
 @import "~materialize-css/sass/materialize.scss";
 
 header, main, footer {

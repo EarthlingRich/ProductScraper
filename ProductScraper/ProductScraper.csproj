@@ -16,9 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Persistance\" />
-    <Folder Include="Persistance\Repositories\" />
-    <Folder Include="Persistance\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsetting.json">

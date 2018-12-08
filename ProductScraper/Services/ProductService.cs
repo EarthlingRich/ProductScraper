@@ -1,27 +1,26 @@
-﻿using Model;
+﻿using System.Linq;
+using Model;
 using Model.Models;
-using ProductScraper.Persistance;
-using ProductScraper.Persistance.Interfaces.Repositories;
 
 namespace ProductScraper.Services
 {
     public class ProductService
     {
-        readonly IUnitOfWork _unitOfWork;
+        readonly ApplicationContext _context;
 
-        public ProductService() {
-            _unitOfWork = new UnitOfWork();
+        public ProductService(ApplicationContext context) {
+            _context = context;
         }
 
         public void Add(Product product)
         {
-            _unitOfWork.Products.Add(product);
-            _unitOfWork.Complete();
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
         public void UpdateOrAdd(Product product)
         {
-            var existingProduct = _unitOfWork.Products.FirstOrDefault(_ => _.Url == product.Url);
+            var existingProduct = _context.Products.FirstOrDefault(_ => _.Url == product.Url);
             if (existingProduct == null)
             {
                 Add(product);
@@ -30,7 +29,7 @@ namespace ProductScraper.Services
             {
                 existingProduct.Name = product.Name;
                 existingProduct.Ingredients = product.Ingredients;
-                _unitOfWork.Complete();
+                _context.SaveChanges();
             }
         }
     }

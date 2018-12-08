@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Model;
 using Model.Models;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
@@ -14,10 +15,10 @@ namespace ProductScraper.Scrapers
         readonly ChromeDriver _driver;
         readonly ProductService _productService;
 
-        public AlbertHeijnScraper(ChromeDriver driver)
+        public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context)
         {
             _driver = driver;
-            _productService = new ProductService();
+            _productService = new ProductService(context);
         }
 
         public void ScrapeAll()

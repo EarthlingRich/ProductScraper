@@ -12,19 +12,19 @@ namespace Model.Models
         public int Id { get; set; }
         public string Name { get; set; }
         [Column("Keywords")]
-        private string _keyWords { get; set; }
+        public string KeyWordsString { get; set; }
         [NotMapped]
         public string[] KeyWords
         {
-            get { return _keyWords != null ? _keyWords.Split(";") : new string[0]; }
-            set { _keyWords = string.Join(";", value); }
+            get { return KeyWordsString != null ? KeyWordsString.Split(";") : new string[0]; }
+            set { KeyWordsString = string.Join(";", value); }
         }
 
         public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
         {
             public void Configure(EntityTypeBuilder<Ingredient> builder)
             {
-                builder.Property(_ => _._keyWords);
+                builder.Property(_ => _.KeyWordsString);
             }
         }
     }

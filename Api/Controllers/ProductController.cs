@@ -3,6 +3,7 @@ using Api.Models;
 using Api.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace Api.Controllers
@@ -30,7 +31,7 @@ namespace Api.Controllers
 
         public IActionResult Update(int id)
         {
-            var product = _context.Products.Find(id);
+            var product = _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == id);
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
             return View(viewModel);

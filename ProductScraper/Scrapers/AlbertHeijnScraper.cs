@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Model;
 using Model.Models;
 using OpenQA.Selenium.Chrome;
@@ -99,16 +100,26 @@ namespace ProductScraper.Scrapers
 
         void HandleProduct(string url, ChromeDriver driver)
         {
+            var replaceRegex = new List<string> {
+                @"ingrediënten: ",
+                @"dit product.*",
+                @"kan sporen.*"
+            };
+
             driver.Navigate().GoToUrl(url);
+
+            var ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text.ToLower();
+
+            foreach (var regex in replaceRegex) {
+                ingredients = Regex.Replace(ingredients, regex, "");
+            }
 
             var product = new Product
             {
                 StoreType = StoreType.AlbertHeijn,
                 Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
                 Url = url,
-                Ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text
-                                    .Replace("Ingrediënten: ", "")
-                                    .ToLower()
+                Ingredients = ingredients.Trim()
             };
 
             _productService.UpdateOrAdd(product);

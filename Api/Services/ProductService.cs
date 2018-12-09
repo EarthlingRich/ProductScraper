@@ -40,6 +40,8 @@ namespace Api.Services
                 }
             }
 
+            product.IsVegan = !product.MatchedIngredients.Any();
+
             _context.SaveChanges();
             return product;
         }

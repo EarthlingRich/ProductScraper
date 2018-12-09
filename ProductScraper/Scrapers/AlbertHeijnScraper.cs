@@ -103,7 +103,8 @@ namespace ProductScraper.Scrapers
             var replaceRegex = new List<string> {
                 @"ingrediënten: ",
                 @"dit product.*",
-                @"kan sporen.*"
+                @"kan sporen.*",
+                @"allergiewijzer.*"
             };
 
             driver.Navigate().GoToUrl(url);

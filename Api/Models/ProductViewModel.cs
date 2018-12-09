@@ -15,5 +15,6 @@ namespace Api.Models
         public string Url { get; set; }
         public string Ingredients { get; set; }
         public List<Ingredient> MatchedIngredients { get; set; }
+        public bool IsVegan { get; set; }
     }
 }

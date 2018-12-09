@@ -7,6 +7,7 @@ $secondary-color: #43a047 !default;
 
 @import "~materialize-css/sass/materialize.scss";
 
+@import "../Views/Home/Home.scss";
 @import "../Views/Shared/Layout.scss";
 
 .dataTables_wrapper {

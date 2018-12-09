@@ -1,3 +1,25 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home";
 }
+
+<div class="row">
+    <div class="col s4">
+        <div class="card-panel home-card center-align">
+            <h4>Producten</h4>
+            <h4 class="home-card__counter">@Model.TotalProduccs</h4>
+        </div>
+    </div>
+    <div class="col s4">
+        <div class="card-panel home-card center-align">
+            <h4>Vegan</h4>
+            <h4 class="home-card__counter">@Model.TotalVeganProducts</h4>
+        </div>
+    </div>
+    <div class="col s4">
+        <div class="card-panel home-card center-align">
+            <h4>Werklijst</h4>
+            <h4 class="home-card__counter">@Model.TotalWorkload</h4>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,7 @@
     Utils.initDatatables();
 
     $('#product-table').DataTable({
-        ajax: 'Product/ProductList',
+        ajax: Utils.getBaseUrl() + '/Product/ProductList',
         columns:
             [
                 { data: 'name' },
@@ -12,7 +12,7 @@
             {
                 targets: 0,
                 render(data, type, row) {
-                    var url = "Product/Update/" + row["id"];
+                    var url = Utils.getBaseUrl() + "/Product/Update/" + row["id"];
                     return `<a href=\"${url}\"})">${data}</a>`;
                 }
             },
@@ -33,7 +33,7 @@ export function initWorkload() {
     Utils.initDatatables();
 
     $('#workload-table').DataTable({
-        ajax: 'WorkloadList',
+        ajax: Utils.getBaseUrl() + '/Product/WorkloadList',
         columns:
             [
                 { data: 'name' },
@@ -43,7 +43,7 @@ export function initWorkload() {
             {
                 targets: 0,
                 render(data, type, row) {
-                    var url = "Product/Update/" + row["id"];
+                    var url = Utils.getBaseUrl() + "/Product/Update/" + row["id"];
                     return `<a href=\"${url}\"})">${data}</a>`;
                 }
             },

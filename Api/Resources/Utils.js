@@ -1,4 +1,8 @@
-﻿export function initDatatables() {
+﻿export function getBaseUrl() {
+    return window.location.protocol + '//' + window.location.host;
+}
+
+export function initDatatables() {
     $.extend($.fn.dataTable.defaults, {
         processing: true,
         serverSide: true,

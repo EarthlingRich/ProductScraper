@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Model.Models
 {
     public class Product
     {
-        public Product()
-        => MatchedIngredients = new JoinCollectionFacade<Ingredient, ProductIngredient>(
-            ProductIngredients,
-            _ => _.Ingredient,
-            ingredient => new ProductIngredient { Product = this, Ingredient = ingredient });
+        public Product() {
+            MatchedIngredients = new JoinCollectionFacade<Ingredient, ProductIngredient>(
+                ProductIngredients,
+                _ => _.Ingredient,
+                ingredient => new ProductIngredient { Product = this, Ingredient = ingredient }
+            );
+        }
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,7 +22,7 @@ namespace Model.Models
         [NotMapped]
         public ICollection<Ingredient> MatchedIngredients { get; }
         public bool IsVegan { get; set; }
-}
+    }
 
     public class ProductIngredient
     {

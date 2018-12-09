@@ -2,6 +2,8 @@ using System.Linq;
 using Api.Models;
 using Api.Services;
 using AutoMapper;
+using DataTables.AspNet.AspNetCore;
+using DataTables.AspNet.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
@@ -23,12 +25,18 @@ namespace Api.Controllers
 
         public IActionResult Index()
         {
-            var products = _context.Products.ToList();
-            var viewModel = products.Select(_ => _mapper.Map<ProductViewModel>(_));
-
-            return View(viewModel);
+            return View();
         }
 
+        public IActionResult ProductList(IDataTablesRequest dataTablesRequest) {
+            var products = _context.Products.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
+            var data = products.Select(_ => _mapper.Map<ProductViewModel>(_));
+
+            var response = DataTablesResponse.Create(dataTablesRequest, data.Count(), _context.Products.Count(), data);
+
+            return new DataTablesJsonResult(response, true);
+        }
+        
         public IActionResult Update(int id)
         {
             var product = _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == id);

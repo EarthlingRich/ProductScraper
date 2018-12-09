@@ -22,7 +22,7 @@ namespace Api.Services
 
         public Product ProcessMatchedIngredientsForProduct(int productId)
         {
-            var product =  _context.Products.Include("ProductIngredients.Ingredient").SingleOrDefault(_ => _.Id == productId);
+            var product =  _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == productId);
             var ingredients = _context.Ingredients;
 
             product.MatchedIngredients.Clear();

@@ -17,7 +17,7 @@ export function initUpdate(data) {
 }
 
 function UpdateKeyWordsString() {
-    var data = "";
+    var data = '';
 
     chips.chipsData.forEach(function(item) {
         data += item.tag + ';';

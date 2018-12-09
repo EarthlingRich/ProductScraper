@@ -1,21 +1,19 @@
-﻿@model IEnumerable<ProductViewModel>
-@{
+﻿@{
     ViewData["Title"] = "Producten";
 }
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        Product.initIndex();
+    });
+</script>
+
 <div class="row">
-    <table class="striped">
+    <table id="product-table" class="striped">
         <thead>
             <tr>
                 <th>Naam</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var product in Model)
-            {
-                <tr>
-                    <td><a href="@Url.Action("Update", "Product", new { id = product.Id })">@product.Name</a></td>
-                </tr>
-            }
-        </tbody>
     </table>
 </div>

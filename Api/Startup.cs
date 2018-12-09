@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Model;
 using System;
 using AutoMapper;
+using DataTables.AspNet.AspNetCore;
 
 namespace Api
 {
@@ -24,6 +25,7 @@ namespace Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAutoMapper();
+            services.RegisterDataTables();
 
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)

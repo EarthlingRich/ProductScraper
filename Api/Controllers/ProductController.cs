@@ -36,7 +36,22 @@ namespace Api.Controllers
 
             return new DataTablesJsonResult(response, true);
         }
-        
+
+        public IActionResult Workload()
+        {
+            return View();
+        }
+
+        public IActionResult WorkloadList(IDataTablesRequest dataTablesRequest)
+        {
+            var products = _context.Products.Where(_ => !_.IsProcessed).Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
+            var data = products.Select(_ => _mapper.Map<ProductViewModel>(_));
+
+            var response = DataTablesResponse.Create(dataTablesRequest, data.Count(), _context.Products.Count(), data);
+
+            return new DataTablesJsonResult(response, true);
+        }
+
         public IActionResult Update(int id)
         {
             var product = _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == id);

@@ -9,6 +9,12 @@ namespace Api.Models
         {
             CreateMap<IngredientViewModel, Ingredient>()
                 .ForMember(_ => _.KeyWords, opt => opt.Ignore());
+            CreateMap<ProductViewModel, Product>()
+                .ForMember(_ => _.Name, opt => opt.Ignore())
+                .ForMember(_ => _.MatchedIngredients, opt => opt.Ignore())
+                .ForMember(_ => _.ProductIngredients, opt => opt.Ignore())
+                .ForMember(_ => _.Ingredients, opt => opt.Ignore())
+                .ForMember(_ => _.IsVegan, opt => opt.Ignore());
         }
     }
 }

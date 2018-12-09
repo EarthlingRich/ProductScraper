@@ -5,9 +5,25 @@
 
 <h3>@Model.Name<a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons">local_grocery_store</i></a></h3>
 <div>@Model.Ingredients</div>
-@foreach(var matchedIngredient in Model.MatchedIngredients)
+@foreach (var matchedIngredient in Model.MatchedIngredients)
 {
     <div class="chip">@matchedIngredient.Name</div>
 }
-<br\>
-<a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">Verwerken</a>
+@using (Html.BeginForm("Update", "Product", FormMethod.Post, new { @class = "col s12" }))
+{
+    @Html.HiddenFor(_ => _.Id)
+    <p>
+        <label>
+            @Html.EditorFor(_ => _.IsProcessed)
+            <span>Verwerkt</span>
+        </label>
+    </p>
+    <p>
+        <label>
+            @Html.EditorFor(_ => _.IsNew)
+            <span>Nieuw</span>
+        </label>
+    </p>
+    <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
+    <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">Verwerken</a>
+}

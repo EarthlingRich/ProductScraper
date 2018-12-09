@@ -14,6 +14,8 @@ namespace ProductScraper.Services
 
         public void Add(Product product)
         {
+            product.IsNew = true;
+
             _context.Products.Add(product);
             _context.SaveChanges();
         }

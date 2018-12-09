@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
+using Api.Models;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
@@ -8,11 +10,20 @@ namespace Api.Services
 {
     public class ProductService
     {
+        readonly IMapper _mapper;
         readonly ApplicationContext _context;
 
-        public ProductService(ApplicationContext context)
+        public ProductService(ApplicationContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+        }
+
+        public void Update(ProductViewModel viewModel)
+        {
+            var product = _context.Products.Find(viewModel.Id);
+            _mapper.Map(viewModel, product);
+            _context.SaveChanges();
         }
 
         public Product ProcessMatchedIngredientsForProduct(int productId)

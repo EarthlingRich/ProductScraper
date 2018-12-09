@@ -20,7 +20,7 @@ namespace Api.Controllers
         {
             _context = context;
             _mapper = mapper;
-            _productService = new ProductService(_context);
+            _productService = new ProductService(_context, _mapper);
         }
 
         public IActionResult Index()
@@ -43,6 +43,13 @@ namespace Api.Controllers
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Update(ProductViewModel viewModel)
+        {
+            _productService.Update(viewModel);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Process(int id)

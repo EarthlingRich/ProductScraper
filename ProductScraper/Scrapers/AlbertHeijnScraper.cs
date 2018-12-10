@@ -37,7 +37,7 @@ namespace ProductScraper.Scrapers
             }
 
             //Remove double products
-            productUrls.Distinct();
+            productUrls = productUrls.Distinct().ToList();
 
             //Get product data
             foreach (string productUrl in productUrls)
@@ -54,7 +54,7 @@ namespace ProductScraper.Scrapers
             productUrls.AddRange(GetProductUrls(url, _driver));
 
             //Remove double products
-            productUrls.Distinct();
+            productUrls = productUrls.Distinct().ToList();
 
             //Get product data
             foreach (string productUrl in productUrls)

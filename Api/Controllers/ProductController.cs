@@ -69,10 +69,17 @@ namespace Api.Controllers
 
         public IActionResult Process(int id)
         {
-            var product = _productService.ProcessMatchedIngredientsForProduct(id);
+            var product = _productService.ProcessIsVegan(id);
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
             return View("Update", viewModel);
+        }
+
+        public IActionResult ProcessAll()
+        {
+            _productService.ProcessAllNonVegan();
+
+            return Redirect("Index");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Api.Models;
 using AutoMapper;
@@ -26,20 +27,49 @@ namespace Api.Services
             _context.SaveChanges();
         }
 
-        public Product ProcessMatchedIngredientsForProduct(int productId)
+        public void ProcessAllNonVegan()
+        {
+            var products = _context.Products.Include("ProductIngredients.Ingredient").Where(_ => !_.IsProcessed);
+            var ingredients = _context.Ingredients.ToList();
+
+            foreach(var product in products)
+            {
+                SetMatchedIngredients(product, ingredients);
+
+                if(product.MatchedIngredients.Any())
+                {
+                    product.IsProcessed = true;
+                    product.IsVegan = false;
+                }
+            }
+
+            _context.SaveChanges();
+        }
+
+        public Product ProcessIsVegan(int productId)
         {
             var product =  _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == productId);
-            var ingredients = _context.Ingredients;
+            var ingredients = _context.Ingredients.ToList();
 
+            SetMatchedIngredients(product, ingredients);
+
+            product.IsVegan = !product.MatchedIngredients.Any();
+
+            _context.SaveChanges();
+            return product;
+        }
+
+        private void SetMatchedIngredients(Product product, List<Ingredient> ingredients)
+        {
             product.MatchedIngredients.Clear();
 
-            foreach(var ingredient in ingredients)
+            foreach (var ingredient in ingredients)
             {
                 var foundMatch = false;
 
                 foreach (var keyWord in ingredient.AllergyKeywords)
                 {
-                    var match = Regex.Match(product.Ingredients, @"[\s,]*" + keyWord + @"[\s,.]");
+                    var match = Regex.Match(product.Ingredients, @"[\s\W]" + keyWord + @"[\s\W]");
                     if (match.Success)
                     {
                         foundMatch = true;
@@ -51,7 +81,7 @@ namespace Api.Services
                 {
                     foreach (var keyWord in ingredient.KeyWords)
                     {
-                        var match = Regex.Match(product.Ingredients, @"[\s,]*" + keyWord + @"[\s,.]");
+                        var match = Regex.Match(product.Ingredients, @"[\s\W]" + keyWord + @"[\s\W]");
                         if (match.Success)
                         {
                             foundMatch = true;
@@ -60,16 +90,11 @@ namespace Api.Services
                     }
                 }
 
-                if(foundMatch)
+                if (foundMatch)
                 {
                     product.MatchedIngredients.Add(ingredient);
                 }
             }
-
-            product.IsVegan = !product.MatchedIngredients.Any();
-
-            _context.SaveChanges();
-            return product;
         }
     }
 }

@@ -25,6 +25,12 @@
             <span>Nieuw</span>
         </label>
     </p>
+    <p>
+        <label>
+            @Html.EditorFor(_ => _.IsVegan)
+            <span>Vegan</span>
+        </label>
+    </p>
     <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
     <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">Verwerken</a>
 }

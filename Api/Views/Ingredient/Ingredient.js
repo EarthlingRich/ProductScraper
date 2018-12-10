@@ -7,10 +7,10 @@ export function initUpdate(keywords, allergyKeywords) {
     var options = {
         data: keywords,
         onChipAdd: function() {
-            UpdateKeyWordsString();
+            UpdateKeywordsString();
         },
         onChipDelete: function() {
-            UpdateKeyWordsString();
+            UpdateKeywordsString();
         }
     }
 
@@ -18,7 +18,7 @@ export function initUpdate(keywords, allergyKeywords) {
 
     var allergykeywordsChipsElement = document.querySelector('#allergykeywords-chips');
 
-    var options = {
+    var optionsAllergy = {
         data: allergyKeywords,
         onChipAdd: function() {
             UpdateAllergyKeywordsString();
@@ -28,7 +28,7 @@ export function initUpdate(keywords, allergyKeywords) {
         }
     }
 
-    allergykeywordsChips = M.Chips.init(allergykeywordsChipsElement, options);
+    allergykeywordsChips = M.Chips.init(allergykeywordsChipsElement, optionsAllergy);
 }
 
 function UpdateKeywordsString() {

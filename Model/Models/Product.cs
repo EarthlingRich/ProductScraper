@@ -18,6 +18,7 @@ namespace Model.Models
         public StoreType StoreType { get; set; }
         public string Url { get; set; }
         public string Ingredients { get; set; }
+        public string AllergyInfo { get; set; }
         public ICollection<ProductIngredient> ProductIngredients { get; } = new List<ProductIngredient>();
         [NotMapped]
         public ICollection<Ingredient> MatchedIngredients { get; }

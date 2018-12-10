@@ -5,31 +5,43 @@
 
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        var data = [
-            @foreach(var keyWord in Model.KeyWords)
+        var keywords = [
+            @foreach(var keyword in Model.Keywords)
             {
-                <text>{tag: '@keyWord'},</text>
+                <text>{tag: '@keyword'},</text>
             }
         ];
-        Ingredient.initUpdate(data);
+        var allergyKeywords = [
+            @foreach(var allergyKeyword in Model.AllergyKeywords)
+            {
+                <text>{tag: '@allergyKeyword'},</text>
+            }
+        ];
+        Ingredient.initUpdate(keywords, allergyKeywords);
     });
 </script>
 
 <h3>@Model.Name</h3>
 @using (Html.BeginForm("Update", "Ingredient", FormMethod.Post, new { @class = "col s12" }))
 {
-    <div class="row">
-        @Html.HiddenFor(_ => _.Id)
-        @Html.HiddenFor(_ => _.KeyWordsString)
-        <div class="input-field col s12">
-            @Html.TextBoxFor(_ => _.Name)
-            @Html.LabelFor(_ => _.Name)
-        </div>
-        <div class="col s12">
-            <div class="chips input-field">
-                <input class="input">
-            </div>
+<div class="row">
+    @Html.HiddenFor(_ => _.Id)
+    @Html.HiddenFor(_ => _.KeywordsString)
+    @Html.HiddenFor(_ => _.AllergyKeywordsString)
+    <div class="input-field col s12">
+        @Html.TextBoxFor(_ => _.Name)
+        @Html.LabelFor(_ => _.Name)
+    </div>
+    <div class="col s12">
+        <div id="keywords-chips" class="chips input-field">
+            <input class="input">
         </div>
     </div>
+    <div class="col s12">
+        <div id="allergykeywords-chips" class="chips input-field">
+            <input class="input">
+        </div>
+    </div>
+</div>
     <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
 }

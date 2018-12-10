@@ -12,19 +12,28 @@ namespace Model.Models
         public int Id { get; set; }
         public string Name { get; set; }
         [Column("Keywords")]
-        public string KeyWordsString { get; set; }
+        public string KeywordsString { get; set; }
         [NotMapped]
         public string[] KeyWords
         {
-            get { return KeyWordsString != null ? KeyWordsString.Split(";") : new string[0]; }
-            set { KeyWordsString = string.Join(";", value); }
+            get { return KeywordsString != null ? KeywordsString.Split(";") : new string[0]; }
+            set { KeywordsString = string.Join(";", value); }
+        }
+        [Column("AllergyKeyWords")]
+        public string AllergyKeywordsString { get; set; }
+        [NotMapped]
+        public string[] AllergyKeywords
+        {
+            get { return AllergyKeywordsString != null ? AllergyKeywordsString.Split(";") : new string[0]; }
+            set { AllergyKeywordsString = string.Join(";", value); }
         }
 
         public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
         {
             public void Configure(EntityTypeBuilder<Ingredient> builder)
             {
-                builder.Property(_ => _.KeyWordsString);
+                builder.Property(_ => _.KeywordsString);
+                builder.Property(_ => _.AllergyKeywordsString);
             }
         }
     }

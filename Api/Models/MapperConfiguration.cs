@@ -8,7 +8,8 @@ namespace Api.Models
         public MapperConfiguration()
         {
             CreateMap<IngredientViewModel, Ingredient>()
-                .ForMember(_ => _.KeyWords, opt => opt.Ignore());
+                .ForMember(_ => _.KeyWords, opt => opt.Ignore())
+                .ForMember(_ => _.AllergyKeywords, opt => opt.Ignore());
             CreateMap<ProductViewModel, Product>()
                 .ForMember(_ => _.Name, opt => opt.Ignore())
                 .ForMember(_ => _.MatchedIngredients, opt => opt.Ignore())

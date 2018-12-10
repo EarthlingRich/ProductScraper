@@ -1,10 +1,11 @@
-﻿var chips = null;
+﻿var keywordsChips = null;
+var allergykeywordsChips = null;
 
-export function initUpdate(data) {
-    var chipsElement = document.querySelector('.chips');
+export function initUpdate(keywords, allergyKeywords) {
+    var keywordsChipsElement = document.querySelector('#keywords-chips');
 
     var options = {
-        data: data,
+        data: keywords,
         onChipAdd: function() {
             UpdateKeyWordsString();
         },
@@ -13,16 +14,41 @@ export function initUpdate(data) {
         }
     }
 
-    chips = M.Chips.init(chipsElement, options);
+    keywordsChips = M.Chips.init(keywordsChipsElement, options);
+
+    var allergykeywordsChipsElement = document.querySelector('#allergykeywords-chips');
+
+    var options = {
+        data: allergyKeywords,
+        onChipAdd: function() {
+            UpdateAllergyKeywordsString();
+        },
+        onChipDelete: function() {
+            UpdateAllergyKeywordsString();
+        }
+    }
+
+    allergykeywordsChips = M.Chips.init(allergykeywordsChipsElement, options);
 }
 
-function UpdateKeyWordsString() {
+function UpdateKeywordsString() {
     var data = '';
 
-    chips.chipsData.forEach(function(item) {
+    keywordsChips.chipsData.forEach(function(item) {
         data += item.tag + ';';
     });
     data = data.substring(0, data.length - 1);
-    var keyWordsStringElement = document.getElementById('KeyWordsString');
+    var keyWordsStringElement = document.getElementById('KeywordsString');
+    keyWordsStringElement.value = data;
+}
+
+function UpdateAllergyKeywordsString() {
+    var data = '';
+
+    allergykeywordsChips.chipsData.forEach(function(item) {
+        data += item.tag + ';';
+    });
+    data = data.substring(0, data.length - 1);
+    var keyWordsStringElement = document.getElementById('AllergyKeywordsString');
     keyWordsStringElement.value = data;
 }

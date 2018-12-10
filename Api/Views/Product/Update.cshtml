@@ -5,6 +5,7 @@
 
 <h3>@Model.Name<a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons">local_grocery_store</i></a></h3>
 <div>@Model.Ingredients</div>
+<div>@Model.AllergyInfo</div>
 @foreach (var matchedIngredient in Model.MatchedIngredients)
 {
     <div class="chip">@matchedIngredient.Name</div>

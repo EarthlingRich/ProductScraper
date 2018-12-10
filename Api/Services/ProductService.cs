@@ -35,14 +35,34 @@ namespace Api.Services
 
             foreach(var ingredient in ingredients)
             {
-                foreach(var keyWord in ingredient.KeyWords)
+                var foundMatch = false;
+
+                foreach (var keyWord in ingredient.AllergyKeywords)
                 {
-                    var match = Regex.Match(product.Ingredients, @"[\s,]" + keyWord + @"[\s,]");
+                    var match = Regex.Match(product.Ingredients, @"[\s,]*" + keyWord + @"[\s,.]");
                     if (match.Success)
                     {
-                        product.MatchedIngredients.Add(ingredient);
+                        foundMatch = true;
                         break;
                     }
+                }
+
+                if (!foundMatch)
+                {
+                    foreach (var keyWord in ingredient.KeyWords)
+                    {
+                        var match = Regex.Match(product.Ingredients, @"[\s,]*" + keyWord + @"[\s,.]");
+                        if (match.Success)
+                        {
+                            foundMatch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(foundMatch)
+                {
+                    product.MatchedIngredients.Add(ingredient);
                 }
             }
 

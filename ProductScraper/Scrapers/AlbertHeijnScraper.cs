@@ -36,6 +36,9 @@ namespace ProductScraper.Scrapers
                 productUrls.AddRange(GetProductUrls(mainCategoryUrl, _driver));
             }
 
+            //Remove double products
+            productUrls.Distinct();
+
             //Get product data
             foreach (string productUrl in productUrls)
             {
@@ -49,6 +52,9 @@ namespace ProductScraper.Scrapers
 
             //Get product url's from category
             productUrls.AddRange(GetProductUrls(url, _driver));
+
+            //Remove double products
+            productUrls.Distinct();
 
             //Get product data
             foreach (string productUrl in productUrls)
@@ -100,30 +106,74 @@ namespace ProductScraper.Scrapers
 
         void HandleProduct(string url, ChromeDriver driver)
         {
-            var replaceRegex = new List<string> {
-                @"ingrediënten: ",
-                @"dit product.*",
-                @"kan sporen.*",
-                @"allergiewijzer.*"
-            };
-
             driver.Navigate().GoToUrl(url);
 
-            var ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text.ToLower();
-
-            foreach (var regex in replaceRegex) {
-                ingredients = Regex.Replace(ingredients, regex, "");
-            }
+            var ingredients = GetIngredients(driver);
+            var allergyInfo = GetAllergyInfo(driver);
 
             var product = new Product
             {
                 StoreType = StoreType.AlbertHeijn,
                 Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
                 Url = url,
-                Ingredients = ingredients.Trim()
+                Ingredients = ingredients,
+                AllergyInfo = allergyInfo
             };
 
             _productService.UpdateOrAdd(product);
+        }
+
+        private string GetIngredients(ChromeDriver driver) {
+            var replaceRegex = new List<string> {
+                @"ingrediënten: ",
+                @"dit product.*",
+                @"kan sporen.*",
+                @"allergiewijzer.*",
+                @"allergie info:.*"
+            };
+
+            var ingredients = "";
+            try
+            {
+                ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text.ToLower();
+            }
+            catch
+            {
+                return ingredients;
+            }
+
+            foreach (var regex in replaceRegex)
+            {
+                ingredients = Regex.Replace(ingredients, regex, "");
+            }
+
+            return ingredients.Trim();
+        }
+
+        private string GetAllergyInfo(ChromeDriver driver)
+        {
+            var replaceRegex = new List<string> {
+                @"bevat: ",
+                @"kan bevatten.*"
+            };
+
+            var allergyInfo = "";
+            try
+            {
+                allergyInfo = driver.FindElementByXPath("//h2[@id='allergie-informatie']/following-sibling::p").Text.ToLower();
+            }
+            catch
+            {
+                return allergyInfo;
+            }
+
+
+            foreach (var regex in replaceRegex)
+            {
+                allergyInfo = Regex.Replace(allergyInfo, regex, "");
+            }
+
+            return allergyInfo.Trim();
         }
     }
 }

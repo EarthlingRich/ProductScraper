@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Model;
@@ -13,12 +14,14 @@ namespace ProductScraper
         static void Main(string[] args)
         {
             var context = GetApplicationContext();
+            var file = File.Create(Environment.CurrentDirectory + $"{args[0]}-{DateTime.Now}.txt");
 
             using (var driver = new ChromeDriver())
+            using (var streamWriter = new StreamWriter(file))
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
-                var scraper = GetProductScraper(args[0], driver, context);
+                var scraper = GetProductScraper(args[0], driver, context, streamWriter);
                 if (args.Length == 2)
                 {
                     scraper.ScrapeCategory(args[1]);
@@ -30,13 +33,13 @@ namespace ProductScraper
             }
         }
 
-        static IProductScraper GetProductScraper(string store, ChromeDriver driver, ApplicationContext context)
+        static IProductScraper GetProductScraper(string store, ChromeDriver driver, ApplicationContext context, StreamWriter streamWriter)
         {
             Enum.TryParse(store, out StoreType storeType);
             switch (storeType)
             {
                 case StoreType.AlbertHeijn:
-                    return new AlbertHeijnScraper(driver, context);
+                    return new AlbertHeijnScraper(driver, context, streamWriter);
                 default:
                     throw new ArgumentException("Product scraper for store not found.");
             }

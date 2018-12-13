@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Model;
@@ -15,11 +16,13 @@ namespace ProductScraper.Scrapers
         static readonly string URL = "https://www.ah.nl/producten/";
         readonly ChromeDriver _driver;
         readonly ProductService _productService;
+        readonly StreamWriter _streamWriter;
 
-        public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context)
+        public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, StreamWriter streamWriter)
         {
             _driver = driver;
-            _productService = new ProductService(context);
+            _productService = new ProductService(context, _streamWriter);
+            _streamWriter = streamWriter;
         }
 
         public void ScrapeAll()
@@ -111,16 +114,23 @@ namespace ProductScraper.Scrapers
             var ingredients = GetIngredients(driver);
             var allergyInfo = GetAllergyInfo(driver);
 
-            var product = new Product
+            try
             {
-                StoreType = StoreType.AlbertHeijn,
-                Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
-                Url = url,
-                Ingredients = ingredients,
-                AllergyInfo = allergyInfo
-            };
+                var product = new Product
+                {
+                    StoreType = StoreType.AlbertHeijn,
+                    Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
+                    Url = url,
+                    Ingredients = ingredients,
+                    AllergyInfo = allergyInfo
+                };
 
-            _productService.UpdateOrAdd(product);
+                _productService.UpdateOrAdd(product);
+            }
+            catch
+            {
+                _streamWriter.WriteLine($"Error getting product: { driver.Url }");
+            }
         }
 
         private string GetIngredients(ChromeDriver driver) {
@@ -166,7 +176,6 @@ namespace ProductScraper.Scrapers
             {
                 return allergyInfo;
             }
-
 
             foreach (var regex in replaceRegex)
             {

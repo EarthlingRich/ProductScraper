@@ -29,31 +29,47 @@ namespace Api.Services
 
         public void ProcessAllNonVegan()
         {
-            var products = _context.Products.Include("ProductIngredients.Ingredient").Where(_ => !_.IsProcessed);
+            var products = _context.Products.Include("ProductIngredients.Ingredient").ToList();
             var ingredients = _context.Ingredients.ToList();
 
             foreach(var product in products)
             {
                 SetMatchedIngredients(product, ingredients);
 
-                if(product.MatchedIngredients.Any())
+                if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
                 {
                     product.IsProcessed = true;
-                    product.IsVegan = false;
+                    product.VeganType = VeganType.Not;
+                }
+                else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
+                {
+                    product.IsProcessed = true;
+                    product.VeganType = VeganType.Unsure;
                 }
             }
 
             _context.SaveChanges();
         }
 
-        public Product ProcessIsVegan(int productId)
+        public Product ProcessVeganType(int productId)
         {
             var product =  _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == productId);
             var ingredients = _context.Ingredients.ToList();
 
             SetMatchedIngredients(product, ingredients);
 
-            product.IsVegan = !product.MatchedIngredients.Any();
+            if(product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
+            {
+                product.VeganType = VeganType.Not;
+            }
+            else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
+            {
+                product.VeganType = VeganType.Unsure;
+            }
+            else
+            {
+                product.VeganType = VeganType.Vegan;
+            }
 
             _context.SaveChanges();
             return product;
@@ -69,7 +85,7 @@ namespace Api.Services
 
                 foreach (var keyWord in ingredient.AllergyKeywords)
                 {
-                    var match = Regex.Match(product.Ingredients, @"[\s\W]" + keyWord + @"[\s\W]");
+                    var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s\W]" + keyWord + @"[\s\W]");
                     if (match.Success)
                     {
                         foundMatch = true;
@@ -81,7 +97,7 @@ namespace Api.Services
                 {
                     foreach (var keyWord in ingredient.KeyWords)
                     {
-                        var match = Regex.Match(product.Ingredients, @"[\s\W]" + keyWord + @"[\s\W]");
+                        var match = Regex.Match(" " + product.Ingredients + " ", @"[\s\W]" + keyWord + @"[\s\W]");
                         if (match.Success)
                         {
                             foundMatch = true;

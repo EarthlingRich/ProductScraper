@@ -15,7 +15,7 @@ namespace Api.Models
                 .ForMember(_ => _.MatchedIngredients, opt => opt.Ignore())
                 .ForMember(_ => _.ProductIngredients, opt => opt.Ignore())
                 .ForMember(_ => _.Ingredients, opt => opt.Ignore())
-                .ForMember(_ => _.IsVegan, opt => opt.Ignore());
+                .ForMember(_ => _.VeganType, opt => opt.Ignore());
         }
     }
 }

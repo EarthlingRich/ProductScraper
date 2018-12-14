@@ -27,6 +27,7 @@ namespace Model.Models
             get { return AllergyKeywordsString != null ? AllergyKeywordsString.Split(";") : new string[0]; }
             set { AllergyKeywordsString = string.Join(";", value); }
         }
+        public VeganType VeganType { get; set; }
 
         public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
         {

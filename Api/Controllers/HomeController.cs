@@ -2,6 +2,7 @@
 using Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using Model.Models;
 
 namespace Api.Controllers
 {
@@ -19,7 +20,7 @@ namespace Api.Controllers
             var viewModel = new HomeViewModel
             {
                 TotalProduccs = _context.Products.Count(),
-                TotalVeganProducts = _context.Products.Where(_ => _.IsVegan).Count(),
+                TotalVeganProducts = _context.Products.Where(_ => _.VeganType == VeganType.Vegan).Count(),
                 TotalWorkload = _context.Products.Where(_ => !_.IsProcessed).Count()
             };
 

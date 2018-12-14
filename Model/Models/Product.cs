@@ -22,7 +22,7 @@ namespace Model.Models
         public ICollection<ProductIngredient> ProductIngredients { get; } = new List<ProductIngredient>();
         [NotMapped]
         public ICollection<Ingredient> MatchedIngredients { get; }
-        public bool IsVegan { get; set; }
+        public VeganType VeganType { get; set; }
         public bool IsProcessed { get; set; }
         public bool IsNew { get; set; }
     }

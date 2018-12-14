@@ -6,7 +6,7 @@
         columns:
             [
                 { data: 'name' },
-                { data: 'isVegan' }
+                { data: 'veganType' }
             ],
         columnDefs: [
             {

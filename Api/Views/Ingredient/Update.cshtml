@@ -28,9 +28,17 @@
         @Html.HiddenFor(_ => _.Id)
         @Html.HiddenFor(_ => _.KeywordsString)
         @Html.HiddenFor(_ => _.AllergyKeywordsString)
-        <div class="input-field col s4">
-            @Html.TextBoxFor(_ => _.Name)
-            @Html.LabelFor(_ => _.Name)
+        <div class="clearfix">
+            <div class="input-field col s4">
+                @Html.TextBoxFor(_ => _.Name)
+                @Html.LabelFor(_ => _.Name)
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="input-field col s4">
+                @Html.DropDownListFor(_ => Model.VeganType, Html.GetEnumSelectList<VeganType>())
+                @Html.LabelFor(_ => Model.VeganType)
+            </div>
         </div>
         <div class="col s12">
             <div id="keywords-chips" class="chips input-field">

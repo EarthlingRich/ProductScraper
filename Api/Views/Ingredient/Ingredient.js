@@ -29,6 +29,8 @@ export function initUpdate(keywords, allergyKeywords) {
     }
 
     allergykeywordsChips = M.Chips.init(allergykeywordsChipsElement, optionsAllergy);
+
+    Utils.initSelect();
 }
 
 function UpdateKeywordsString() {

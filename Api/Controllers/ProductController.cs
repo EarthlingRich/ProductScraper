@@ -30,7 +30,7 @@ namespace Api.Controllers
 
         public IActionResult ProductList(IDataTablesRequest dataTablesRequest) {
             var products = _context.Products.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
-            var data = products.Select(_ => _mapper.Map<ProductViewModel>(_));
+            var data = products.Select(_ => _mapper.Map<ProductListViewModel>(_));
 
             var response = DataTablesResponse.Create(dataTablesRequest, data.Count(), _context.Products.Count(), data);
 

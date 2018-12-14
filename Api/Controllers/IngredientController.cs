@@ -23,7 +23,7 @@ namespace Api.Controllers
         public IActionResult Index()
         {
             var ingredients = _context.Ingredients.ToList();
-            var viewModel = ingredients.Select(_ => _mapper.Map<IngredientViewModel>(_));
+            var viewModel = ingredients.Select(_ => _mapper.Map<IngredientListViewModel>(_));
 
             return View(viewModel);
         }

@@ -3,8 +3,16 @@
     ViewData["Title"] = Model.Name;
 }
 
-<h3 class="page-title">@Model.Name<a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons">local_grocery_store</i></a></h3>
+<script type="text/javascript">
+    $(function() {
+        Product.initUpdate();
+    });
+</script>
 
+<h3 class="page-title">
+    @Model.Name
+    <a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons">local_grocery_store</i></a>
+</h3>
 @using (Html.BeginForm("Update", "Product", FormMethod.Post))
 {
 <div class="row">
@@ -30,6 +38,10 @@
             }
         </div>
     }
+    <div class="input-field col s4">
+        @Html.DropDownListFor(_ => Model.VeganType, Html.GetEnumSelectList<VeganType>())
+        @Html.LabelFor(_ => Model.VeganType)
+    </div>
     <div class="input-field col s12">
         <div class="custom-form-label">Status</div>
         <p>

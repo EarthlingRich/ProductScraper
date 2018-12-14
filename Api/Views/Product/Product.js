@@ -15,18 +15,13 @@
                     var url = Utils.getBaseUrl() + "/Product/Update/" + row["id"];
                     return `<a href=\"${url}\"})">${data}</a>`;
                 }
-            },
-            {
-                targets: 1,
-                render(data, type, row) {
-                    if(data) {
-                        return `<i class="material-icons">done</i>`;
-                    }
-                    return null;
-                }
             }
         ]
     });
+}
+
+export function initUpdate() {
+    Utils.initSelect();
 }
 
 export function initWorkload() {

@@ -3,34 +3,51 @@
     ViewData["Title"] = Model.Name;
 }
 
-<h3>@Model.Name<a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons">local_grocery_store</i></a></h3>
-<div>@Model.Ingredients</div>
-<div>@Model.AllergyInfo</div>
-@foreach (var matchedIngredient in Model.MatchedIngredients)
+<h3 class="page-title">@Model.Name<a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons">local_grocery_store</i></a></h3>
+
+@using (Html.BeginForm("Update", "Product", FormMethod.Post))
 {
-    <div class="chip">@matchedIngredient.Name</div>
-}
-@using (Html.BeginForm("Update", "Product", FormMethod.Post, new { @class = "col s12" }))
-{
+<div class="row">
     @Html.HiddenFor(_ => _.Id)
-    <p>
-        <label>
-            @Html.EditorFor(_ => _.IsProcessed)
-            <span>Verwerkt</span>
-        </label>
-    </p>
-    <p>
-        <label>
-            @Html.EditorFor(_ => _.IsNew)
-            <span>Nieuw</span>
-        </label>
-    </p>
-    <p>
-        <label>
-            @Html.EditorFor(_ => _.VeganType)
-            <span>Vegan</span>
-        </label>
-    </p>
-    <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
-    <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">Verwerken</a>
+    <div class="input-field col s12">
+        <div class="custom-form-label">Ingrediënten</div>
+        @Model.Ingredients
+    </div>
+    @if (!string.IsNullOrEmpty(Model.AllergyInfo))
+    {
+        <div class="input-field col s12">
+            <div class="custom-form-label">Allergiën</div>
+            @Model.AllergyInfo
+        </div>
+    }
+    @if (Model.MatchedIngredients.Any())
+    {
+        <div class="col s12">
+            <div class="custom-form-label">Product bevat</div>
+            @foreach (var matchedIngredient in Model.MatchedIngredients)
+            {
+                <div class="chip">@matchedIngredient.Name</div>
+            }
+        </div>
+    }
+    <div class="input-field col s12">
+        <div class="custom-form-label">Status</div>
+        <p>
+            <label>
+                @Html.EditorFor(_ => _.IsProcessed)
+                <span>Verwerkt</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                @Html.EditorFor(_ => _.IsNew)
+                <span>Nieuw</span>
+            </label>
+        </p>
+    </div>
+    <div class="col s12">
+        <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
+        <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">Verwerken</a>
+    </div>
+</div>
 }

@@ -21,27 +21,31 @@
     });
 </script>
 
-<h3>@Model.Name</h3>
-@using (Html.BeginForm("Update", "Ingredient", FormMethod.Post, new { @class = "col s12" }))
+<h3 class="page-title">@Model.Name</h3>
+@using (Html.BeginForm("Update", "Ingredient", FormMethod.Post))
 {
-<div class="row">
-    @Html.HiddenFor(_ => _.Id)
-    @Html.HiddenFor(_ => _.KeywordsString)
-    @Html.HiddenFor(_ => _.AllergyKeywordsString)
-    <div class="input-field col s12">
-        @Html.TextBoxFor(_ => _.Name)
-        @Html.LabelFor(_ => _.Name)
-    </div>
-    <div class="col s12">
-        <div id="keywords-chips" class="chips input-field">
-            <input class="input">
+    <div class="row">
+        @Html.HiddenFor(_ => _.Id)
+        @Html.HiddenFor(_ => _.KeywordsString)
+        @Html.HiddenFor(_ => _.AllergyKeywordsString)
+        <div class="input-field col s4">
+            @Html.TextBoxFor(_ => _.Name)
+            @Html.LabelFor(_ => _.Name)
+        </div>
+        <div class="col s12">
+            <div id="keywords-chips" class="chips input-field">
+                <div class="custom-form-label">Ingrediënten</div>
+                <input class="input">
+            </div>
+        </div>
+        <div class="col s12">
+            <div id="allergykeywords-chips" class="chips input-field">
+                <div class="custom-form-label">Allergiën</div>
+                <input class="input">
+            </div>
+        </div>
+        <div class="col s12">
+            <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
         </div>
     </div>
-    <div class="col s12">
-        <div id="allergykeywords-chips" class="chips input-field">
-            <input class="input">
-        </div>
-    </div>
-</div>
-    <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
 }

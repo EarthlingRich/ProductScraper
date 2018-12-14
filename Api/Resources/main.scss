@@ -1,4 +1,6 @@
-﻿$sidenav-bg-color: #37474f;
+﻿$size-md: 0.75rem;
+
+$sidenav-bg-color: #37474f;
 $sidenav-font-color: #fff;
 $sidenav-width: 200px;
 
@@ -32,4 +34,8 @@ $secondary-color: #43a047 !default;
             @extend .btn.disabled;
         }
     }
+}
+
+th {
+    padding-top: 0;
 }

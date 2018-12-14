@@ -8,14 +8,15 @@
     });
 </script>
 
-<div class="row">
-    <a href="@Url.Action("ProcessAll", "Product")" class="waves-effect waves-light btn">Verwerken</a>
-    <table id="workload-table" class="striped">
-        <thead>
-            <tr>
-                <th>Naam</th>
-                <th>Nieuw</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+<h3 class="page-title">
+    Werklijst
+    <a href="@Url.Action("ProcessAll", "Product")" class="waves-effect waves-light btn right">Verwerken</a>
+</h3>
+<table id="workload-table" class="striped">
+    <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Nieuw</th>
+        </tr>
+    </thead>
+</table>

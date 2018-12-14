@@ -2,24 +2,23 @@
 @{
     ViewData["Title"] = "Ingrediënten";
 }
-<div class="row">
-    <h3>
-        Ingrediënten
-        <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action("Create", "Ingredient")"><i class="material-icons">add</i></a>
-    </h3>
-    <table class="striped">
-        <thead>
+
+<h3 class="page-title">
+    Ingrediënten
+    <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action("Create", "Ingredient")"><i class="material-icons">add</i></a>
+</h3>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>Naam</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ingredient in Model)
+        {
             <tr>
-                <th>Naam</th>
+                <td><a href="@Url.Action("Update", "Ingredient", new { id = ingredient.Id })">@ingredient.Name</a></td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var ingredient in Model)
-            {
-                <tr>
-                    <td><a href="@Url.Action("Update", "Ingredient", new { id = ingredient.Id })">@ingredient.Name</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>

@@ -1,17 +1,17 @@
 ﻿@model IEnumerable<IngredientListViewModel>
 @{
-    ViewData["Title"] = "Ingrediënten";
+    ViewData["Title"] = CommonTerms.Ingredient_Index;
 }
 
 <h3 class="page-title">
-    Ingrediënten
+    @CommonTerms.Ingredient_Index
     <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action("Create", "Ingredient")"><i class="material-icons">add</i></a>
 </h3>
 <table class="striped">
     <thead>
         <tr>
-            <th>Naam</th>
-            <th>Vegan</th>
+            <th>@Html.DisplayNameFor(_ => _.Name)</th>
+            <th>@Html.DisplayNameFor(_ => _.VeganType)</th>
         </tr>
     </thead>
     <tbody>

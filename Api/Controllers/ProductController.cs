@@ -45,7 +45,7 @@ namespace Api.Controllers
         public IActionResult WorkloadList(IDataTablesRequest dataTablesRequest)
         {
             var products = _context.Products.Where(_ => !_.IsProcessed);
-            var data = products.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).Select(_ => _mapper.Map<ProductViewModel>(_));
+            var data = products.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).Select(_ => _mapper.Map<ProductListViewModel>(_));
 
             var response = DataTablesResponse.Create(dataTablesRequest, data.Count(), products.Count(), data);
 

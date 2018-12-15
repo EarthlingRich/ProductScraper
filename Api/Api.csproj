@@ -37,4 +37,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\CommonTerms.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommonTerms.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\CommonTerms.Designer.cs">
+      <DependentUpon>CommonTerms.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

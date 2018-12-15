@@ -18,20 +18,20 @@
 <div class="row">
     @Html.HiddenFor(_ => _.Id)
     <div class="input-field col s12">
-        <div class="custom-form-label">Ingrediënten</div>
+        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Ingredients)</div>
         @Model.Ingredients
     </div>
     @if (!string.IsNullOrEmpty(Model.AllergyInfo))
     {
         <div class="input-field col s12">
-            <div class="custom-form-label">Allergiën</div>
+            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.AllergyInfo)</div>
             @Model.AllergyInfo
         </div>
     }
     @if (Model.MatchedIngredients.Any())
     {
         <div class="col s12">
-            <div class="custom-form-label">Product bevat</div>
+            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.MatchedIngredients)</div>
             @foreach (var matchedIngredient in Model.MatchedIngredients)
             {
                 <div class="chip">@matchedIngredient.Name</div>
@@ -43,23 +43,23 @@
         @Html.LabelFor(_ => Model.VeganType)
     </div>
     <div class="input-field col s12">
-        <div class="custom-form-label">Status</div>
+        <div class="custom-form-label">@CommonTerms.Common_Status</div>
         <p>
             <label>
                 @Html.EditorFor(_ => _.IsProcessed)
-                <span>Verwerkt</span>
+                <span>@Html.DisplayNameFor(_ => _.IsProcessed)</span>
             </label>
         </p>
         <p>
             <label>
                 @Html.EditorFor(_ => _.IsNew)
-                <span>Nieuw</span>
+                <span>@Html.DisplayNameFor(_ => _.IsNew)</span>
             </label>
         </p>
     </div>
     <div class="col s12">
-        <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
-        <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">Verwerken</a>
+        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+        <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">@CommonTerms.Action_Process</a>
     </div>
 </div>
 }

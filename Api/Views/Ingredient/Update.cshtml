@@ -42,18 +42,18 @@
         </div>
         <div class="col s12">
             <div id="keywords-chips" class="chips input-field">
-                <div class="custom-form-label">Ingrediënten</div>
+                <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Keywords)</div>
                 <input class="input">
             </div>
         </div>
         <div class="col s12">
             <div id="allergykeywords-chips" class="chips input-field">
-                <div class="custom-form-label">Allergiën</div>
+                <div class="custom-form-label">@Html.DisplayNameFor(_ => _.AllergyKeywords)</div>
                 <input class="input">
             </div>
         </div>
         <div class="col s12">
-            <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
+            <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
         </div>
     </div>
 }

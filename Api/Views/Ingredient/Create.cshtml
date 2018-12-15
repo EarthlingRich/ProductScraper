@@ -1,9 +1,9 @@
 ﻿@model IngredientViewModel
 @{
-    ViewData["Title"] = "Ingrediënt toevoegen";
+    ViewData["Title"] = CommonTerms.Ingredient_Create;
 }
 
-<h3 class="page-title">Ingrediënt toevoegen</h3>
+<h3 class="page-title">@CommonTerms.Ingredient_Create</h3>
 @using (Html.BeginForm("Create", "Ingredient", FormMethod.Post, new { @class = "col s12" }))
 {
     <div class="row">
@@ -12,5 +12,5 @@
             @Html.LabelFor(_ => _.Name)
         </div>
     </div>
-    <button class="btn waves-effect waves-light" type="submit">Opslaan</button>
+    <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
 }

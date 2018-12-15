@@ -15,10 +15,10 @@
 <body>
     <header>
         <ul id="sidenav" class="sidenav sidenav-fixed">
-            <li class="@(controller == "Home" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Home")">Home</a></li>
-            <li class="@(controller == "Product" && action == "Workload" ? "active" : "")"><a href="@Url.Action("Workload", "Product")">Werklijst</a></li>
-            <li class="@(controller == "Product" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Product")">Producten</a></li>
-            <li class="@(controller == "Ingredient" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Ingredient")">Ingrediënten</a></li>
+            <li class="@(controller == "Home" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Home")">@CommonTerms.Home_Index</a></li>
+            <li class="@(controller == "Product" && action == "Workload" ? "active" : "")"><a href="@Url.Action("Workload", "Product")">@CommonTerms.Product_Workload</a></li>
+            <li class="@(controller == "Product" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Product")">@CommonTerms.Product_Index</a></li>
+            <li class="@(controller == "Ingredient" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Ingredient")">@CommonTerms.Ingredient_Index</a></li>
         </ul>
         <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
     </header>

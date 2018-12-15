@@ -20,7 +20,7 @@ namespace Api.Services
             _mapper = mapper;
         }
 
-        public void Update(ProductViewModel viewModel)
+        public void Update(ProductUpdateRequest viewModel)
         {
             var product = _context.Products.Find(viewModel.Id);
             _mapper.Map(viewModel, product);
@@ -85,7 +85,7 @@ namespace Api.Services
 
                 foreach (var keyWord in ingredient.AllergyKeywords)
                 {
-                    var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s\W]" + keyWord + @"[\s\W]");
+                    var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s,.]" + keyWord + @"[\s,.]");
                     if (match.Success)
                     {
                         foundMatch = true;
@@ -97,7 +97,7 @@ namespace Api.Services
                 {
                     foreach (var keyWord in ingredient.KeyWords)
                     {
-                        var match = Regex.Match(" " + product.Ingredients + " ", @"[\s\W]" + keyWord + @"[\s\W]");
+                        var match = Regex.Match(" " + product.Ingredients + " ", @"[\s,.]" + keyWord + @"[\s,.]");
                         if (match.Success)
                         {
                             foundMatch = true;

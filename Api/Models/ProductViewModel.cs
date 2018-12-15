@@ -5,14 +5,12 @@ using Model.Resources;
 
 namespace Api.Models
 {
-    public class ProductViewModel
+    public class ProductUpdateViewModel
     {
-        public ProductViewModel()
+        public ProductUpdateViewModel()
         {
             MatchedIngredients = new List<Ingredient>();
         }
-
-        public int Id { get; set; }
 
         public string Name { get; set; }
 
@@ -24,6 +22,18 @@ namespace Api.Models
         [Display(Name = "Product_AllergyInfo", ResourceType = typeof(DomainTerms))]
         public string AllergyInfo { get; set; }
 
+        [Display(Name = "Product_MatchedIngredients", ResourceType = typeof(DomainTerms))]
+        public List<Ingredient> MatchedIngredients { get; set; }
+
+        public List<WorkloadItem> WorkloadItems { get; set; }
+
+        public ProductUpdateRequest Request { get; set; }
+    }
+
+    public class ProductUpdateRequest
+    {
+        public int Id { get; set; }
+
         [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
         public int VeganType { get; set; }
 
@@ -32,11 +42,6 @@ namespace Api.Models
 
         [Display(Name = "Product_IsNew", ResourceType = typeof(DomainTerms))]
         public bool IsNew { get; set; }
-
-        [Display(Name = "Product_MatchedIngredients", ResourceType = typeof(DomainTerms))]
-        public List<Ingredient> MatchedIngredients { get; set; }
-
-        public List<WorkloadItem> WorkloadItems { get; set; }
     }
 
     public class ProductListViewModel

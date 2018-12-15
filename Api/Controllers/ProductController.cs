@@ -56,15 +56,16 @@ namespace Api.Controllers
         public IActionResult Update(int id)
         {
             var product = _context.Products.Include("ProductIngredients.Ingredient").Include(_ => _.WorkloadItems).FirstOrDefault(_ => _.Id == id);
-            var viewModel = _mapper.Map<ProductViewModel>(product);
+            var viewModel = _mapper.Map<ProductUpdateViewModel>(product);
+            viewModel.Request = _mapper.Map<ProductUpdateRequest>(product);
 
             return View("Update", viewModel);
         }
 
         [HttpPost]
-        public IActionResult Update(ProductViewModel viewModel)
+        public IActionResult Update(ProductUpdateViewModel viewModel)
         {
-            _productService.Update(viewModel);
+            _productService.Update(viewModel.Request);
             return RedirectToAction("Index");
         }
 

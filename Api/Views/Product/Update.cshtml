@@ -1,4 +1,4 @@
-﻿@model ProductViewModel
+﻿@model ProductUpdateViewModel
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -16,7 +16,7 @@
 @using (Html.BeginForm("Update", "Product", FormMethod.Post))
 {
 <div class="row">
-    @Html.HiddenFor(_ => _.Id)
+    @Html.HiddenFor(_ => _.Request.Id)
     <div class="input-field col s12">
         <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Ingredients)</div>
         @Model.Ingredients
@@ -38,28 +38,28 @@
             }
         </div>
     }
-    <div class="input-field col s4">
-        @Html.DropDownListFor(_ => Model.VeganType, Html.GetEnumSelectList<VeganType>())
-        @Html.LabelFor(_ => Model.VeganType)
-    </div>
+        <div class="input-field col s4">
+            @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
+            @Html.LabelFor(_ => _.Request.VeganType)
+        </div>
     <div class="input-field col s12">
         <div class="custom-form-label">@CommonTerms.Common_Status</div>
         <p>
             <label>
-                @Html.EditorFor(_ => _.IsProcessed)
-                <span>@Html.DisplayNameFor(_ => _.IsProcessed)</span>
+                @Html.EditorFor(_ => _.Request.IsProcessed)
+                <span>@Html.DisplayNameFor(_ => _.Request.IsProcessed)</span>
             </label>
         </p>
         <p>
             <label>
-                @Html.EditorFor(_ => _.IsNew)
-                <span>@Html.DisplayNameFor(_ => _.IsNew)</span>
+                @Html.EditorFor(_ => _.Request.IsNew)
+                <span>@Html.DisplayNameFor(_ => _.Request.IsNew)</span>
             </label>
         </p>
     </div>
     <div class="col s12">
         <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
-        <a href="@Url.Action("Process", "Product", new { id = Model.Id })" class="waves-effect waves-light btn">@CommonTerms.Action_Process</a>
+        <a href="@Url.Action("Process", "Product", new { id = Model.Request.Id })" class="waves-effect waves-light btn">@CommonTerms.Action_Process</a>
     </div>
 </div>
 }

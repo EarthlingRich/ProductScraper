@@ -12,6 +12,7 @@ namespace Model
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<WorkloadItem> WorkloadItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +21,10 @@ namespace Model
             modelBuilder.Entity<ProductIngredient>()
                 .HasOne(_ => _.Product)
                 .WithMany("ProductIngredients");
+
+            modelBuilder.Entity<Product>()
+                .HasMany(_ => _.WorkloadItems)
+                .WithOne(_ => _.Product);
         }
     }
 }

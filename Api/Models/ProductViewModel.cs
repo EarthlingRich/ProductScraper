@@ -35,6 +35,8 @@ namespace Api.Models
 
         [Display(Name = "Product_MatchedIngredients", ResourceType = typeof(DomainTerms))]
         public List<Ingredient> MatchedIngredients { get; set; }
+
+        public List<WorkloadItem> WorkloadItems { get; set; }
     }
 
     public class ProductListViewModel

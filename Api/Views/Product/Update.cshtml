@@ -63,3 +63,20 @@
     </div>
 </div>
 }
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Item Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var workloadItem in Model.WorkloadItems)
+        {
+            <tr>
+                <td>@workloadItem.Message</td>
+                <td>@workloadItem.CreatedOn</td>
+            </tr>
+        }
+    </tbody>
+</table>

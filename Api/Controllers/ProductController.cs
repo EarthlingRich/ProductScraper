@@ -28,7 +28,8 @@ namespace Api.Controllers
             return View();
         }
 
-        public IActionResult ProductList(IDataTablesRequest dataTablesRequest) {
+        public IActionResult ProductList(IDataTablesRequest dataTablesRequest)
+        {
             var products = _context.Products.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
             var data = products.Select(_ => _mapper.Map<ProductListViewModel>(_));
 
@@ -54,10 +55,10 @@ namespace Api.Controllers
 
         public IActionResult Update(int id)
         {
-            var product = _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == id);
+            var product = _context.Products.Include("ProductIngredients.Ingredient").Include(_ => _.WorkloadItems).FirstOrDefault(_ => _.Id == id);
             var viewModel = _mapper.Map<ProductViewModel>(product);
 
-            return View(viewModel);
+            return View("Update", viewModel);
         }
 
         [HttpPost]
@@ -69,10 +70,8 @@ namespace Api.Controllers
 
         public IActionResult Process(int id)
         {
-            var product = _productService.ProcessVeganType(id);
-            var viewModel = _mapper.Map<ProductViewModel>(product);
-
-            return View("Update", viewModel);
+            _productService.ProcessVeganType(id);
+            return Update(id);
         }
 
         public IActionResult ProcessAll()

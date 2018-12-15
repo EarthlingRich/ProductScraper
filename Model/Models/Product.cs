@@ -19,12 +19,15 @@ namespace Model.Models
         public string Url { get; set; }
         public string Ingredients { get; set; }
         public string AllergyInfo { get; set; }
-        public ICollection<ProductIngredient> ProductIngredients { get; } = new List<ProductIngredient>();
-        [NotMapped]
-        public ICollection<Ingredient> MatchedIngredients { get; }
         public VeganType VeganType { get; set; }
         public bool IsProcessed { get; set; }
         public bool IsNew { get; set; }
+
+        public ICollection<ProductIngredient> ProductIngredients { get; } = new List<ProductIngredient>();
+        [NotMapped]
+        public ICollection<Ingredient> MatchedIngredients { get; }
+
+        public ICollection<WorkloadItem> WorkloadItems { get; set; }
     }
 
     public class ProductIngredient

@@ -22,6 +22,7 @@ namespace Model.Models
         public VeganType VeganType { get; set; }
         public bool IsProcessed { get; set; }
         public bool IsNew { get; set; }
+        public ProductCategory Category { get; set; }
 
         public ICollection<ProductIngredient> ProductIngredients { get; } = new List<ProductIngredient>();
         [NotMapped]

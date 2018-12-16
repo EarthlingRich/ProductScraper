@@ -13,7 +13,7 @@ namespace Database.Migrations
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "ProductCategory",
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -22,7 +22,7 @@ namespace Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCategory", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -31,10 +31,10 @@ namespace Database.Migrations
                 column: "CategoryId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Products_ProductCategory_CategoryId",
+                name: "FK_Products_ProductCategories_CategoryId",
                 table: "Products",
                 column: "CategoryId",
-                principalTable: "ProductCategory",
+                principalTable: "ProductCategories",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -42,11 +42,11 @@ namespace Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Products_ProductCategory_CategoryId",
+                name: "FK_Products_ProductCategories_CategoryId",
                 table: "Products");
 
             migrationBuilder.DropTable(
-                name: "ProductCategory");
+                name: "ProductCategories");
 
             migrationBuilder.DropIndex(
                 name: "IX_Products_CategoryId",

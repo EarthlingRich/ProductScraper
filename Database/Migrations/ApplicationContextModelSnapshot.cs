@@ -81,7 +81,7 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Model.Models.ProductIngredient", b =>

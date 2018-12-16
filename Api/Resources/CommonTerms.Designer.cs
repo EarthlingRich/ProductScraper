@@ -100,5 +100,17 @@ namespace Api.Resources {
                 return ResourceManager.GetString("Product_Workload", resourceCulture);
             }
         }
+        
+        public static string ProductCategory_Create {
+            get {
+                return ResourceManager.GetString("ProductCategory_Create", resourceCulture);
+            }
+        }
+        
+        public static string ProductCategory_Index {
+            get {
+                return ResourceManager.GetString("ProductCategory_Index", resourceCulture);
+            }
+        }
     }
 }

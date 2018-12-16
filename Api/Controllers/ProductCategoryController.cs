@@ -1,0 +1,58 @@
+﻿using System.Linq;
+using Api.Models;
+using Api.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Model;
+
+namespace Api.Controllers
+{
+    public class ProductCategoryController : Controller
+    {
+        readonly IMapper _mapper;
+        readonly ApplicationContext _context;
+        readonly ProductCategoryService _productCategoryService;
+
+        public ProductCategoryController(ApplicationContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+            _productCategoryService = new ProductCategoryService(_context, _mapper);
+        }
+
+        public IActionResult Index()
+        {
+            var productCategories = _context.ProductCategories.ToList();
+            var viewModel = productCategories.Select(_ => new ProductCategoryViewModel().Map(_, _mapper));
+
+            return View(viewModel);
+        }
+
+        public IActionResult Create()
+        {
+            return View(new ProductCategoryCreateViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult Create(ProductCategoryCreateViewModel viewmodel)
+        {
+            _productCategoryService.Create(viewmodel.Request);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Update(int id)
+        {
+            var productCategory = _context.ProductCategories.Find(id);
+            var viewModel =  new ProductCategoryUpdateViewModel().Map(productCategory, _mapper);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Update(ProductCategoryUpdateViewModel viewModel)
+        {
+            _productCategoryService.Update(viewModel.Request);
+            return Update(viewModel.Request.Id);
+        }
+    }
+}

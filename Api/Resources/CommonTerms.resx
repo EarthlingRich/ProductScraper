@@ -39,4 +39,10 @@
     <data name="Product_Workload" xml:space="preserve">
         <value>Werklijst</value>
     </data>
+    <data name="ProductCategory_Create" xml:space="preserve">
+        <value>Categorie toevoegen</value>
+    </data>
+    <data name="ProductCategory_Index" xml:space="preserve">
+        <value>Categorieën</value>
+    </data>
 </root>

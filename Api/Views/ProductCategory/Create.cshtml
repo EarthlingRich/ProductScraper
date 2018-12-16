@@ -1,0 +1,16 @@
+﻿@model ProductCategoryCreateViewModel
+@{
+    ViewData["Title"] = CommonTerms.ProductCategory_Create;
+}
+
+<h3 class="page-title">@CommonTerms.ProductCategory_Create</h3>
+@using (Html.BeginForm("Create", "ProductCategory", FormMethod.Post))
+{
+    <div class="row">
+        <div class="input-field col s12">
+            @Html.TextBoxFor(_ => _.Request.Name)
+            @Html.LabelFor(_ => _.Request.Name)
+        </div>
+    </div>
+    <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+}

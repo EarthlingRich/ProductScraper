@@ -1,0 +1,19 @@
+﻿@model ProductCategoryUpdateViewModel
+@{
+    ViewData["Title"] = Model.Request.Name;
+}
+
+<h3 class="page-title">@Model.Request.Name</h3>
+@using (Html.BeginForm("Update", "ProductCategory", FormMethod.Post))
+{
+    @Html.HiddenFor(_ => _.Request.Id)
+    <div class="row">
+        <div class="clearfix">
+            <div class="input-field col s4">
+                @Html.TextBoxFor(_ => _.Request.Name)
+                @Html.LabelFor(_ => _.Request.Name)
+            </div>
+        </div>
+    </div>
+    <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+}

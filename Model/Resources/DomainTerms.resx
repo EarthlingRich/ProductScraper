@@ -45,4 +45,7 @@
     <data name="Product_VeganType" xml:space="preserve">
         <value>Vegan type</value>
     </data>
+    <data name="ProductCategory_Name" xml:space="preserve">
+        <value>Naam</value>
+    </data>
 </root>

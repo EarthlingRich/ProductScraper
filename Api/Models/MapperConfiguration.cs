@@ -13,6 +13,9 @@ namespace Api.Models
             CreateMap<Product, ProductUpdateViewModel>()
                 .ForMember(_ => _.Request, opt => opt.Ignore());
             CreateMap<ProductUpdateRequest, Product>(MemberList.Source);
+
+            CreateMap<ProductCategoryCreateRequest, ProductCategory>(MemberList.Source);
+            CreateMap<ProductCategoryUpdateRequest, ProductCategory>(MemberList.Source);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Model.Models;
 using Model.Resources;
 
@@ -28,6 +29,14 @@ namespace Api.Models
         public List<WorkloadItem> WorkloadItems { get; set; }
 
         public ProductUpdateRequest Request { get; set; }
+
+        public static ProductUpdateViewModel Map(Product product, IMapper mapper)
+        {
+            var viewModel = mapper.Map<ProductUpdateViewModel>(product);
+            viewModel.Request = mapper.Map<ProductUpdateRequest>(product);
+
+            return viewModel;
+        }
     }
 
     public class ProductUpdateRequest

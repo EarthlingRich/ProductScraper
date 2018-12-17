@@ -7,12 +7,12 @@ namespace Api.Models
     {
         public MapperConfiguration()
         {
-            CreateMap<IngredientViewModel, Ingredient>()
-                .ForMember(_ => _.KeyWords, opt => opt.Ignore())
-                .ForMember(_ => _.AllergyKeywords, opt => opt.Ignore());
             CreateMap<Product, ProductUpdateViewModel>()
                 .ForMember(_ => _.Request, opt => opt.Ignore());
             CreateMap<ProductUpdateRequest, Product>(MemberList.Source);
+
+            CreateMap<IngredientUpdateRequest, Ingredient>(MemberList.Source);
+            CreateMap<IngredientCreateRequest, Ingredient>(MemberList.Source);
 
             CreateMap<ProductCategoryCreateRequest, ProductCategory>(MemberList.Source);
             CreateMap<ProductCategoryUpdateRequest, ProductCategory>(MemberList.Source);

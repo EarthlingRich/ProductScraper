@@ -30,29 +30,29 @@ namespace Api.Controllers
 
         public IActionResult Create()
         {
-            return View(new IngredientViewModel());
+            return View(new IngredientCreateViewModel());
         }
 
         [HttpPost]
-        public IActionResult Create(IngredientViewModel viewmodel)
+        public IActionResult Create(IngredientCreateViewModel viewmodel)
         {
-            _ingredientService.Create(viewmodel);
-            return RedirectToAction("Index");
+            var ingredient = _ingredientService.Create(viewmodel.Request);
+            return RedirectToAction("Update", new { id = ingredient.Id });
         }
 
         public IActionResult Update(int id)
         {
             var ingredient = _context.Ingredients.Find(id);
-            var viewModel = _mapper.Map<IngredientViewModel>(ingredient);
+            var viewModel = IngredientUpdateViewModel.Map(ingredient, _mapper);
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Update(IngredientViewModel viewModel)
+        public IActionResult Update(IngredientUpdateViewModel viewModel)
         {
-            _ingredientService.Update(viewModel);
-            return RedirectToAction("Index");
+            _ingredientService.Update(viewModel.Request);
+            return Update(viewModel.Request.Id);
         }
     }
 }

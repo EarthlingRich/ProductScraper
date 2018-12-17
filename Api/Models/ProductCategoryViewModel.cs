@@ -21,12 +21,12 @@ namespace Api.Models
 
     public class ProductCategoryCreateViewModel
     {
+        public ProductCategoryCreateRequest Request { get; set; }
+
         public ProductCategoryCreateViewModel()
         {
             Request = new ProductCategoryCreateRequest();
         }
-
-        public ProductCategoryCreateRequest Request { get; set; }
     }
 
     public class ProductCategoryCreateRequest
@@ -39,7 +39,7 @@ namespace Api.Models
     {
         public ProductCategoryUpdateRequest Request { get; set; }
 
-        public ProductCategoryUpdateViewModel Map(ProductCategory productCategory, IMapper mapper)
+        public static ProductCategoryUpdateViewModel Map(ProductCategory productCategory, IMapper mapper)
         {
             return new ProductCategoryUpdateViewModel
             {

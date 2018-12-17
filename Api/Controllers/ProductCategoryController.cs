@@ -36,14 +36,14 @@ namespace Api.Controllers
         [HttpPost]
         public IActionResult Create(ProductCategoryCreateViewModel viewmodel)
         {
-            _productCategoryService.Create(viewmodel.Request);
-            return RedirectToAction("Index");
+            var productCategory = _productCategoryService.Create(viewmodel.Request);
+            return RedirectToAction("Update", new { id = productCategory.Id });
         }
 
         public IActionResult Update(int id)
         {
             var productCategory = _context.ProductCategories.Find(id);
-            var viewModel =  new ProductCategoryUpdateViewModel().Map(productCategory, _mapper);
+            var viewModel =  ProductCategoryUpdateViewModel.Map(productCategory, _mapper);
 
             return View(viewModel);
         }

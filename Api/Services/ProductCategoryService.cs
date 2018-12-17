@@ -16,11 +16,13 @@ namespace Api.Services
             _mapper = mapper;
         }
 
-        public void Create(ProductCategoryCreateRequest request)
+        public ProductCategory Create(ProductCategoryCreateRequest request)
         {
             var productCategory = _mapper.Map<ProductCategory>(request);
             _context.ProductCategories.Add(productCategory);
             _context.SaveChanges();
+
+            return productCategory;
         }
 
         public void Update(ProductCategoryUpdateRequest request)

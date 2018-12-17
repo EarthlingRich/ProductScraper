@@ -6,11 +6,13 @@
 <h3 class="page-title">@CommonTerms.ProductCategory_Create</h3>
 @using (Html.BeginForm("Create", "ProductCategory", FormMethod.Post))
 {
-    <div class="row">
-        <div class="input-field col s12">
-            @Html.TextBoxFor(_ => _.Request.Name)
-            @Html.LabelFor(_ => _.Request.Name)
-        </div>
+<div class="row">
+    <div class="input-field col s4">
+        @Html.TextBoxFor(_ => _.Request.Name)
+        @Html.LabelFor(_ => _.Request.Name)
     </div>
-    <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+    <div class="col s12">
+        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+    </div>
+</div>
 }

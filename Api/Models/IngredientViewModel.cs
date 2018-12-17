@@ -1,10 +1,40 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Model.Models;
 using Model.Resources;
 
 namespace Api.Models
 {
-    public class IngredientViewModel
+    public class IngredientCreateViewModel
+    {
+        public IngredientCreateRequest Request { get; set; }
+
+        public IngredientCreateViewModel()
+        {
+            Request = new IngredientCreateRequest();
+        }
+    }
+
+    public class IngredientCreateRequest
+    {
+        [Display(Name = "Ingredient_Name", ResourceType = typeof(DomainTerms))]
+        public string Name { get; set; }
+    }
+
+    public class IngredientUpdateViewModel
+    {
+        public IngredientUpdateRequest Request { get; set; }
+
+        public static IngredientUpdateViewModel Map(Ingredient ingredient, IMapper mapper)
+        {
+            return new IngredientUpdateViewModel
+            {
+                Request = mapper.Map<IngredientUpdateRequest>(ingredient)
+            };
+        }
+    }
+
+    public class IngredientUpdateRequest
     {
         public int Id { get; set; }
 

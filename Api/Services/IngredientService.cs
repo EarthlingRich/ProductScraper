@@ -16,17 +16,19 @@ namespace Api.Services
             _mapper = mapper;
         }
 
-        public void Create(IngredientViewModel viewModel)
+        public Ingredient Create(IngredientCreateRequest request)
         {
-            var ingredient = _mapper.Map<Ingredient>(viewModel);
+            var ingredient = _mapper.Map<Ingredient>(request);
             _context.Ingredients.Add(ingredient);
             _context.SaveChanges();
+
+            return ingredient;
         }
 
-        public void Update(IngredientViewModel viewModel)
+        public void Update(IngredientUpdateRequest request)
         {
-            var ingredient = _context.Ingredients.Find(viewModel.Id);
-            _mapper.Map(viewModel, ingredient);
+            var ingredient = _context.Ingredients.Find(request.Id);
+            _mapper.Map(request, ingredient);
             _context.SaveChanges();
         }
     }

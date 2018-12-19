@@ -55,7 +55,7 @@ namespace Api.Controllers
 
         public IActionResult Update(int id)
         {
-            var product = _context.Products.Include("ProductIngredients.Ingredient").Include(_ => _.WorkloadItems).FirstOrDefault(_ => _.Id == id);
+            var product = _context.Products.Include("ProductIngredients.Ingredient").Include(_ => _.WorkloadItems).First(_ => _.Id == id);
             var viewModel = ProductUpdateViewModel.Map(product, _mapper);
 
             return View("Update", viewModel);

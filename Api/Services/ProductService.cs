@@ -53,7 +53,7 @@ namespace Api.Services
 
         public Product ProcessVeganType(int productId)
         {
-            var product =  _context.Products.Include("ProductIngredients.Ingredient").FirstOrDefault(_ => _.Id == productId);
+            var product =  _context.Products.Include("ProductIngredients.Ingredient").First(_ => _.Id == productId);
             var ingredients = _context.Ingredients.ToList();
 
             SetMatchedIngredients(product, ingredients);

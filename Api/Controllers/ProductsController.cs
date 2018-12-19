@@ -35,7 +35,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public ProductApiViewModel Get(int id)
         {
-            var product = _context.Products.AsNoTracking().FirstOrDefault(_ => _.Id == id);
+            var product = _context.Products.AsNoTracking().First(_ => _.Id == id);
             var data = _mapper.Map<ProductApiViewModel>(product);
 
             return data;

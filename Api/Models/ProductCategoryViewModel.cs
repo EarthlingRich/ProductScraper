@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Model.Models;
@@ -54,5 +55,7 @@ namespace Api.Models
 
         [Display(Name = "ProductCategory_Name", ResourceType = typeof(DomainTerms))]
         public string Name { get; set; }
+
+        public List<StoreCategory> StoreCategories { get; set; }
     }
 }

@@ -7,6 +7,7 @@ require("./main.scss");
 require("expose-loader?Ingredient!../Views/Ingredient/Ingredient");
 require("expose-loader?Layout!../Views/Shared/Layout");
 require("expose-loader?Product!../Views/Product/Product");
+require("expose-loader?ProductCategory!../Views/ProductCategory/ProductCategory");
 require("expose-loader?Utils!./Utils");
 
 $(function() {

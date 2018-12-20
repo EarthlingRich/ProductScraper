@@ -14,6 +14,7 @@ namespace Model
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<WorkloadItem> WorkloadItems { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<StoreCategory> StoreCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -24,6 +24,11 @@ namespace ProductScraper
                 var scraper = GetProductScraper(args[0], driver, context, streamWriter);
                 if (args.Length == 2)
                 {
+                    if(args[1].ToLower() == "-c")
+                    {
+                        scraper.ScrapeAllCategories();
+                    }
+
                     scraper.ScrapeCategory(args[1]);
                 }
                 else

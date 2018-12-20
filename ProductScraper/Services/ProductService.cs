@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
 
@@ -37,19 +38,20 @@ namespace ProductScraper.Services
 
         public void UpdateOrAdd(Product product)
         {
-            var existingProduct = _context.Products.FirstOrDefault(_ => _.Url == product.Url);
+            var existingProduct = _context.Products.Include("ProductProductCategories.ProductCategory").FirstOrDefault(_ => _.Url == product.Url);
             if (existingProduct == null)
             {
                 Add(product);
             }
             else
             {
+                //Change product name
                 if (existingProduct.Name != product.Name)
                 {
-
                     existingProduct.Name = product.Name;
-                    _context.SaveChanges();
                 }
+
+                //Change ingredients and allergy info
                 if (existingProduct.Ingredients != product.Ingredients
                     || existingProduct.AllergyInfo != product.AllergyInfo)
                 {
@@ -63,10 +65,24 @@ namespace ProductScraper.Services
                         CreatedOn = DateTime.Now
                     };
                     _context.WorkloadItems.Add(workloadItem);
-
-                    _context.SaveChanges();
                     _streamWriter.WriteLine($"{product.Id}: Product aangepast {product.Name}");
                 }
+
+                //Add new product categorie
+                if (existingProduct.ProductCategories.Contains(product.ProductCategories.First()))
+                {
+                    existingProduct.ProductCategories.Add(product.ProductCategories.First());
+                    var workloadItem = new WorkloadItem
+                    {
+                        Product = existingProduct,
+                        Message = "Product heeft nieuwe categorie",
+                        CreatedOn = DateTime.Now
+                    };
+                    _context.WorkloadItems.Add(workloadItem);
+                    _streamWriter.WriteLine($"{product.Id}: Product heeft nieuwe categorie {product.Name}");
+                }
+
+                _context.SaveChanges();
             }
         }
     }

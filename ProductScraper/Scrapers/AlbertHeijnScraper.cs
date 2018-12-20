@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
 using OpenQA.Selenium.Chrome;
@@ -13,56 +14,68 @@ namespace ProductScraper.Scrapers
 {
     public class AlbertHeijnScraper : IProductScraper
     {
-        static readonly string URL = "https://www.ah.nl/producten/";
+        readonly ApplicationContext _context;
         readonly ChromeDriver _driver;
         readonly ProductService _productService;
         readonly StreamWriter _streamWriter;
 
         public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, StreamWriter streamWriter)
         {
+            _context = context;
             _driver = driver;
-            _productService = new ProductService(context, _streamWriter);
+            _productService = new ProductService(_context, _streamWriter);
             _streamWriter = streamWriter;
         }
 
         public void ScrapeAll()
         {
-            var productUrls = new List<string>();
+            var productUrlDictonary = new Dictionary<int, List<string>>();
             var mainCategoryUrls = new List<string>();
 
             //Get main categorie url's
-            mainCategoryUrls.AddRange(GetMainCategories(URL, _driver));
+            var productCategories = _context.ProductCategories.Include(_ => _.StoreCategories).Where(_ => _.StoreCategories.Any(sc => sc.StoreType == StoreType.AlbertHeijn));
 
             //Get product url's from main categories
-            foreach (string mainCategoryUrl in mainCategoryUrls)
+            foreach (var productCategorie in productCategories)
             {
-                productUrls.AddRange(GetProductUrls(mainCategoryUrl, _driver));
+                var productCategorieUrls = productCategorie.StoreCategories.Select(_ => _.Url);
+                foreach (var productCategorieUrl in productCategorieUrls)
+                {
+                    if (productUrlDictonary.ContainsKey(productCategorie.Id))
+                    {
+                        productUrlDictonary[productCategorie.Id].AddRange(GetProductUrls(productCategorieUrl, _driver));
+                    }
+                    else
+                    {
+                        productUrlDictonary.Add(productCategorie.Id, GetProductUrls(productCategorieUrl, _driver));
+                    }
+                }
             }
 
-            //Remove double products
-            productUrls = productUrls.Distinct().ToList();
 
             //Get product data
-            foreach (string productUrl in productUrls)
+            foreach (var productsUrlsForCategory in productUrlDictonary)
             {
-                HandleProduct(productUrl, _driver);
+                var productCateogry = _context.ProductCategories.Find(productsUrlsForCategory.Key);
+                foreach (var productUrl in productsUrlsForCategory.Value)
+                {
+                    HandleProduct(productUrl, productCateogry, _driver);
+                }
             }
         }
 
         public void ScrapeCategory(string url)
         {
             var productUrls = new List<string>();
+            var productCategorie = _context.ProductCategories.First(_ => _.StoreCategories.Any(sc => sc.Url == url));
 
             //Get product url's from category
             productUrls.AddRange(GetProductUrls(url, _driver));
 
-            //Remove double products
-            productUrls = productUrls.Distinct().ToList();
-
             //Get product data
             foreach (string productUrl in productUrls)
             {
-                HandleProduct(productUrl, _driver);
+                HandleProduct(productUrl, productCategorie, _driver);
             }
         }
 
@@ -107,7 +120,7 @@ namespace ProductScraper.Scrapers
             return productUrls;
         }
 
-        void HandleProduct(string url, ChromeDriver driver)
+        void HandleProduct(string url, ProductCategory productCategory, ChromeDriver driver)
         {
             driver.Navigate().GoToUrl(url);
 
@@ -124,10 +137,11 @@ namespace ProductScraper.Scrapers
                     Ingredients = ingredients,
                     AllergyInfo = allergyInfo
                 };
+                product.ProductCategories.Add(productCategory);
 
                 _productService.UpdateOrAdd(product);
             }
-            catch
+            catch(Exception ex)
             {
                 _streamWriter.WriteLine($"Error getting product: { driver.Url }");
             }

@@ -23,6 +23,11 @@ namespace Model
                 .HasOne(_ => _.Product)
                 .WithMany("ProductIngredients");
 
+            modelBuilder.Entity<ProductProductCategory>().HasKey(_ => new { _.ProductId, _.ProductCategoryId });
+            modelBuilder.Entity<ProductProductCategory>()
+                .HasOne(_ => _.Product)
+                .WithMany("ProductProductCategories");
+
             modelBuilder.Entity<Product>()
                 .HasMany(_ => _.WorkloadItems)
                 .WithOne(_ => _.Product);

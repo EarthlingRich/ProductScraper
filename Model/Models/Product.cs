@@ -11,6 +11,11 @@ namespace Model.Models
                 _ => _.Ingredient,
                 ingredient => new ProductIngredient { Product = this, Ingredient = ingredient }
             );
+            ProductCategories = new JoinCollectionFacade<ProductCategory, ProductProductCategory>(
+                ProductProductCategories,
+                _ => _.ProductCategory,
+                productCategory => new ProductProductCategory { Product = this, ProductCategory = productCategory }
+            );
         }
 
         public int Id { get; set; }
@@ -28,6 +33,10 @@ namespace Model.Models
         [NotMapped]
         public ICollection<Ingredient> MatchedIngredients { get; }
 
+        public ICollection<ProductProductCategory> ProductProductCategories { get; } = new List<ProductProductCategory>();
+        [NotMapped]
+        public ICollection<ProductCategory> ProductCategories { get; }
+
         public ICollection<WorkloadItem> WorkloadItems { get; set; }
     }
 
@@ -37,5 +46,13 @@ namespace Model.Models
         public int IngredientId { get; set; }
         public virtual Product Product { get; set; }
         public virtual Ingredient Ingredient { get; set; }
+    }
+
+    public class ProductProductCategory
+    {
+        public int ProductId { get; set; }
+        public int ProductCategoryId { get; set; }
+        public virtual Product Product { get; set; }
+        public virtual ProductCategory ProductCategory { get; set; }
     }
 }

@@ -13,12 +13,14 @@ namespace Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
+
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            HostingEnvironment = hostingEnvironment;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -30,6 +32,7 @@ namespace Api
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{HostingEnvironment.EnvironmentName}.json", optional: true)
                 .Build();
 
             services.AddDbContext<ApplicationContext>

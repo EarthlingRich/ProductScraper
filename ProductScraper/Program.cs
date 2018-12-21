@@ -55,6 +55,7 @@ namespace ProductScraper
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json", optional: true)
                 .Build();
 
             var builder = new DbContextOptionsBuilder<ApplicationContext>();

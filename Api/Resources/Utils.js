@@ -21,10 +21,10 @@ export function initDatatables() {
             'sInfoThousands': '.',
             'sLoadingRecords': 'Laden...',
             'oPaginate': {
-                'sFirst': '<i class="material-icons">first_page</i>',
-                'sLast':'<i class="material-icons">last_page</i>',
-                'sPrevious': '<i class="material-icons">navigate_before</i>',
-                'sNext': '<i class="material-icons">navigate_next</i>'
+                'sFirst': '<i class="material-icons" aria-hidden="true">first_page</i>',
+                'sLast':'<i class="material-icons" aria-hidden="true">last_page</i>',
+                'sPrevious': '<i class="material-icons" aria-hidden="true">navigate_before</i>',
+                'sNext': '<i class="material-icons" aria-hidden="true">navigate_next</i>'
             },
             'oAria': {
                 'sSortAscending': ': activeer om kolom oplopend te sorteren',

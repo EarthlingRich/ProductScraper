@@ -46,10 +46,7 @@ namespace ProductScraper.Services
             else
             {
                 //Change product name
-                if (existingProduct.Name != product.Name)
-                {
-                    existingProduct.Name = product.Name;
-                }
+                existingProduct.Name = product.Name;
 
                 //Change ingredients and allergy info
                 if (existingProduct.Ingredients != product.Ingredients

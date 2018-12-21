@@ -47,7 +47,7 @@ export function initWorkload() {
                 targets: 1,
                 render(data, type, row) {
                     if(data) {
-                        return `<i class="material-icons">done</i>`;
+                        return `<i class="material-icons" aria-hidden="true">done</i>`;
                     }
                     return null;
                 }

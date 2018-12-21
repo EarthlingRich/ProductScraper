@@ -89,7 +89,7 @@ namespace ProductScraper.Scrapers
                 productCategoryUrls.AddRange(GetProductCategoryUrls(mainCategoryUrl, _driver));
             }
 
-            productCategoryUrls.Distinct();
+            productCategoryUrls = productCategoryUrls.Distinct().ToList();
 
             foreach (var productCategoryUrl in productCategoryUrls)
             {

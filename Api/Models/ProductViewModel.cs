@@ -28,6 +28,9 @@ namespace Api.Models
 
         public List<WorkloadItem> WorkloadItems { get; set; }
 
+        [Display(Name = "Product_ProductCategories", ResourceType = typeof(DomainTerms))]
+        public List<string> ProductCategories { get; set; }
+
         public ProductUpdateRequest Request { get; set; }
 
         public static ProductUpdateViewModel Map(Product product, IMapper mapper)
@@ -65,6 +68,9 @@ namespace Api.Models
 
         [Display(Name = "Product_IsNew", ResourceType = typeof(DomainTerms))]
         public bool IsNew { get; set; }
+
+        [Display(Name = "Product_ProductCategories", ResourceType = typeof(DomainTerms))]
+        public string ProductCategories { get; set; } 
     }
 
     public class ProductApiViewModel

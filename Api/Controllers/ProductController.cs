@@ -30,7 +30,7 @@ namespace Api.Controllers
 
         public IActionResult ProductList(IDataTablesRequest dataTablesRequest)
         {
-            var products = _context.Products.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
+            var products = _context.Products.Include("ProductProductCategories.ProductCategory").Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
             var data = products.Select(_ => _mapper.Map<ProductListViewModel>(_));
 
             var response = DataTablesResponse.Create(dataTablesRequest, data.Count(), _context.Products.Count(), data);
@@ -55,7 +55,7 @@ namespace Api.Controllers
 
         public IActionResult Update(int id)
         {
-            var product = _context.Products.Include("ProductIngredients.Ingredient").Include(_ => _.WorkloadItems).First(_ => _.Id == id);
+            var product = _context.Products.Include("ProductIngredients.Ingredient").Include("ProductProductCategories.ProductCategory").Include(_ => _.WorkloadItems).First(_ => _.Id == id);
             var viewModel = ProductUpdateViewModel.Map(product, _mapper);
 
             return View("Update", viewModel);

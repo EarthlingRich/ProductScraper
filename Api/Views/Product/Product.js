@@ -6,7 +6,8 @@
         columns:
             [
                 { data: 'name' },
-                { data: 'veganType' }
+                { data: 'veganType' },
+                { data: 'productCategories' }
             ],
         columnDefs: [
             {

@@ -17,6 +17,13 @@
 {
 <div class="row">
     @Html.HiddenFor(_ => _.Request.Id)
+    <div class="col s12">
+        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.ProductCategories)</div>
+        @foreach (var productCategorie in Model.ProductCategories)
+        {
+            <div class="chip">@productCategorie</div>
+        }
+    </div>
     <div class="input-field col s12">
         <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Ingredients)</div>
         @Model.Ingredients
@@ -38,10 +45,10 @@
             }
         </div>
     }
-        <div class="input-field col s4">
-            @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
-            @Html.LabelFor(_ => _.Request.VeganType)
-        </div>
+    <div class="input-field col s4">
+        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
+        @Html.LabelFor(_ => _.Request.VeganType)
+    </div>
     <div class="input-field col s12">
         <div class="custom-form-label">@CommonTerms.Common_Status</div>
         <p>

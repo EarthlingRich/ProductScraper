@@ -13,11 +13,6 @@
     <PackageReference Include="DataTables.AspNet.AspNetCore" Version="2.0.2" />
     <PackageReference Include="DataTables.AspNet.Core" Version="2.0.2" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\Shared\_CookieConsentPartial.cshtml" />
-    <Content Remove="wwwroot\css\site.css" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
     <Folder Include="Models\" />
@@ -29,9 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="productscraper\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">

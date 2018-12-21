@@ -265,3 +265,6 @@ __pycache__/
 
 # Api project
 Api/wwwroot/dist/
+
+# ignore appsettings configuration files
+**/appsettings.development.json

@@ -14,7 +14,7 @@ namespace ProductScraper
         static void Main(string[] args)
         {
             var context = GetApplicationContext();
-            var file = File.Create(Environment.CurrentDirectory + $"{args[0]}-{DateTime.Now}.txt");
+            var file = File.Create(Environment.CurrentDirectory + $"/Logs/{args[0]}-{DateTime.Now}.txt");
 
             using (var driver = new ChromeDriver())
             using (var streamWriter = new StreamWriter(file))

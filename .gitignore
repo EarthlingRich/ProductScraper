@@ -268,3 +268,6 @@ Api/wwwroot/dist/
 
 # ignore appsettings configuration files
 **/appsettings.development.json
+
+# ignore ProductScraper logs
+ProductScraper/Logs/

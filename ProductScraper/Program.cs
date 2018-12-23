@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,10 @@ namespace ProductScraper
             Directory.CreateDirectory(Environment.CurrentDirectory + "/Logs/");
             var file = File.Create(Environment.CurrentDirectory + $"/Logs/{args[0]}-{DateTime.Now.ToString("dd-MM-HH:mm")}.txt");
 
-            using (var driver = new ChromeDriver())
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments(new List<string> { "no-sandbox", "disable-gpu" });
+
+            using (var driver = new ChromeDriver(chromeOptions))
             using (var streamWriter = new StreamWriter(file))
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);

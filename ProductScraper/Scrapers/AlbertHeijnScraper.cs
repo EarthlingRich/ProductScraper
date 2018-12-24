@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -163,6 +163,10 @@ namespace ProductScraper.Scrapers
                                             .Select(_ => _.GetAttribute("href"))
                                             .Where(_ => _.StartsWith("https://www.ah.nl/producten/", StringComparison.InvariantCulture))
                                             .ToList();
+            productCategoryUrls.AddRange(driver.FindElementsByXPath("//article[contains(@class, 'see-more-lane')]//div[contains(@class, 'see-more--entry')]//a[contains(@class, 'grid-item__content')]")
+                                .Select(_ => _.GetAttribute("href"))
+                                .Where(_ => _.StartsWith("https://www.ah.nl/producten/", StringComparison.InvariantCulture))
+                                .ToList());
             if (productCategoryUrls.Any())
             {
                 foreach (string productCategoryUrl in productCategoryUrls)

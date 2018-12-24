@@ -9,7 +9,8 @@ namespace Api.Models
         public MapperConfiguration()
         {
             //Ingredient
-            CreateMap<IngredientUpdateRequest, Ingredient>(MemberList.Source);
+            CreateMap<IngredientUpdateRequest, Ingredient>(MemberList.Source)
+                .ForMember(_ => _.KeyWords, opt => opt.Ignore());
             CreateMap<IngredientCreateRequest, Ingredient>(MemberList.Source);
 
             //Product

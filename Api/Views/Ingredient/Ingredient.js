@@ -40,7 +40,7 @@ function UpdateKeywordsString() {
         data += item.tag + ';';
     });
     data = data.substring(0, data.length - 1);
-    var keyWordsStringElement = document.getElementById('KeywordsString');
+    var keyWordsStringElement = document.getElementById('Request_KeywordsString');
     keyWordsStringElement.value = data;
 }
 
@@ -51,6 +51,6 @@ function UpdateAllergyKeywordsString() {
         data += item.tag + ';';
     });
     data = data.substring(0, data.length - 1);
-    var keyWordsStringElement = document.getElementById('AllergyKeywordsString');
+    var keyWordsStringElement = document.getElementById('Request_AllergyKeywordsString');
     keyWordsStringElement.value = data;
 }

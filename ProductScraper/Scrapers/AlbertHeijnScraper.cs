@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,7 +57,9 @@ namespace ProductScraper.Scrapers
             foreach (var productsUrlsForCategory in productUrlDictonary)
             {
                 var productCateogry = _context.ProductCategories.Find(productsUrlsForCategory.Key);
-                foreach (var productUrl in productsUrlsForCategory.Value)
+                var productsUrlsForCategoryDistinct = productsUrlsForCategory.Value.Distinct().ToList();
+
+                foreach (var productUrl in productsUrlsForCategoryDistinct)
                 {
                     HandleProduct(productUrl, productCateogry, _driver);
                 }

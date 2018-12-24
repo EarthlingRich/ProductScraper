@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Api.Models;
@@ -38,13 +38,19 @@ namespace Api.Services
 
                 if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
                 {
-                    product.IsProcessed = true;
                     product.VeganType = VeganType.Not;
+                    if (product.MatchedIngredients.All(_ => _.VeganType == VeganType.Not && !_.NeedsReview))
+                    {
+                        product.IsProcessed = true;
+                    }
                 }
                 else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
                 {
-                    product.IsProcessed = true;
                     product.VeganType = VeganType.Unsure;
+                    if (product.MatchedIngredients.All(_ => _.VeganType == VeganType.Unsure && !_.NeedsReview))
+                    {
+                        product.IsProcessed = true;
+                    }
                 }
             }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,23 +8,26 @@ namespace Model.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool NeedsReview { get; set; }
+        public VeganType VeganType { get; set; }
+
         [Column("Keywords")]
         public string KeywordsString { get; set; }
         [NotMapped]
         public string[] KeyWords
         {
-            get { return KeywordsString != null ? KeywordsString.Split(";") : new string[0]; }
+            get { return !string.IsNullOrEmpty(KeywordsString) ? KeywordsString.Split(";") : new string[0]; }
             set { KeywordsString = string.Join(";", value); }
         }
+
         [Column("AllergyKeyWords")]
         public string AllergyKeywordsString { get; set; }
         [NotMapped]
         public string[] AllergyKeywords
         {
-            get { return AllergyKeywordsString != null ? AllergyKeywordsString.Split(";") : new string[0]; }
+            get { return !string.IsNullOrEmpty(AllergyKeywordsString) ? AllergyKeywordsString.Split(";") : new string[0]; }
             set { AllergyKeywordsString = string.Join(";", value); }
         }
-        public VeganType VeganType { get; set; }
 
         public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
         {

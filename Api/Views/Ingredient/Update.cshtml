@@ -4,7 +4,7 @@
 }
 
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
+    $(function() {
         var keywords = [
             @foreach(var keyword in Model.Request.Keywords)
             {
@@ -34,11 +34,17 @@
             @Html.LabelFor(_ => _.Request.Name)
         </div>
     </div>
-    <div class="clearfix">
-        <div class="input-field col s4">
-            @Html.DropDownListFor(_ => Model.Request.VeganType, Html.GetEnumSelectList<VeganType>())
-            @Html.LabelFor(_ => Model.Request.VeganType)
-        </div>
+    <div class="input-field col s4">
+        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
+        @Html.LabelFor(_ => _.Request.VeganType)
+    </div>
+    <div class="input-field col s12">
+        <p>
+            <label>
+                @Html.EditorFor(_ => _.Request.NeedsReview)
+                <span>@Html.DisplayNameFor(_ => _.Request.NeedsReview)</span>
+            </label>
+        </p>
     </div>
     <div class="col s12">
         <div id="keywords-chips" class="chips input-field">

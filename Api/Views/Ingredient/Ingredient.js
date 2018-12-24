@@ -2,6 +2,8 @@
 var allergykeywordsChips = null;
 
 export function initUpdate(keywords, allergyKeywords) {
+    Utils.initSelect();
+
     var keywordsChipsElement = document.querySelector('#keywords-chips');
 
     var options = {
@@ -29,8 +31,6 @@ export function initUpdate(keywords, allergyKeywords) {
     }
 
     allergykeywordsChips = M.Chips.init(allergykeywordsChipsElement, optionsAllergy);
-
-    Utils.initSelect();
 }
 
 function UpdateKeywordsString() {

@@ -21,6 +21,9 @@
     <data name="Ingredient_Name" xml:space="preserve">
         <value>Naam</value>
     </data>
+    <data name="Ingredient_NeedsReview" xml:space="preserve">
+        <value>Review benodigd</value>
+    </data>
     <data name="Ingredient_VeganType" xml:space="preserve">
         <value>Vegan type</value>
     </data>

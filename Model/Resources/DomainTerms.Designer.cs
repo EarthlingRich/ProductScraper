@@ -65,6 +65,12 @@ namespace Model.Resources {
             }
         }
         
+        public static string Ingredient_NeedsReview {
+            get {
+                return ResourceManager.GetString("Ingredient_NeedsReview", resourceCulture);
+            }
+        }
+        
         public static string Ingredient_VeganType {
             get {
                 return ResourceManager.GetString("Ingredient_VeganType", resourceCulture);

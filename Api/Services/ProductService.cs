@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Api.Models;
@@ -91,7 +91,7 @@ namespace Api.Services
 
                 foreach (var keyWord in ingredient.AllergyKeywords)
                 {
-                    var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s,.]" + keyWord + @"[\s,.]");
+                    var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s\W]" + keyWord + @"[\s\W]");
                     if (match.Success)
                     {
                         foundMatch = true;
@@ -103,7 +103,7 @@ namespace Api.Services
                 {
                     foreach (var keyWord in ingredient.KeyWords)
                     {
-                        var match = Regex.Match(" " + product.Ingredients + " ", @"[\s,.]" + keyWord + @"[\s,.]");
+                        var match = Regex.Match(" " + product.Ingredients + " ", @"[\s\W]" + keyWord + @"[\s\W]");
                         if (match.Success)
                         {
                             foundMatch = true;

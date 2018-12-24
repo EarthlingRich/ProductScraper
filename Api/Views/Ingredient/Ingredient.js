@@ -2,7 +2,6 @@
     Utils.initSelect();
 
     var keywordsChipsElement = document.querySelector('#keywords-chips');
-
     var options = {
         data: keywords,
         placeholder: 'Ingrediënten',
@@ -18,7 +17,6 @@
     M.Chips.init(keywordsChipsElement, options);
 
     var allergykeywordsChipsElement = document.querySelector('#allergykeywords-chips');
-
     var optionsAllergy = {
         data: allergyKeywords,
         placeholder: 'Allergiën',

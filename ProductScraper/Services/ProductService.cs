@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +32,6 @@ namespace ProductScraper.Services
                 CreatedOn = _scrapeDate
             };
             _context.WorkloadItems.Add(workloadItem);
-
             _context.SaveChanges();
 
             _streamWriter.WriteLine($"{product.Id}: Nieuw product {product.Name}");
@@ -64,11 +63,11 @@ namespace ProductScraper.Services
                         CreatedOn = _scrapeDate
                     };
                     _context.WorkloadItems.Add(workloadItem);
-                    _streamWriter.WriteLine($"{product.Id}: Product aangepast {product.Name}");
+                    _streamWriter.WriteLine($"{existingProduct.Id}: Product aangepast {existingProduct.Name}");
                 }
 
                 //Add new product categorie
-                if (existingProduct.ProductCategories.Contains(product.ProductCategories.First()))
+                if (!existingProduct.ProductCategories.Contains(product.ProductCategories.First()))
                 {
                     existingProduct.ProductCategories.Add(product.ProductCategories.First());
                     var workloadItem = new WorkloadItem
@@ -78,7 +77,7 @@ namespace ProductScraper.Services
                         CreatedOn = _scrapeDate
                     };
                     _context.WorkloadItems.Add(workloadItem);
-                    _streamWriter.WriteLine($"{product.Id}: Product heeft nieuwe categorie {product.Name}");
+                    _streamWriter.WriteLine($"{existingProduct.Id}: Product heeft nieuwe categorie {existingProduct.Name}");
                 }
 
                 _context.SaveChanges();

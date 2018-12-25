@@ -24,8 +24,9 @@ namespace ProductScraper.Scrapers
         {
             _context = context;
             _driver = driver;
-            _productService = new ProductService(_context, _streamWriter);
             _streamWriter = streamWriter;
+
+            _productService = new ProductService(_context, _streamWriter);
         }
 
         public void ScrapeAll()

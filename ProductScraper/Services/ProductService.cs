@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +11,12 @@ namespace ProductScraper.Services
     {
         readonly ApplicationContext _context;
         readonly StreamWriter _streamWriter;
+        readonly DateTime _scrapeDate;
 
         public ProductService(ApplicationContext context, StreamWriter streamWriter) {
             _context = context;
             _streamWriter = streamWriter;
+            _scrapeDate = DateTime.Now;
         }
 
         public void Add(Product product)
@@ -27,7 +29,7 @@ namespace ProductScraper.Services
             {
                 Product = product,
                 Message = "Nieuw product gevonden",
-                CreatedOn = DateTime.Now
+                CreatedOn = _scrapeDate
             };
             _context.WorkloadItems.Add(workloadItem);
 
@@ -59,7 +61,7 @@ namespace ProductScraper.Services
                     {
                         Product = existingProduct,
                         Message = "Product heeft aanpassingen",
-                        CreatedOn = DateTime.Now
+                        CreatedOn = _scrapeDate
                     };
                     _context.WorkloadItems.Add(workloadItem);
                     _streamWriter.WriteLine($"{product.Id}: Product aangepast {product.Name}");
@@ -73,7 +75,7 @@ namespace ProductScraper.Services
                     {
                         Product = existingProduct,
                         Message = "Product heeft nieuwe categorie",
-                        CreatedOn = DateTime.Now
+                        CreatedOn = _scrapeDate
                     };
                     _context.WorkloadItems.Add(workloadItem);
                     _streamWriter.WriteLine($"{product.Id}: Product heeft nieuwe categorie {product.Name}");

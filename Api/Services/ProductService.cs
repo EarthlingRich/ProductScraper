@@ -39,7 +39,7 @@ namespace Api.Services
                 if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
                 {
                     product.VeganType = VeganType.Not;
-                    if (product.MatchedIngredients.All(_ => _.VeganType == VeganType.Not && !_.NeedsReview))
+                    if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))
                     {
                         product.IsProcessed = true;
                     }
@@ -47,7 +47,7 @@ namespace Api.Services
                 else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
                 {
                     product.VeganType = VeganType.Unsure;
-                    if (product.MatchedIngredients.All(_ => _.VeganType == VeganType.Unsure && !_.NeedsReview))
+                    if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Unsure).Any(_ => _.NeedsReview))
                     {
                         product.IsProcessed = true;
                     }
@@ -76,6 +76,8 @@ namespace Api.Services
             {
                 product.VeganType = VeganType.Vegan;
             }
+
+            product.IsProcessed = true;
 
             _context.SaveChanges();
             return product;

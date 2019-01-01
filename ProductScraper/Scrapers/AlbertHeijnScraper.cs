@@ -191,6 +191,7 @@ namespace ProductScraper.Scrapers
 
             var ingredients = GetIngredients(driver);
             var allergyInfo = GetAllergyInfo(driver);
+            var storeAdvertisedVegan = GetStoreAdvertisedVegan(driver);
 
             try
             {
@@ -200,7 +201,8 @@ namespace ProductScraper.Scrapers
                     Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
                     Url = url,
                     Ingredients = ingredients,
-                    AllergyInfo = allergyInfo
+                    AllergyInfo = allergyInfo,
+                    StoreAdvertisedVegan = storeAdvertisedVegan
                 };
                 product.ProductCategories.Add(productCategory);
 
@@ -262,6 +264,11 @@ namespace ProductScraper.Scrapers
             }
 
             return allergyInfo.Trim();
+        }
+
+        private bool GetStoreAdvertisedVegan(ChromeDriver driver)
+        {
+            return driver.PageSource.Contains("icon--ah_vegan");
         }
     }
 }

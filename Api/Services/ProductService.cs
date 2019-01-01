@@ -36,7 +36,11 @@ namespace Api.Services
             {
                 SetMatchedIngredients(product, ingredients);
 
-                if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
+                if (product.StoreAdvertisedVegan)
+                {
+                    product.VeganType = VeganType.Vegan;
+                }
+                else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
                 {
                     product.VeganType = VeganType.Not;
                     if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))
@@ -64,7 +68,11 @@ namespace Api.Services
 
             SetMatchedIngredients(product, ingredients);
 
-            if(product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
+            if(product.StoreAdvertisedVegan)
+            {
+                product.VeganType = VeganType.Vegan;
+            }
+            else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
             {
                 product.VeganType = VeganType.Not;
             }

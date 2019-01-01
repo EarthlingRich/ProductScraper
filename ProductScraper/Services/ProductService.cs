@@ -66,6 +66,20 @@ namespace ProductScraper.Services
                     _streamWriter.WriteLine($"{existingProduct.Id}: Product aangepast {existingProduct.Name}");
                 }
 
+                if (existingProduct.StoreAdvertisedVegan != product.StoreAdvertisedVegan)
+                {
+                    existingProduct.StoreAdvertisedVegan = product.StoreAdvertisedVegan;
+
+                    var workloadItem = new WorkloadItem
+                    {
+                        Product = existingProduct,
+                        Message = $"Product is { (product.StoreAdvertisedVegan ? "wel" : "niet")} vegan volgens winkel",
+                        CreatedOn = _scrapeDate
+                    };
+                    _context.WorkloadItems.Add(workloadItem);
+                    _streamWriter.WriteLine($"{existingProduct.Id}: Product StoreAdvertisedVegan aangepast {existingProduct.Name}");
+                }
+
                 //Add new product categorie
                 if (!existingProduct.ProductCategories.Contains(product.ProductCategories.First()))
                 {

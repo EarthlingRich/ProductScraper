@@ -4,10 +4,11 @@
 
 export function initDatatables() {
     $.extend($.fn.dataTable.defaults, {
+        searching: true,
         processing: true,
         serverSide: true,
         pageLength: 25,
-        dom: 'tp',
+        dom: '<"row"<"col s4"f>>tp',
         language: {
             'sProcessing': 'Bezig...',
             'sLengthMenu': '_MENU_ resultaten weergeven',

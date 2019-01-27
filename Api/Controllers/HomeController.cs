@@ -8,6 +8,7 @@ namespace Api.Controllers
 {
     public class HomeController : Controller
     {
+        public static readonly string RouteName = nameof(HomeController).Replace("Controller", "");
         readonly ApplicationContext _context;
 
         public HomeController(ApplicationContext context)

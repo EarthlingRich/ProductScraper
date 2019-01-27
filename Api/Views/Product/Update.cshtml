@@ -1,4 +1,7 @@
-﻿@model ProductUpdateViewModel
+﻿@using Api.Controllers
+
+@model ProductUpdateViewModel
+
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -13,62 +16,62 @@
     @Model.Name
     <a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons" aria-hidden="true">local_grocery_store</i></a>
 </h3>
-@using (Html.BeginForm("Update", "Product", FormMethod.Post))
+@using (Html.BeginForm(nameof(ProductController.Update), ProductController.RouteName, FormMethod.Post))
 {
-<div class="row">
-    @Html.HiddenFor(_ => _.Request.Id)
-    <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.ProductCategories)</div>
-        @foreach (var productCategorie in Model.ProductCategories)
-        {
-            <div class="chip">@productCategorie</div>
-        }
-    </div>
-    <div class="input-field col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Ingredients)</div>
-        @Model.Ingredients
-    </div>
-    @if (!string.IsNullOrEmpty(Model.AllergyInfo))
-    {
-        <div class="input-field col s12">
-            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.AllergyInfo)</div>
-            @Model.AllergyInfo
-        </div>
-    }
-    @if (Model.MatchedIngredients.Any())
-    {
+    <div class="row">
+        @Html.HiddenFor(_ => _.Request.Id)
         <div class="col s12">
-            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.MatchedIngredients)</div>
-            @foreach (var matchedIngredient in Model.MatchedIngredients)
+            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.ProductCategories)</div>
+            @foreach (var productCategorie in Model.ProductCategories)
             {
-                <div class="chip">@matchedIngredient.Name</div>
+                <div class="chip">@productCategorie</div>
             }
         </div>
-    }
-    <div class="input-field col s4">
-        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
-        @Html.LabelFor(_ => _.Request.VeganType)
+        <div class="input-field col s12">
+            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Ingredients)</div>
+            @Model.Ingredients
+        </div>
+        @if (!string.IsNullOrEmpty(Model.AllergyInfo))
+        {
+            <div class="input-field col s12">
+                <div class="custom-form-label">@Html.DisplayNameFor(_ => _.AllergyInfo)</div>
+                @Model.AllergyInfo
+            </div>
+        }
+        @if (Model.MatchedIngredients.Any())
+        {
+            <div class="col s12">
+                <div class="custom-form-label">@Html.DisplayNameFor(_ => _.MatchedIngredients)</div>
+                @foreach (var matchedIngredient in Model.MatchedIngredients)
+                {
+                    <div class="chip">@matchedIngredient.Name</div>
+                }
+            </div>
+        }
+        <div class="input-field col s4">
+            @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
+            @Html.LabelFor(_ => _.Request.VeganType)
+        </div>
+        <div class="input-field col s12">
+            <div class="custom-form-label">@CommonTerms.Common_Status</div>
+            <p>
+                <label>
+                    @Html.EditorFor(_ => _.Request.IsProcessed)
+                    <span>@Html.DisplayNameFor(_ => _.Request.IsProcessed)</span>
+                </label>
+            </p>
+            <p>
+                <label>
+                    @Html.EditorFor(_ => _.Request.IsNew)
+                    <span>@Html.DisplayNameFor(_ => _.Request.IsNew)</span>
+                </label>
+            </p>
+        </div>
+        <div class="col s12">
+            <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+            <a href="@Url.Action(nameof(ProductController.Process), ProductController.RouteName, new { id = Model.Request.Id })" class="waves-effect waves-light btn">@CommonTerms.Action_Process</a>
+        </div>
     </div>
-    <div class="input-field col s12">
-        <div class="custom-form-label">@CommonTerms.Common_Status</div>
-        <p>
-            <label>
-                @Html.EditorFor(_ => _.Request.IsProcessed)
-                <span>@Html.DisplayNameFor(_ => _.Request.IsProcessed)</span>
-            </label>
-        </p>
-        <p>
-            <label>
-                @Html.EditorFor(_ => _.Request.IsNew)
-                <span>@Html.DisplayNameFor(_ => _.Request.IsNew)</span>
-            </label>
-        </p>
-    </div>
-    <div class="col s12">
-        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
-        <a href="@Url.Action("Process", "Product", new { id = Model.Request.Id })" class="waves-effect waves-light btn">@CommonTerms.Action_Process</a>
-    </div>
-</div>
 }
 <table>
     <thead>

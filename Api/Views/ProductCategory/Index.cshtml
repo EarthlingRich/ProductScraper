@@ -1,11 +1,14 @@
-﻿@model IEnumerable<ProductCategoryViewModel>
+﻿@using Api.Controllers
+
+@model IEnumerable<ProductCategoryViewModel>
+
 @{
     ViewData["Title"] = CommonTerms.ProductCategory_Index;
 }
 
 <h3 class="page-title">
     @CommonTerms.ProductCategory_Index
-    <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action("Create", "ProductCategory")"><i class="material-icons" aria-hidden="true">add</i></a>
+    <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action(nameof(ProductCategoryController.Create), ProductCategoryController.RouteName)"><i class="material-icons" aria-hidden="true">add</i></a>
 </h3>
 <table class="striped">
     <thead>
@@ -17,7 +20,7 @@
         @foreach (var productCategory in Model)
         {
             <tr>
-                <td><a href="@Url.Action("Update", "ProductCategory", new { id = productCategory.Id })">@productCategory.Name</a></td>
+                <td><a href="@Url.Action(nameof(ProductCategoryController.Update), ProductCategoryController.RouteName, new { id = productCategory.Id })">@productCategory.Name</a></td>
             </tr>
         }
     </tbody>

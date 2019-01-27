@@ -1,18 +1,20 @@
-﻿@model IngredientCreateViewModel
+﻿@using Api.Controllers
+
+@model IngredientCreateViewModel
 @{
     ViewData["Title"] = CommonTerms.Ingredient_Create;
 }
 
 <h3 class="page-title">@CommonTerms.Ingredient_Create</h3>
-@using (Html.BeginForm("Create", "Ingredient", FormMethod.Post))
+@using (Html.BeginForm(nameof(IngredientController.Create), IngredientController.RouteName, FormMethod.Post))
 {
-<div class="row">
-    <div class="input-field col s4">
-        @Html.TextBoxFor(_ => _.Request.Name)
-        @Html.LabelFor(_ => _.Request.Name)
+    <div class="row">
+        <div class="input-field col s4">
+            @Html.TextBoxFor(_ => _.Request.Name)
+            @Html.LabelFor(_ => _.Request.Name)
+        </div>
+        <div class="col s12">
+            <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
+        </div>
     </div>
-    <div class="col s12">
-        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
-    </div>
-</div>
 }

@@ -8,6 +8,7 @@ using Model;
 using System;
 using AutoMapper;
 using DataTables.AspNet.AspNetCore;
+using Api.Controllers;
 
 namespace Api
 {
@@ -48,7 +49,7 @@ namespace Api
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler($"{HomeController.RouteName}/{nameof(HomeController.Error)}");
                 app.UseHsts();
             }
 

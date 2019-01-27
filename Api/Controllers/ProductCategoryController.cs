@@ -10,6 +10,7 @@ namespace Api.Controllers
 {
     public class ProductCategoryController : Controller
     {
+        public static readonly string RouteName = nameof(ProductCategoryController).Replace("Controller", "");
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
         readonly ProductCategoryService _productCategoryService;

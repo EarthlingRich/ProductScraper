@@ -13,6 +13,7 @@ namespace Api.Controllers
 {
     public class WorkloadController : Controller
     {
+        public static readonly string RouteName = nameof(WorkloadController).Replace("Controller", "");
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
 

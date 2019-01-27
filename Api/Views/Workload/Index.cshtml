@@ -1,4 +1,6 @@
-﻿@model ProductListViewModel
+﻿@using Api.Controllers
+
+@model ProductListViewModel
 
 @{
     ViewData["Title"] = CommonTerms.Product_Workload;
@@ -12,7 +14,7 @@
 
 <h3 class="page-title">
     @CommonTerms.Product_Workload
-    <a href="@Url.Action("ProcessAll", "Product")" class="waves-effect waves-light btn right">@CommonTerms.Action_Process</a>
+    <a href="@Url.Action(nameof(ProductController.ProcessAll), ProductController.RouteName)" class="waves-effect waves-light btn right">@CommonTerms.Action_Process</a>
 </h3>
 <table id="workload-table" class="striped">
     <thead>

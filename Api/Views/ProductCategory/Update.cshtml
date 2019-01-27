@@ -1,4 +1,7 @@
-﻿@model ProductCategoryUpdateViewModel
+﻿@using Api.Controllers
+
+@model ProductCategoryUpdateViewModel
+
 @{
     ViewData["Title"] = Model.Request.Name;
 }
@@ -10,25 +13,25 @@
 </script>
 
 <h3 class="page-title">@Model.Request.Name</h3>
-@using (Html.BeginForm("Update", "ProductCategory", FormMethod.Post))
+@using (Html.BeginForm(nameof(ProductCategoryController.Update), ProductCategoryController.RouteName, FormMethod.Post))
 {
     @Html.HiddenFor(_ => _.Request.Id)
-<div class="row">
-    <div class="input-field col s12">
-        @Html.TextBoxFor(_ => _.Request.Name)
-        @Html.LabelFor(_ => _.Request.Name)
-    </div>
-    @foreach (var storeCategory in Model.Request.StoreCategories)
-    {
-        <div class="input-field col s3">
-            @Html.DropDownListFor(_ => storeCategory.StoreType, Html.GetEnumSelectList<StoreType>())
+    <div class="row">
+        <div class="input-field col s12">
+            @Html.TextBoxFor(_ => _.Request.Name)
+            @Html.LabelFor(_ => _.Request.Name)
         </div>
-        <div class="input-field col s9">
-            @Html.EditorFor(_ => storeCategory.Url)
+        @foreach (var storeCategory in Model.Request.StoreCategories)
+        {
+            <div class="input-field col s3">
+                @Html.DropDownListFor(_ => storeCategory.StoreType, Html.GetEnumSelectList<StoreType>())
+            </div>
+            <div class="input-field col s9">
+                @Html.EditorFor(_ => storeCategory.Url)
+            </div>
+        }
+        <div class="col s12">
+            <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
         </div>
-    }
-    <div class="col s12">
-        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
     </div>
-</div>
 }

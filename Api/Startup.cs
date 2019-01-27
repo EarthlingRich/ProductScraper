@@ -49,7 +49,7 @@ namespace Api
             }
             else
             {
-                app.UseExceptionHandler($"{HomeController.RouteName}/{nameof(HomeController.Error)}");
+                app.UseExceptionHandler($"/{HomeController.RouteName}/{nameof(HomeController.Error)}");
                 app.UseHsts();
             }
 

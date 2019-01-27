@@ -23,6 +23,7 @@
     <Folder Include="Views\Ingredient\" />
     <Folder Include="Services\" />
     <Folder Include="Views\ProductCategory\" />
+    <Folder Include="Views\Workload\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />

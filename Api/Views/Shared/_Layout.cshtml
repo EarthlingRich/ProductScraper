@@ -16,7 +16,7 @@
     <header>
         <ul id="sidenav" class="sidenav sidenav-fixed">
             <li class="@(controller == "Home" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Home")">@CommonTerms.Home_Index</a></li>
-            <li class="@(controller == "Product" && action == "Workload" ? "active" : "")"><a href="@Url.Action("Workload", "Product")">@CommonTerms.Product_Workload</a></li>
+            <li class="@(controller == "Workload" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Workload")">@CommonTerms.Product_Workload</a></li>
             <li class="@(controller == "Product" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Product")">@CommonTerms.Product_Index</a></li>
             <li class="@(controller == "Ingredient" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "Ingredient")">@CommonTerms.Ingredient_Index</a></li>
             <li class="@(controller == "ProductCategory" && action == "Index" ? "active" : "")"><a href="@Url.Action("Index", "ProductCategory")">@CommonTerms.ProductCategory_Index</a></li>

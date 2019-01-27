@@ -48,29 +48,6 @@ namespace Api.Controllers
             return new DataTablesJsonResult(response, true);
         }
 
-        public IActionResult Workload()
-        {
-            return View();
-        }
-
-        public IActionResult WorkloadList(IDataTablesRequest dataTablesRequest)
-        {
-            var productsQuery = _context.Products.Where(_ => !_.IsProcessed);
-            var totalCount = productsQuery.Count();
-
-            if (dataTablesRequest.Search.Value != null)
-            {
-                productsQuery = productsQuery.Where(_ => _.Name.Contains(dataTablesRequest.Search.Value));
-            }
-
-            var filteredCount = productsQuery.Count();
-            var data = productsQuery.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).Select(_ => _mapper.Map<ProductListViewModel>(_));
-
-            var response = DataTablesResponse.Create(dataTablesRequest, totalCount, filteredCount, data);
-
-            return new DataTablesJsonResult(response, true);
-        }
-
         public IActionResult Update(int id)
         {
             var product = _context.Products.Include("ProductIngredients.Ingredient").Include("ProductProductCategories.ProductCategory").Include(_ => _.WorkloadItems).First(_ => _.Id == id);

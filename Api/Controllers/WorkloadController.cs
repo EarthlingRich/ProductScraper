@@ -30,7 +30,7 @@ namespace Api.Controllers
 
         public IActionResult ProductList(IDataTablesRequest dataTablesRequest)
         {
-            var productsQuery = _context.Products.Where(_ => _.IsProcessed);
+            var productsQuery = _context.Products.Where(_ => !_.IsProcessed);
             var totalCount = productsQuery.Count();
 
             if (dataTablesRequest.Search.Value != null)

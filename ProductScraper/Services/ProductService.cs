@@ -23,6 +23,12 @@ namespace ProductScraper.Services
         {
             product.IsNew = true;
             product.VeganType = VeganType.Unkown;
+
+            if (product.StoreAdvertisedVegan)
+            {
+                product.IsProcessed = true;
+            }
+
             _context.Products.Add(product);
 
             var workloadItem = new WorkloadItem
@@ -55,6 +61,7 @@ namespace ProductScraper.Services
                 {
                     existingProduct.Ingredients = product.Ingredients;
                     existingProduct.AllergyInfo = product.AllergyInfo;
+                    existingProduct.IsProcessed = false;
 
                     var workloadItem = new WorkloadItem
                     {
@@ -69,6 +76,7 @@ namespace ProductScraper.Services
                 if (existingProduct.StoreAdvertisedVegan != product.StoreAdvertisedVegan)
                 {
                     existingProduct.StoreAdvertisedVegan = product.StoreAdvertisedVegan;
+                    existingProduct.IsProcessed = product.StoreAdvertisedVegan;
 
                     var workloadItem = new WorkloadItem
                     {

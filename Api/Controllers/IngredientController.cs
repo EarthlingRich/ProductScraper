@@ -2,7 +2,10 @@
 using Api.Models;
 using Api.Services;
 using AutoMapper;
+using DataTables.AspNet.AspNetCore;
+using DataTables.AspNet.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace Api.Controllers
@@ -22,10 +25,30 @@ namespace Api.Controllers
 
         public IActionResult Index()
         {
-            var ingredients = _context.Ingredients.ToList();
-            var viewModel = ingredients.Select(_ => _mapper.Map<IngredientListViewModel>(_));
+            return View();
+        }
 
-            return View(viewModel);
+        public IActionResult IngredientList(IDataTablesRequest dataTablesRequest)
+        {
+            var ingredientsQuery = _context.Ingredients.AsQueryable();
+            var totalCount = ingredientsQuery.Count();
+
+            if (dataTablesRequest.Search.Value != null)
+            {
+                ingredientsQuery = ingredientsQuery.Where(_ => _.Name.Contains(dataTablesRequest.Search.Value));
+            }
+
+            var filteredCount = ingredientsQuery.Count();
+            var ingredients = ingredientsQuery
+                    .Skip(dataTablesRequest.Start)
+                    .Take(dataTablesRequest.Length)
+                    .OrderBy(_ => _.Name).ToList();
+
+            var data = ingredients.Select(_ => _mapper.Map<IngredientListViewModel>(_));
+
+            var response = DataTablesResponse.Create(dataTablesRequest, totalCount, filteredCount, data);
+
+            return new DataTablesJsonResult(response, true);
         }
 
         public IActionResult Create()

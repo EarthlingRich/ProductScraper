@@ -1,4 +1,26 @@
-﻿export function initUpdate(keywords, allergyKeywords) {
+﻿export function initIndex() {
+    Utils.initDatatables();
+
+    $('#ingredient-table').DataTable({
+        ajax: Utils.getBaseUrl() + '/Ingredient/IngredientList',
+        columns:
+            [
+                { data: 'name' },
+                { data: 'veganType' },
+            ],
+        columnDefs: [
+            {
+                targets: 0,
+                render(data, type, row) {
+                    var url = Utils.getBaseUrl() + "/Ingredient/Update/" + row["id"];
+                    return `<a href=\"${url}\"})">${data}</a>`;
+                }
+            }
+        ]
+    });
+}
+
+export function initUpdate(keywords, allergyKeywords) {
     Utils.initSelect();
 
     var keywordsChipsElement = document.querySelector('#keywords-chips');

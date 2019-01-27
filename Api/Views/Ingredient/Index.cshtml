@@ -1,26 +1,24 @@
-﻿@model IEnumerable<IngredientListViewModel>
+﻿@model IngredientListViewModel
+
 @{
     ViewData["Title"] = CommonTerms.Ingredient_Index;
 }
+
+<script type="text/javascript">
+    $(function() {
+        Ingredient.initIndex();
+    });
+</script>
 
 <h3 class="page-title">
     @CommonTerms.Ingredient_Index
     <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action("Create", "Ingredient")"><i class="material-icons" aria-hidden="true">add</i></a>
 </h3>
-<table class="striped">
+<table id="ingredient-table" class="striped">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(_ => _.Name)</th>
             <th>@Html.DisplayNameFor(_ => _.VeganType)</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var ingredient in Model)
-        {
-            <tr>
-                <td><a href="@Url.Action("Update", "Ingredient", new { id = ingredient.Id })">@ingredient.Name</a></td>
-                <td>@ingredient.VeganType</td>
-            </tr>
-        }
-    </tbody>
 </table>

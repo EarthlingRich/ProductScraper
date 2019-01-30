@@ -107,5 +107,11 @@ namespace ProductScraper.Services
                 _context.SaveChanges();
             }
         }
+
+        public void RemoveOutdatedProducts(StoreType storeType)
+        {
+            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < DateTime.Now.AddDays(-14));
+            _context.Products.RemoveRange(outdatedProducts);
+        }
     }
 }

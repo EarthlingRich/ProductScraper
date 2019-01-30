@@ -65,6 +65,9 @@ namespace ProductScraper.Scrapers
                     HandleProduct(productUrl, productCateogry, _driver);
                 }
             }
+
+            //Remove outdated products
+            _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn);
         }
 
         public void ScrapeCategory(string url)

@@ -14,9 +14,16 @@ namespace ProductScraper
     {
         static void Main(string[] args)
         {
-            var context = GetApplicationContext();
-            Directory.CreateDirectory(Environment.CurrentDirectory + "/Logs/");
-            var file = File.Create(Environment.CurrentDirectory + $"/Logs/{args[0]}-{DateTime.Now.ToString("dd-MM-yyyy-HH-mm")}.txt");
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json", optional: true)
+                .Build();
+            var context = GetApplicationContext(configuration);
+
+            var logPath = configuration["LogPath"];
+            Directory.CreateDirectory(logPath);
+            var file = File.Create($"{logPath}{args[0]}-{DateTime.Now.ToString("dd-MM-yyyy-HH-mm")}.txt");
 
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArguments(new List<string> { "no-sandbox", "disable-gpu" });
@@ -55,14 +62,8 @@ namespace ProductScraper
             }
         }
 
-        private static ApplicationContext GetApplicationContext()
+        private static ApplicationContext GetApplicationContext(IConfigurationRoot configuration)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile("appsettings.Development.json", optional: true)
-                .Build();
-
             var builder = new DbContextOptionsBuilder<ApplicationContext>();
             builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 

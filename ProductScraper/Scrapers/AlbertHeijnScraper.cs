@@ -53,7 +53,6 @@ namespace ProductScraper.Scrapers
                 }
             }
 
-
             //Get product data
             foreach (var productsUrlsForCategory in productUrlDictonary)
             {

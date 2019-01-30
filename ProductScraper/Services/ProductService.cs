@@ -23,6 +23,7 @@ namespace ProductScraper.Services
         {
             product.IsNew = true;
             product.VeganType = VeganType.Unkown;
+            product.LastScrapeDate = _scrapeDate;
 
             if (product.StoreAdvertisedVegan)
             {
@@ -52,8 +53,9 @@ namespace ProductScraper.Services
             }
             else
             {
-                //Change product name
+                //Change product name and last scrape date
                 existingProduct.Name = product.Name;
+                existingProduct.LastScrapeDate = _scrapeDate;
 
                 //Change ingredients and allergy info
                 if (existingProduct.Ingredients != product.Ingredients

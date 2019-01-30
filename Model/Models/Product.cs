@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Model.Models
@@ -29,6 +30,7 @@ namespace Model.Models
         public bool IsProcessed { get; set; }
         public bool IsNew { get; set; }
         public ProductCategory Category { get; set; }
+        public DateTime LastScrapeDate { get; set; }
 
         public ICollection<ProductIngredient> ProductIngredients { get; } = new List<ProductIngredient>();
         [NotMapped]

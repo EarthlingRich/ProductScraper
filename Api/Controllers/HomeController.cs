@@ -22,7 +22,7 @@ namespace Api.Controllers
             {
                 TotalProduccs = _context.Products.Count(),
                 TotalVeganProducts = _context.Products.Where(_ => _.VeganType == VeganType.Vegan).Count(),
-                TotalWorkload = _context.Products.Where(_ => !_.IsProcessed).Count()
+                TotalWorkload = _context.WorkloadItems.Count()
             };
 
             return View(viewModel);

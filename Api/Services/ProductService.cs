@@ -99,27 +99,11 @@ namespace Api.Services
             {
                 var foundMatch = false;
 
-                foreach (var keyWord in ingredient.AllergyKeywords)
-                {
-                    var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s\W]" + keyWord + @"[\s\W]");
-                    if (match.Success)
-                    {
-                        foundMatch = true;
-                        break;
-                    }
-                }
+                foundMatch = DetectAllergyKeyword(ingredient, product);
 
                 if (!foundMatch)
                 {
-                    foreach (var keyWord in ingredient.KeyWords)
-                    {
-                        var match = Regex.Match(" " + product.Ingredients + " ", @"[\s\W]" + keyWord + @"[\s\W]");
-                        if (match.Success)
-                        {
-                            foundMatch = true;
-                            break;
-                        }
-                    }
+                    foundMatch = DetectyKeyword(ingredient, product);
                 }
 
                 if (foundMatch)
@@ -127,6 +111,34 @@ namespace Api.Services
                     product.MatchedIngredients.Add(ingredient);
                 }
             }
+        }
+
+        private bool DetectAllergyKeyword(Ingredient ingredient, Product product)
+        {
+            foreach (var keyWord in ingredient.AllergyKeywords)
+            {
+                var match = Regex.Match(" " + product.AllergyInfo + " ", @"[\s\W]" + keyWord + @"[\s\W]");
+                if (match.Success)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool DetectyKeyword(Ingredient ingredient, Product product)
+        {
+            foreach (var keyWord in ingredient.KeyWords)
+            {
+                var match = Regex.Match(" " + product.Ingredients + " ", @"[\s\W]" + keyWord + @"[\s\W]");
+                if (match.Success)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

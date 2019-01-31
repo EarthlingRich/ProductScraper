@@ -24,6 +24,12 @@
     <data name="Common_Vegan" xml:space="preserve">
         <value>Vegan</value>
     </data>
+    <data name="Error_Ingredient_In_Use" xml:space="preserve">
+        <value>Dit ingrediënt wordt nog gebruikt</value>
+    </data>
+    <data name="Error_ProductCategory_In_Use" xml:space="preserve">
+        <value>Deze categorie wordt nog gebruikt</value>
+    </data>
     <data name="Home_Index" xml:space="preserve">
         <value>Dashboard</value>
     </data>

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Api.Models;
+using Api.Resources;
 using Api.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -27,19 +28,19 @@ namespace Api.Controllers
             var productCategories = _context.ProductCategories.ToList();
             var viewModel = productCategories.Select(_ => new ProductCategoryViewModel().Map(_, _mapper));
 
-            return View(viewModel);
+            return View(nameof(Index), viewModel);
         }
 
         public IActionResult Create()
         {
-            return View(new ProductCategoryCreateViewModel());
+            return View(nameof(Create), new ProductCategoryCreateViewModel());
         }
 
         [HttpPost]
         public IActionResult Create(ProductCategoryCreateViewModel viewmodel)
         {
             var productCategory = _productCategoryService.Create(viewmodel.Request);
-            return RedirectToAction("Update", new { id = productCategory.Id });
+            return RedirectToAction(nameof(Update), new { id = productCategory.Id });
         }
 
         public IActionResult Update(int id)
@@ -47,7 +48,7 @@ namespace Api.Controllers
             var productCategory = _context.ProductCategories.Include(_ => _.StoreCategories).First(_ => _.Id == id);
             var viewModel =  ProductCategoryUpdateViewModel.Map(productCategory, _mapper);
 
-            return View(viewModel);
+            return View(nameof(Update), viewModel);
         }
 
         [HttpPost]
@@ -55,6 +56,20 @@ namespace Api.Controllers
         {
             _productCategoryService.Update(viewModel.Request);
             return Update(viewModel.Request.Id);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var deleteResult = _productCategoryService.Delete(id);
+
+            if (!deleteResult)
+            {
+                ModelState.AddModelError(string.Empty, CommonTerms.Error_ProductCategory_In_Use);
+                return Update(id);
+            }
+
+            return Redirect(nameof(Index));
         }
     }
 }

@@ -24,7 +24,14 @@
     });
 </script>
 
-<h3 class="page-title">@Model.Request.Name</h3>
+<h3 class="page-title">
+    @Model.Request.Name
+    @using (Html.BeginForm(nameof(IngredientController.Delete), IngredientController.RouteName, FormMethod.Post, new { @class = "right" }))
+    {
+        @Html.Hidden("Id", Model.Request.Id)
+        <button class="btn-floating btn-large waves-effect waves-light red darken-1 product__delete-button" type="submit"><i class="material-icons" aria-hidden="true">delete</i></button>
+    }
+</h3>
 @using (Html.BeginForm(nameof(IngredientController.Update), IngredientController.RouteName, FormMethod.Post))
 {
 <div class="row">

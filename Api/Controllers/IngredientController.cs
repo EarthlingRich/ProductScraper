@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using Api.Models;
+using Api.Resources;
 using Api.Services;
 using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using DataTables.AspNet.Core;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace Api.Controllers
@@ -26,7 +26,7 @@ namespace Api.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(nameof(Index));
         }
 
         public IActionResult IngredientList(IDataTablesRequest dataTablesRequest)
@@ -54,14 +54,14 @@ namespace Api.Controllers
 
         public IActionResult Create()
         {
-            return View(new IngredientCreateViewModel());
+            return View(nameof(Create), new IngredientCreateViewModel());
         }
 
         [HttpPost]
         public IActionResult Create(IngredientCreateViewModel viewmodel)
         {
             var ingredient = _ingredientService.Create(viewmodel.Request);
-            return RedirectToAction("Update", new { id = ingredient.Id });
+            return RedirectToAction(nameof(Update), new { id = ingredient.Id });
         }
 
         public IActionResult Update(int id)
@@ -69,7 +69,7 @@ namespace Api.Controllers
             var ingredient = _context.Ingredients.Find(id);
             var viewModel = IngredientUpdateViewModel.Map(ingredient, _mapper);
 
-            return View(viewModel);
+            return View(nameof(Update), viewModel);
         }
 
         [HttpPost]
@@ -77,6 +77,20 @@ namespace Api.Controllers
         {
             _ingredientService.Update(viewModel.Request);
             return Update(viewModel.Request.Id);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var deleteResult = _ingredientService.Delete(id);
+
+            if (!deleteResult)
+            {
+                ModelState.AddModelError(string.Empty, CommonTerms.Error_Ingredient_In_Use);
+                return Update(id);
+            }
+
+            return Redirect(nameof(Index));
         }
     }
 }

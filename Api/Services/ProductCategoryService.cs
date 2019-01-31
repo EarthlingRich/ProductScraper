@@ -1,5 +1,7 @@
-﻿using Api.Models;
+﻿using System.Linq;
+using Api.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
 
@@ -30,6 +32,23 @@ namespace Api.Services
             var productCategory = _context.ProductCategories.Find(request.Id);
             _mapper.Map(request, productCategory);
             _context.SaveChanges();
+        }
+
+        public bool Delete(int id)
+        {
+            var productCategory = _context.ProductCategories.Find(id);
+            var productsWithCategory = _context.Products
+                    .Include("ProductIngredients.Ingredient")
+                    .Where(_ => _.ProductProductCategories.Any(c => c.ProductCategory == productCategory));
+
+            if (!productsWithCategory.Any())
+            {
+                _context.ProductCategories.Remove(productCategory);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }

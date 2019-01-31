@@ -71,6 +71,18 @@ namespace Api.Resources {
             }
         }
         
+        public static string Error_Ingredient_In_Use {
+            get {
+                return ResourceManager.GetString("Error_Ingredient_In_Use", resourceCulture);
+            }
+        }
+        
+        public static string Error_ProductCategory_In_Use {
+            get {
+                return ResourceManager.GetString("Error_ProductCategory_In_Use", resourceCulture);
+            }
+        }
+        
         public static string Home_Index {
             get {
                 return ResourceManager.GetString("Home_Index", resourceCulture);

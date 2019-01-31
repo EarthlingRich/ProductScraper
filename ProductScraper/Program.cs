@@ -25,10 +25,7 @@ namespace ProductScraper
             Directory.CreateDirectory(logPath);
             var file = File.Create($"{logPath}{args[0]}-{DateTime.Now.ToString("dd-MM-yyyy-HH-mm")}.txt");
 
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments(new List<string> { "no-sandbox", "disable-gpu" });
-
-            using (var driver = new ChromeDriver(chromeOptions))
+            using (var driver = new ChromeDriver())
             using (var streamWriter = new StreamWriter(file))
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);

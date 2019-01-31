@@ -54,4 +54,10 @@
     <data name="ProductCategory_Name" xml:space="preserve">
         <value>Naam</value>
     </data>
+    <data name="WorkLoadItem_CreatedOn" xml:space="preserve">
+        <value>Datum</value>
+    </data>
+    <data name="WorkLoadItem_Message" xml:space="preserve">
+        <value>Bericht</value>
+    </data>
 </root>

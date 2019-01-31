@@ -1,16 +1,14 @@
 ﻿@using Api.Controllers
 
-@model ProductListViewModel
+@model WorkloadItemListViewModel
 
 @{
     ViewData["Title"] = CommonTerms.Product_Workload;
 }
 
-<script type="text/javascript">
-    $(function() {
+<script type="text/javascript">$(function() {
         Workload.initIndex();
-    });
-</script>
+    });</script>
 
 <h3 class="page-title">
     @CommonTerms.Product_Workload
@@ -19,8 +17,9 @@
 <table id="workload-table" class="striped">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(_ => _.Name)</th>
-            <th>@Html.DisplayNameFor(_ => _.IsNew)</th>
+            <th>@Html.DisplayNameFor(_ => _.ProductName)</th>
+            <th>@Html.DisplayNameFor(_ => _.Message)</th>
+            <th>@Html.DisplayNameFor(_ => _.CreatedOn)</th>
         </tr>
     </thead>
 </table>

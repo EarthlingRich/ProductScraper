@@ -5,24 +5,16 @@
         ajax: Utils.getBaseUrl() + '/Workload/ProductList',
         columns:
             [
-                { data: 'name' },
-                { data: 'isNew' }
+                { data: 'productName' },
+                { data: 'message' },
+                { data: 'createdOn' } 
             ],
         columnDefs: [
             {
                 targets: 0,
                 render(data, type, row) {
-                    var url = Utils.getBaseUrl() + "/Product/Update/" + row["id"];
+                    var url = Utils.getBaseUrl() + '/Product/Update/' + row['productId'];
                     return `<a href=\"${url}\"})">${data}</a>`;
-                }
-            },
-            {
-                targets: 1,
-                render(data, type, row) {
-                    if(data) {
-                        return `<i class="material-icons" aria-hidden="true">done</i>`;
-                    }
-                    return null;
                 }
             }
         ]

@@ -130,5 +130,17 @@ namespace Model.Resources {
                 return ResourceManager.GetString("ProductCategory_Name", resourceCulture);
             }
         }
+        
+        public static string WorkLoadItem_CreatedOn {
+            get {
+                return ResourceManager.GetString("WorkLoadItem_CreatedOn", resourceCulture);
+            }
+        }
+        
+        public static string WorkLoadItem_Message {
+            get {
+                return ResourceManager.GetString("WorkLoadItem_Message", resourceCulture);
+            }
+        }
     }
 }

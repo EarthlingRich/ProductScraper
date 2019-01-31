@@ -7,6 +7,7 @@ using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using DataTables.AspNet.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace Api.Controllers
@@ -30,18 +31,22 @@ namespace Api.Controllers
 
         public IActionResult ProductList(IDataTablesRequest dataTablesRequest)
         {
-            var productsQuery = _context.Products.Where(_ => !_.IsProcessed);
-            var totalCount = productsQuery.Count();
+            var workLoadItemsQuery = _context.WorkloadItems.Include("Product");
+            var totalCount = workLoadItemsQuery.Count();
 
             if (dataTablesRequest.Search.Value != null)
             {
-                productsQuery = productsQuery.Where(_ => _.Name.Contains(dataTablesRequest.Search.Value));
+                workLoadItemsQuery = workLoadItemsQuery.Where(_ => _.Product.Name.Contains(dataTablesRequest.Search.Value));
             }
 
-            var filteredCount = productsQuery.Count();
-            var products = productsQuery.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
+            var filteredCount = workLoadItemsQuery.Count();
+            var products = workLoadItemsQuery
+                    .OrderBy(_ => _.CreatedOn)
+                    .Skip(dataTablesRequest.Start)
+                    .Take(dataTablesRequest.Length)
+                    .ToList();
 
-            var data = products.Select(_ => _mapper.Map<WorkloadProductListViewModel>(_));
+            var data = products.Select(_ => _mapper.Map<WorkloadItemListViewModel>(_));
 
             var response = DataTablesResponse.Create(dataTablesRequest, totalCount, filteredCount, data);
 

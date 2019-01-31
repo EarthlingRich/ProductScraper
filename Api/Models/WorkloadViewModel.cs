@@ -3,17 +3,17 @@ using Model.Resources;
 
 namespace Api.Models
 {
-    public class WorkloadProductListViewModel
+    public class WorkloadItemListViewModel
     {
-        public int Id { get; set; }
+        public int ProductId { get; set; }
 
         [Display(Name = "Product_Name", ResourceType = typeof(DomainTerms))]
-        public string Name { get; set; }
+        public string ProductName { get; set; }
 
-        [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
-        public string VeganType { get; set; }
+        [Display(Name = "WorkLoadItem_Message", ResourceType = typeof(DomainTerms))]
+        public string Message { get; set; }
 
-        [Display(Name = "Product_IsNew", ResourceType = typeof(DomainTerms))]
-        public bool IsNew { get; set; }
+        [Display(Name = "WorkLoadItem_CreatedOn", ResourceType = typeof(DomainTerms))]
+        public string CreatedOn { get; set; }
     }
 }

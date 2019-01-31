@@ -76,5 +76,12 @@ namespace Api.Controllers
 
             return Redirect("Index");
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            _productService.Delete(id);
+            return Redirect("Index");
+        }
     }
 }

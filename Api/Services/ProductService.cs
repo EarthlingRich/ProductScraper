@@ -27,6 +27,13 @@ namespace Api.Services
             _context.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var product = _context.Products.Find(id);
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+        }
+
         public void ProcessAllNonVegan()
         {
             var products = _context.Products.Include("ProductIngredients.Ingredient").ToList();

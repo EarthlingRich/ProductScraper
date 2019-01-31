@@ -14,6 +14,11 @@
 
 <h3 class="page-title">
     @Model.Name
+    @using (Html.BeginForm(nameof(ProductController.Delete), ProductController.RouteName, FormMethod.Post, new { @class = "right" }))
+    {
+        @Html.Hidden("Id", Model.Request.Id)
+        <button class="btn-floating btn-large waves-effect waves-light red darken-1 product__delete-button" type="submit"><i class="material-icons" aria-hidden="true">delete</i></button>
+    }
     <a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons" aria-hidden="true">local_grocery_store</i></a>
 </h3>
 @using (Html.BeginForm(nameof(ProductController.Update), ProductController.RouteName, FormMethod.Post))

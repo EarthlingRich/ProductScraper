@@ -1,4 +1,5 @@
-﻿$size-md: 0.75rem;
+﻿$size-xs: 0.25rem;
+$size-md: 0.75rem;
 
 $sidenav-bg-color: #37474f;
 $sidenav-font-color: #fff;
@@ -10,15 +11,16 @@ $secondary-color: #43a047 !default;
 @import "~materialize-css/sass/materialize.scss";
 
 @import "../Views/Home/Home.scss";
+@import "../Views/Product/Product.scss";
 @import "../Views/Shared/Layout.scss";
 
 .dataTables_wrapper {
     & .dataTables_paginate {
         @extend .right;
-        padding-top: 0.25rem;
+        padding-top: $size-xs;
 
         & a {
-            margin-left: .25rem;
+            margin-left: $size-xs;
         }
 
         & .paginate_button {
@@ -38,4 +40,8 @@ $secondary-color: #43a047 !default;
 
 th {
     padding-top: 0;
+}
+
+.custom-form-label {
+    font-weight: bold;
 }

@@ -112,6 +112,13 @@ namespace ProductScraper.Services
         {
             var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < DateTime.Now.AddDays(-14));
             _context.Products.RemoveRange(outdatedProducts);
+
+            foreach(var outdatedProduct in outdatedProducts)
+            {
+                _streamWriter.WriteLine($"{outdatedProduct.Id}: Product verwijderd {outdatedProduct.Name}");
+            }
+
+            _context.SaveChanges();
         }
     }
 }

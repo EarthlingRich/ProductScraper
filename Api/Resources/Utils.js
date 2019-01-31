@@ -17,7 +17,7 @@ export function initDatatables() {
             'sInfoEmpty': 'Geen resultaten gevonden',
             'sInfoFiltered': ' (gefilterd uit _MAX_ resultaten)',
             'sInfoPostFix': '',
-            'sSearch': 'Zoeken:',
+            'sSearch': 'Zoeken',
             'sEmptyTable': 'Geen resultaten gevonden',
             'sInfoThousands': '.',
             'sLoadingRecords': 'Laden...',
@@ -38,6 +38,17 @@ export function initDatatables() {
                 }
             }
         }
+    });
+
+    $.extend($.fn.dataTable.ext.classes, {
+        sFilter: "dataTables_filter input-field"
+    });
+
+    $(document).on( 'preInit.dt', function() {
+        var filter = $(".dataTables_filter");
+        var label = filter.find("label");
+        var input = filter.find("input");
+        label.before(input);
     });
 }
 

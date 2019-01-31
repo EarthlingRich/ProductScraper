@@ -6,5 +6,3 @@ function initSidenav() {
     var sidenav = document.querySelector('.sidenav');
     M.Sidenav.init(sidenav);
 }
-
-

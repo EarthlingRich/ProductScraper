@@ -31,7 +31,8 @@ namespace Model
 
             modelBuilder.Entity<Product>()
                 .HasMany(_ => _.WorkloadItems)
-                .WithOne(_ => _.Product);
+                .WithOne(_ => _.Product)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

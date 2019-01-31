@@ -1,0 +1,37 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace Database.Migrations
+{
+    public partial class CascadeWorkLoadItemOnProductDelete : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_WorkloadItems_Products_ProductId",
+                table: "WorkloadItems");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_WorkloadItems_Products_ProductId",
+                table: "WorkloadItems",
+                column: "ProductId",
+                principalTable: "Products",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_WorkloadItems_Products_ProductId",
+                table: "WorkloadItems");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_WorkloadItems_Products_ProductId",
+                table: "WorkloadItems",
+                column: "ProductId",
+                principalTable: "Products",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+        }
+    }
+}

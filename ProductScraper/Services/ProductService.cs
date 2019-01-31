@@ -110,12 +110,18 @@ namespace ProductScraper.Services
 
         public void RemoveOutdatedProducts(StoreType storeType)
         {
-            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < DateTime.Now.AddDays(-14));
-            _context.Products.RemoveRange(outdatedProducts);
+            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < _scrapeDate);
 
             foreach(var outdatedProduct in outdatedProducts)
             {
-                _streamWriter.WriteLine($"{outdatedProduct.Id}: Product verwijderd {outdatedProduct.Name}");
+                var workloadItem = new WorkloadItem
+                {
+                    Product = outdatedProduct,
+                    Message = "Product niet gevonden",
+                    CreatedOn = _scrapeDate
+                };
+                _context.WorkloadItems.Add(workloadItem);
+                _streamWriter.WriteLine($"{outdatedProduct.Id}: Product niet gevonden {outdatedProduct.Name}");
             }
 
             _context.SaveChanges();

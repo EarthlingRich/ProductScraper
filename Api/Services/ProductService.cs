@@ -110,7 +110,7 @@ namespace Api.Services
 
                 if (!foundMatch)
                 {
-                    foundMatch = DetectyKeyword(ingredient, product);
+                    foundMatch = DetectKeyword(ingredient, product);
                 }
 
                 if (foundMatch)
@@ -134,7 +134,7 @@ namespace Api.Services
             return false;
         }
 
-        private bool DetectyKeyword(Ingredient ingredient, Product product)
+        private bool DetectKeyword(Ingredient ingredient, Product product)
         {
             foreach (var keyWord in ingredient.KeyWords)
             {

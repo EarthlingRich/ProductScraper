@@ -99,20 +99,53 @@ namespace Api.Tests
         public void Delete_Valid()
         {
             // Arrange
+            bool result;
+
             using (var context = new ApplicationContext(_options))
             {
                 AddTestData(context);
                 var ingredientService = new IngredientService(context, _mapper);
 
                 // Act
-                ingredientService.Delete(1);
+                result = ingredientService.Delete(1);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
+                Assert.IsTrue(result);
                 Assert.AreEqual(1, context.Ingredients.Count());
                 Assert.IsNull(context.Ingredients.Find(1));
+            }
+        }
+
+        [TestMethod]
+        public void Delete_InUse()
+        {
+            // Arrange
+            bool result;
+
+            using (var context = new ApplicationContext(_options))
+            {
+                AddTestData(context);
+
+                var product = new Product();
+                product.MatchedIngredients.Add(context.Ingredients.Find(1));
+                context.Products.Add(product);
+                context.SaveChanges();
+
+                var ingredientService = new IngredientService(context, _mapper);
+
+                // Act
+                result = ingredientService.Delete(1);
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                Assert.IsFalse(result);
+                Assert.AreEqual(2, context.Ingredients.Count());
+                Assert.IsNotNull(context.Ingredients.Find(1));
             }
         }
     }

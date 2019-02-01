@@ -38,8 +38,8 @@ namespace Api.Services
         {
             var ingredient = _context.Ingredients.Find(id);
             var productsWithIngredient = _context.Products
-                    .Include("ProductProductCategories.ProductCategory")
-                    .Where(_ => _.ProductIngredients.Any(i => i.Ingredient == ingredient));
+                    .Include("ProductIngredients.Ingredient")
+                    .Where(_ => _.MatchedIngredients.Any(i => i.Id == ingredient.Id));
 
             if (!productsWithIngredient.Any())
             {

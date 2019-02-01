@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Api.Models;
 using Api.Services;
@@ -11,22 +11,22 @@ using Model.Models;
 namespace Api.Tests
 {
     [TestClass]
-    public class ProductServiceTests
+    public class IngredientServiceTests
     {
         DbContextOptions<ApplicationContext> _options;
         IMapper _mapper;
 
         public void AddTestData(ApplicationContext context)
         {
-            context.Add(new Product
+            context.Add(new Ingredient
             {
                 Id = 1,
-                Name = "Product 1",
+                Name = "Ingredient 1",
             });
-            context.Add(new Product
+            context.Add(new Ingredient
             {
                 Id = 2,
-                Name = "Product 2",
+                Name = "Ingredient 2",
             });
             context.SaveChanges();
         }
@@ -37,7 +37,7 @@ namespace Api.Tests
             _options = new DbContextOptionsBuilder<ApplicationContext>()
                 .UseInMemoryDatabase(databaseName: "ProductScraper" + Guid.NewGuid())
                 .Options;
-                
+
             var config = new AutoMapper.MapperConfiguration(cfg =>
                 cfg.AddProfile(new Models.MapperConfiguration())
             );
@@ -45,28 +45,53 @@ namespace Api.Tests
         }
 
         [TestMethod]
-        public void Update_Valid()
+        public void Create_Valid()
         {
             // Arrange
-            var request = new ProductUpdateRequest
+            var request = new IngredientCreateRequest
             {
-                Id = 1,
-                IsProcessed = true
+                Name = "Ingredient Create"
             };
 
             using (var context = new ApplicationContext(_options))
             {
-                AddTestData(context);
-                var productService = new ProductService(context, _mapper);
+                var ingredientService = new IngredientService(context, _mapper);
 
                 // Act
-                productService.Update(request);
+                ingredientService.Create(request);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                Assert.AreEqual(request.IsProcessed, context.Products.Find(1).IsProcessed);
+                Assert.AreEqual(1, context.Ingredients.Count());
+                Assert.AreEqual(request.Name, context.Ingredients.First().Name);
+            }
+        }
+
+        [TestMethod]
+        public void Update_Valid()
+        {
+            // Arrange
+            var request = new IngredientUpdateRequest
+            {
+                Id = 1,
+                Name = "Ingredient Update"
+            };
+
+            using (var context = new ApplicationContext(_options))
+            {
+                AddTestData(context);
+                var ingredientService = new IngredientService(context, _mapper);
+
+                // Act
+                ingredientService.Update(request);
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                Assert.AreEqual(request.Name, context.Ingredients.Find(1).Name);
             }
         }
 
@@ -77,17 +102,17 @@ namespace Api.Tests
             using (var context = new ApplicationContext(_options))
             {
                 AddTestData(context);
-                var productService = new ProductService(context, _mapper);
+                var ingredientService = new IngredientService(context, _mapper);
 
                 // Act
-                productService.Delete(1);
+                ingredientService.Delete(1);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                Assert.AreEqual(1, context.Products.Count());
-                //Assert.IsNotNull(context.Products.Find(2));
+                Assert.AreEqual(1, context.Ingredients.Count());
+                Assert.IsNull(context.Ingredients.Find(1));
             }
         }
     }

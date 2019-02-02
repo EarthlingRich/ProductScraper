@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Model.Models;
+using Model.Requests;
 using Model.Resources;
 
 namespace Api.Models
@@ -40,20 +41,6 @@ namespace Api.Models
 
             return viewModel;
         }
-    }
-
-    public class ProductUpdateRequest
-    {
-        public int Id { get; set; }
-
-        [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
-        public int VeganType { get; set; }
-
-        [Display(Name = "Product_IsProcessed", ResourceType = typeof(DomainTerms))]
-        public bool IsProcessed { get; set; }
-
-        [Display(Name = "Product_IsNew", ResourceType = typeof(DomainTerms))]
-        public bool IsNew { get; set; }
     }
 
     public class ProductListViewModel

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Api.Models;
 using Api.Resources;
-using Api.Services;
+using Application.Services;
 using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using DataTables.AspNet.Core;

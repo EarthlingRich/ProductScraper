@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
-using Model.Models;
 
 namespace Api.Controllers
 {

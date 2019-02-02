@@ -1,12 +1,13 @@
 using System.Linq;
 using AutoMapper;
 using Model.Models;
+using Model.Requests;
 
 namespace Api.Models
 {
-    public class MapperConfiguration : Profile
+    public class ApplicationMapperConfiguration : Profile
     {
-        public MapperConfiguration()
+        public ApplicationMapperConfiguration()
         {
             //Ingredient
             CreateMap<IngredientUpdateRequest, Ingredient>(MemberList.Source)

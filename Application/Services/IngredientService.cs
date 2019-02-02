@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using Api.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
+using Model.Requests;
 
-namespace Api.Services
+namespace Application.Services
 {
     public class IngredientService
     {

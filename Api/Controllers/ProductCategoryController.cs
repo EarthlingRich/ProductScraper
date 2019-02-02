@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Api.Models;
 using Api.Resources;
-using Api.Services;
+using Application.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

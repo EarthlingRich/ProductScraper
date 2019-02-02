@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Api.Models;
-using Api.Services;
+using Application.Services;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Model;
 using Model.Models;
+using Model.Requests;
 
-namespace Api.Tests
+namespace Application.Tests
 {
     [TestClass]
     public class ProductCategoryServiceTests
@@ -38,8 +39,8 @@ namespace Api.Tests
                 .UseInMemoryDatabase(databaseName: "ProductScraper" + Guid.NewGuid())
                 .Options;
 
-            var config = new AutoMapper.MapperConfiguration(cfg =>
-                cfg.AddProfile(new Models.MapperConfiguration())
+            var config = new MapperConfiguration(cfg =>
+                cfg.AddProfile(new ApplicationMapperConfiguration())
             );
             _mapper = new Mapper(config);
         }

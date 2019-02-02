@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Model.Models;
+using Model.Requests;
 using Model.Resources;
 
 namespace Api.Models
@@ -30,12 +31,6 @@ namespace Api.Models
         }
     }
 
-    public class ProductCategoryCreateRequest
-    {
-        [Display(Name = "ProductCategory_Name", ResourceType = typeof(DomainTerms))]
-        public string Name { get; set; }
-    }
-
     public class ProductCategoryUpdateViewModel
     {
         public ProductCategoryUpdateRequest Request { get; set; }
@@ -47,15 +42,5 @@ namespace Api.Models
                 Request = mapper.Map<ProductCategoryUpdateRequest>(productCategory)
             };
         }
-    }
-
-    public class ProductCategoryUpdateRequest
-    {
-        public int Id { get; set; }
-
-        [Display(Name = "ProductCategory_Name", ResourceType = typeof(DomainTerms))]
-        public string Name { get; set; }
-
-        public List<StoreCategory> StoreCategories { get; set; }
     }
 }

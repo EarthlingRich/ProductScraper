@@ -7,12 +7,12 @@ using Model.Requests;
 
 namespace Application.Services
 {
-    public class ProductCategoryService
+    public class ProductCategoryApplicationService
     {
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
 
-        public ProductCategoryService(ApplicationContext context, IMapper mapper)
+        public ProductCategoryApplicationService(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

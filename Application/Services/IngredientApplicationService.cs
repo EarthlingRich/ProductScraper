@@ -7,12 +7,12 @@ using Model.Requests;
 
 namespace Application.Services
 {
-    public class IngredientService
+    public class IngredientApplicationService
     {
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
 
-        public IngredientService(ApplicationContext context, IMapper mapper)
+        public IngredientApplicationService(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

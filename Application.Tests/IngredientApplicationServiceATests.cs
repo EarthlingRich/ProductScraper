@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Api.Models;
 using Application.Services;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -12,22 +11,23 @@ using Model.Requests;
 namespace Application.Tests
 {
     [TestClass]
-    public class ProductCategoryServiceTests
+    public class IngredientServiceApplicationTests
     {
         DbContextOptions<ApplicationContext> _options;
         IMapper _mapper;
+        readonly int DefaultCount = 2;
 
         public void AddTestData(ApplicationContext context)
         {
-            context.Add(new ProductCategory
+            context.Add(new Ingredient
             {
-                Id = 1,
-                Name = "Product Category 1",
+                Id = 100,
+                Name = "Ingredient 1",
             });
-            context.Add(new ProductCategory
+            context.Add(new Ingredient
             {
-                Id = 2,
-                Name = "Product Category 2",
+                Id = 101,
+                Name = "Ingredient 2",
             });
             context.SaveChanges();
         }
@@ -49,24 +49,25 @@ namespace Application.Tests
         public void Create_Valid()
         {
             // Arrange
-            var request = new ProductCategoryCreateRequest
+            var request = new IngredientCreateRequest
             {
-                Name = "Product Category Create"
+                Name = "Ingredient Create"
             };
 
             using (var context = new ApplicationContext(_options))
             {
-                var productCategoryService = new ProductCategoryService(context, _mapper);
+                AddTestData(context);
+                var ingredientService = new IngredientApplicationService(context, _mapper);
 
                 // Act
-                productCategoryService.Create(request);
+                ingredientService.Create(request);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                Assert.AreEqual(1, context.ProductCategories.Count());
-                Assert.AreEqual(request.Name, context.ProductCategories.First().Name);
+                Assert.AreEqual(DefaultCount + 1, context.Ingredients.Count());
+                Assert.AreEqual(request.Name, context.Ingredients.Find(1).Name);
             }
         }
 
@@ -74,25 +75,25 @@ namespace Application.Tests
         public void Update_Valid()
         {
             // Arrange
-            var request = new ProductCategoryUpdateRequest
+            var request = new IngredientUpdateRequest
             {
-                Id = 1,
-                Name = "Product Category Update"
+                Id = 100,
+                Name = "Ingredient Update"
             };
 
             using (var context = new ApplicationContext(_options))
             {
                 AddTestData(context);
-                var productCategoryService = new ProductCategoryService(context, _mapper);
+                var ingredientService = new IngredientApplicationService(context, _mapper);
 
                 // Act
-                productCategoryService.Update(request);
+                ingredientService.Update(request);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                Assert.AreEqual(request.Name, context.ProductCategories.Find(1).Name);
+                Assert.AreEqual(request.Name, context.Ingredients.Find(100).Name);
             }
         }
 
@@ -105,18 +106,19 @@ namespace Application.Tests
             using (var context = new ApplicationContext(_options))
             {
                 AddTestData(context);
-                var productCategoryService = new ProductCategoryService(context, _mapper);
+                var ingredientService = new IngredientApplicationService(context, _mapper);
 
                 // Act
-                result = productCategoryService.Delete(1);
+                result = ingredientService.Delete(100);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
                 Assert.IsTrue(result);
-                Assert.AreEqual(1, context.ProductCategories.Count());
-                Assert.IsNull(context.ProductCategories.Find(1));
+                Assert.AreEqual(DefaultCount - 1, context.Ingredients.Count());
+                Assert.IsNull(context.Ingredients.Find(100));
+                Assert.IsNotNull(context.Ingredients.Find(101));
             }
         }
 
@@ -131,22 +133,21 @@ namespace Application.Tests
                 AddTestData(context);
 
                 var product = new Product();
-                product.ProductCategories.Add(context.ProductCategories.Find(1));
+                product.MatchedIngredients.Add(context.Ingredients.Find(100));
                 context.Products.Add(product);
                 context.SaveChanges();
 
-                var productCategoryService = new ProductCategoryService(context, _mapper);
+                var ingredientService = new IngredientApplicationService(context, _mapper);
 
                 // Act
-                result = productCategoryService.Delete(1);
+                result = ingredientService.Delete(100);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
                 Assert.IsFalse(result);
-                Assert.AreEqual(2, context.ProductCategories.Count());
-                Assert.IsNotNull(context.ProductCategories.Find(1));
+                Assert.AreEqual(2, context.Ingredients.Count());
             }
         }
     }

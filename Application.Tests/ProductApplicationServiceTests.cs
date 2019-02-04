@@ -97,7 +97,7 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include("ProductProductCategories.ProductCategory").Single(p => p.Name == request.Name);
+                var product = context.Products.Include(p => p.WorkloadItems).Include("ProductProductCategories.ProductCategory").Single(p => p.Name == request.Name);
                 Assert.AreEqual(DefaultCount + 1, context.Products.Count());
                 Assert.AreEqual(request.Name, product.Name);
                 Assert.AreEqual(request.StoreType, product.StoreType);
@@ -107,6 +107,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.StoreAdvertisedVegan, product.StoreAdvertisedVegan);
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
                 Assert.AreEqual(request.ProductCategory.Name, product.ProductCategories.First().Name);
+                Assert.AreEqual(1, product.WorkloadItems.Count(_ => _.Message == "Nieuw product gevonden"));
                 Assert.IsFalse(product.IsProcessed);
             }
         }
@@ -130,7 +131,7 @@ namespace Application.Tests
                     AllergyInfo = "Allergy info",
                     StoreAdvertisedVegan = true,
                     LastScrapeDate = DateTime.Now,
-                    ProductCategory = context.ProductCategories.Find(100)
+                    ProductCategory = context.ProductCategories.Find(101)
                 };
 
                 // Act
@@ -150,7 +151,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.AllergyInfo, product.AllergyInfo);
                 Assert.AreEqual(request.StoreAdvertisedVegan, product.StoreAdvertisedVegan);
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
-                Assert.AreEqual(request.ProductCategory.Name, product.ProductCategories.First().Name);
+                Assert.AreEqual(1, product.ProductCategories.Count(_ => _.Name == request.ProductCategory.Name));
                 Assert.IsFalse(product.IsProcessed);
             }
         }
@@ -162,7 +163,9 @@ namespace Application.Tests
             var request = new ProductUpdateRequest
             {
                 Id = 100,
-                IsProcessed = true
+                VeganType = VeganType.Vegan,
+                IsProcessed = true,
+                IsNew = true
             };
 
             using (var context = new ApplicationContext(_options))
@@ -177,7 +180,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                Assert.AreEqual(request.IsProcessed, context.Products.Find(100).IsProcessed);
+                var product = context.Products.Find(100);
+                Assert.AreEqual(request.VeganType, product.VeganType);
+                Assert.AreEqual(request.IsProcessed, product.IsProcessed);
+                Assert.AreEqual(request.IsNew, product.IsNew);
             }
         }
 
@@ -199,6 +205,118 @@ namespace Application.Tests
             {
                 Assert.AreEqual(DefaultCount - 1, context.Products.Count());
                 Assert.IsNotNull(context.Products.Find(101));
+            }
+        }
+
+        [TestMethod]
+        public void ProcessAllNonVegan_Not_Vegan_Ingredient_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    Ingredients = "test, notvegan, test"
+                };
+                context.Products.Add(product);
+
+                var ingredient = new Ingredient
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    VeganType = VeganType.Not,
+                    KeywordsString = "notvegan"
+                };
+                context.Ingredients.Add(ingredient);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessAllNonVegan();
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Find(200);
+                Assert.AreEqual(VeganType.Not, product.VeganType);
+                Assert.IsTrue(product.IsProcessed);
+            }
+        }
+
+        [TestMethod]
+        public void ProcessAllNonVegan_StoreAdvertisedVegan_Ignore_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    VeganType = VeganType.Unkown,
+                    StoreAdvertisedVegan = true
+                };
+                context.Products.Add(product);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessAllNonVegan();
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Find(200);
+                Assert.AreEqual(VeganType.Unkown, product.VeganType);
+                Assert.IsFalse(product.IsProcessed);
+            }
+        }
+
+        [TestMethod]
+        public void ProcessAllNonVegan_Not_Vegan_AllergyInfo_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    AllergyInfo = "test, notvegan, test"
+                };
+                context.Products.Add(product);
+
+                var ingredient = new Ingredient
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    VeganType = VeganType.Not,
+                    AllergyKeywordsString = "notvegan"
+                };
+                context.Ingredients.Add(ingredient);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessAllNonVegan();
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Find(200);
+                Assert.AreEqual(VeganType.Not, product.VeganType);
+                Assert.IsTrue(product.IsProcessed);
             }
         }
     }

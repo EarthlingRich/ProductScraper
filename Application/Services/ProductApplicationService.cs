@@ -113,9 +113,10 @@ namespace Application.Services
 
                 if (product.StoreAdvertisedVegan)
                 {
-                    product.VeganType = VeganType.Vegan;
+                    break;
                 }
-                else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
+
+                if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
                 {
                     product.VeganType = VeganType.Not;
                     if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))

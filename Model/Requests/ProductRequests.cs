@@ -23,7 +23,7 @@ namespace Model.Requests
         public int Id { get; set; }
 
         [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
-        public int VeganType { get; set; }
+        public VeganType VeganType { get; set; }
 
         [Display(Name = "Product_IsProcessed", ResourceType = typeof(DomainTerms))]
         public bool IsProcessed { get; set; }

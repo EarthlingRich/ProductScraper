@@ -1,8 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Model.Models;
 using Model.Resources;
 
 namespace Model.Requests
 {
+    public class ProductStoreRequest
+    {
+        public ProductStoreRequest()
+        {
+            ProductCategories = new List<ProductCategory>();
+        }
+
+        public string Name { get; set; }
+        public StoreType StoreType { get; set; }
+        public string Url { get; set; }
+        public string AllergyInfo { get; set; }
+        public bool StoreAdvertisedVegan { get; set; }
+        public string Ingredients { get; set; }
+        public DateTime LastScrapeDate { get; set; }
+        public ICollection<ProductCategory> ProductCategories { get; set; }
+    }
+
     public class ProductUpdateRequest
     {
         public int Id { get; set; }

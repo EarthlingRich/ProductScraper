@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Application.Services;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
+using Model.Requests;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
-using ProductScraper.Services;
 
 namespace ProductScraper.Scrapers
 {
@@ -17,16 +19,18 @@ namespace ProductScraper.Scrapers
         static readonly string URL = "https://www.ah.nl/producten/";
         readonly ApplicationContext _context;
         readonly ChromeDriver _driver;
-        readonly ProductService _productService;
+        readonly ProductApplicationService _productService;
+        readonly DateTime _scrapeDate;
         readonly StreamWriter _streamWriter;
 
-        public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, StreamWriter streamWriter)
+        public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
         {
             _context = context;
             _driver = driver;
             _streamWriter = streamWriter;
+            _scrapeDate = scrapeDate;
 
-            _productService = new ProductService(_context, _streamWriter);
+            _productService = new ProductApplicationService(_context, mapper);
         }
 
         public void ScrapeAll()
@@ -66,7 +70,7 @@ namespace ProductScraper.Scrapers
             }
 
             //Remove outdated products
-            _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn);
+            _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn, _scrapeDate);
         }
 
         public void ScrapeCategory(string url)
@@ -197,22 +201,24 @@ namespace ProductScraper.Scrapers
 
             try
             {
-                var product = new Product
+                var request = new ProductStoreRequest
                 {
                     StoreType = StoreType.AlbertHeijn,
                     Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
                     Url = url,
                     Ingredients = ingredients,
                     AllergyInfo = allergyInfo,
-                    StoreAdvertisedVegan = storeAdvertisedVegan
+                    StoreAdvertisedVegan = storeAdvertisedVegan,
+                    LastScrapeDate = _scrapeDate
                 };
-                product.ProductCategories.Add(productCategory);
+                request.ProductCategories.Add(productCategory);
 
-                _productService.UpdateOrAdd(product);
+                _productService.CreateOrUpdate(request);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 _streamWriter.WriteLine($"Error getting product: { driver.Url }");
+                _streamWriter.WriteLine(ex);
             }
         }
 

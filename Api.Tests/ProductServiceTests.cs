@@ -58,7 +58,7 @@ namespace Application.Tests
             using (var context = new ApplicationContext(_options))
             {
                 AddTestData(context);
-                var productService = new ProductService(context, _mapper);
+                var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
                 productService.Update(request);
@@ -78,7 +78,7 @@ namespace Application.Tests
             using (var context = new ApplicationContext(_options))
             {
                 AddTestData(context);
-                var productService = new ProductService(context, _mapper);
+                var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
                 productService.Delete(1);

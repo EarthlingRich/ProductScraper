@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutoMapper;
@@ -9,22 +10,83 @@ using Model.Requests;
 
 namespace Application.Services
 {
-    public class ProductService
+    public class ProductApplicationService
     {
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
 
-        public ProductService(ApplicationContext context, IMapper mapper)
+        public ProductApplicationService(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public void Update(ProductUpdateRequest viewModel)
+        private void Create(ProductStoreRequest request)
         {
-            var product = _context.Products.Find(viewModel.Id);
-            _mapper.Map(viewModel, product);
+            var product = _mapper.Map<Product>(request);
+            product.IsNew = true;
+            product.VeganType = VeganType.Unkown;
+
+            _context.Products.Add(product);
+
+            var workloadItem = new WorkloadItem
+            {
+                Product = product,
+                Message = "Nieuw product gevonden",
+                CreatedOn = product.LastScrapeDate
+            };
+            _context.WorkloadItems.Add(workloadItem);
+
             _context.SaveChanges();
+        }
+
+        public void Update(ProductUpdateRequest request)
+        {
+            var product = _context.Products.Find(request.Id);
+            _mapper.Map(request, product);
+            _context.SaveChanges();
+        }
+
+        public void Update(ProductStoreRequest request)
+        {
+            var product = _context.Products.Single(_ => _.Url == request.Url);
+
+            if (request.Ingredients != product.Ingredients || request.AllergyInfo != product.AllergyInfo)
+            {
+                var workloadItem = new WorkloadItem
+                {
+                    Product = product,
+                    Message = "Product heeft aanpassingen",
+                    CreatedOn = request.LastScrapeDate
+                };
+                _context.WorkloadItems.Add(workloadItem);
+            }
+
+            if (product.StoreAdvertisedVegan != request.StoreAdvertisedVegan)
+            {
+                var workloadItem = new WorkloadItem
+                {
+                    Product = product,
+                    Message = $"Product is { (product.StoreAdvertisedVegan ? "wel" : "niet")} vegan volgens winkel",
+                    CreatedOn = request.LastScrapeDate
+                };
+                _context.WorkloadItems.Add(workloadItem);
+            }
+
+            _mapper.Map(request, product);
+
+            _context.SaveChanges();
+        }
+
+        public void CreateOrUpdate(ProductStoreRequest request)
+        {
+            var existingProduct = _context.Products.FirstOrDefault(_ => _.Url == request.Url);
+            if (existingProduct == null)
+            {
+                Create(request);
+            }
+
+            Update(request);
         }
 
         public void Delete(int id)
@@ -118,6 +180,24 @@ namespace Application.Services
                     product.MatchedIngredients.Add(ingredient);
                 }
             }
+        }
+
+        public void RemoveOutdatedProducts(StoreType storeType, DateTime scrapeDate)
+        {
+            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < scrapeDate);
+
+            foreach (var outdatedProduct in outdatedProducts)
+            {
+                var workloadItem = new WorkloadItem
+                {
+                    Product = outdatedProduct,
+                    Message = "Product niet gevonden",
+                    CreatedOn = scrapeDate
+                };
+                _context.WorkloadItems.Add(workloadItem);
+            }
+
+            _context.SaveChanges();
         }
 
         private bool DetectAllergyKeyword(Ingredient ingredient, Product product)

@@ -15,13 +15,13 @@ namespace Api.Controllers
         public static readonly string RouteName = nameof(ProductController).Replace("Controller", "");
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
-        readonly ProductService _productService;
+        readonly ProductApplicationService _productService;
 
         public ProductController(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _productService = new ProductService(_context, _mapper);
+            _productService = new ProductApplicationService(_context, _mapper);
         }
 
         public IActionResult Index()

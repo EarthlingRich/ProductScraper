@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Model;
@@ -25,12 +26,17 @@ namespace ProductScraper
             Directory.CreateDirectory(logPath);
             var file = File.Create($"{logPath}{args[0]}-{DateTime.Now.ToString("dd-MM-yyyy-HH-mm")}.txt");
 
+            var config = new MapperConfiguration(cfg =>
+                cfg.AddProfile(new ApplicationMapperConfiguration())
+            );
+            var mapper = new Mapper(config);
+
             using (var driver = new ChromeDriver())
             using (var streamWriter = new StreamWriter(file))
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
-                var scraper = GetProductScraper(args[0], driver, context, streamWriter);
+                var scraper = GetProductScraper(args[0], driver, context, mapper, streamWriter);
                 if (args.Length == 2)
                 {
                     if(args[1].ToLower() == "-c")
@@ -47,13 +53,13 @@ namespace ProductScraper
             }
         }
 
-        static IProductScraper GetProductScraper(string store, ChromeDriver driver, ApplicationContext context, StreamWriter streamWriter)
+        static IProductScraper GetProductScraper(string store, ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter)
         {
             Enum.TryParse(store, out StoreType storeType);
             switch (storeType)
             {
                 case StoreType.AlbertHeijn:
-                    return new AlbertHeijnScraper(driver, context, streamWriter);
+                    return new AlbertHeijnScraper(driver, context, mapper, streamWriter, DateTime.Now);
                 default:
                     throw new ArgumentException("Product scraper for store not found.");
             }

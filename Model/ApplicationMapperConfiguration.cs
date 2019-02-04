@@ -1,9 +1,8 @@
-using System.Linq;
 using AutoMapper;
 using Model.Models;
 using Model.Requests;
 
-namespace Api.Models
+namespace Model
 {
     public class ApplicationMapperConfiguration : Profile
     {
@@ -16,21 +15,13 @@ namespace Api.Models
             CreateMap<IngredientCreateRequest, Ingredient>(MemberList.Source);
 
             //Product
-            CreateMap<Product, ProductListViewModel>()
-                .ForMember(_ => _.ProductCategories, opt => opt.MapFrom(p => string.Join(", ", p.ProductCategories.Select(pc => pc.Name).OrderBy(_ => _))));
-            CreateMap<Product, ProductUpdateViewModel>()
-                .ForMember(_ => _.Request, opt => opt.Ignore())
-                .ForMember(_ => _.ProductCategories, opt => opt.MapFrom(p => p.ProductCategories.Select(pc => pc.Name).OrderBy(_ => _)));
             CreateMap<ProductUpdateRequest, Product>(MemberList.Source);
+            CreateMap<ProductStoreRequest, Product>(MemberList.Source)
+                .ForSourceMember(_ => _.ProductCategory, opt => opt.DoNotValidate());
 
             //ProductCategory
             CreateMap<ProductCategoryCreateRequest, ProductCategory>(MemberList.Source);
             CreateMap<ProductCategoryUpdateRequest, ProductCategory>(MemberList.Source);
-
-            //WorkLoadItem
-            CreateMap<WorkloadItem, WorkloadItemListViewModel>(MemberList.Source)
-                .ForMember(_ => _.ProductId, opt => opt.MapFrom(_ => _.Product.Id))
-                .ForMember(_ => _.ProductName, opt => opt.MapFrom(_ => _.Product.Name));
         }
     }
 }

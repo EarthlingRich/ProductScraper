@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;

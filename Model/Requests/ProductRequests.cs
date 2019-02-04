@@ -8,11 +8,6 @@ namespace Model.Requests
 {
     public class ProductStoreRequest
     {
-        public ProductStoreRequest()
-        {
-            ProductCategories = new List<ProductCategory>();
-        }
-
         public string Name { get; set; }
         public StoreType StoreType { get; set; }
         public string Url { get; set; }
@@ -20,7 +15,7 @@ namespace Model.Requests
         public bool StoreAdvertisedVegan { get; set; }
         public string Ingredients { get; set; }
         public DateTime LastScrapeDate { get; set; }
-        public ICollection<ProductCategory> ProductCategories { get; set; }
+        public ProductCategory ProductCategory { get; set; }
     }
 
     public class ProductUpdateRequest

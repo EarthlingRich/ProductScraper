@@ -26,6 +26,7 @@ namespace Application.Services
             var product = _mapper.Map<Product>(request);
             product.IsNew = true;
             product.VeganType = VeganType.Unkown;
+            product.ProductCategories.Add(request.ProductCategory);
 
             _context.Products.Add(product);
 
@@ -47,7 +48,7 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void Update(ProductStoreRequest request)
+        private void Update(ProductStoreRequest request)
         {
             var product = _context.Products.Single(_ => _.Url == request.Url);
 
@@ -75,13 +76,18 @@ namespace Application.Services
 
             _mapper.Map(request, product);
 
+            if (!product.ProductCategories.Contains(request.ProductCategory))
+            {
+                product.ProductCategories.Add(request.ProductCategory);
+            }
+
             _context.SaveChanges();
         }
 
         public void CreateOrUpdate(ProductStoreRequest request)
         {
-            var existingProduct = _context.Products.FirstOrDefault(_ => _.Url == request.Url);
-            if (existingProduct == null)
+            var existingProduct = _context.Products.Any(_ => _.Url == request.Url);
+            if (!existingProduct)
             {
                 Create(request);
             }

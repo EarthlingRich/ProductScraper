@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\DomainTerms.resx">

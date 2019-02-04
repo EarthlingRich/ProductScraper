@@ -209,9 +209,9 @@ namespace ProductScraper.Scrapers
                     Ingredients = ingredients,
                     AllergyInfo = allergyInfo,
                     StoreAdvertisedVegan = storeAdvertisedVegan,
-                    LastScrapeDate = _scrapeDate
+                    LastScrapeDate = _scrapeDate,
+                    ProductCategory = productCategory
                 };
-                request.ProductCategories.Add(productCategory);
 
                 _productService.CreateOrUpdate(request);
             }

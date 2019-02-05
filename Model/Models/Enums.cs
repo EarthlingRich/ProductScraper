@@ -1,7 +1,8 @@
 ﻿namespace Model.Models
 {
     public enum StoreType {
-        AlbertHeijn = 1
+        AlbertHeijn = 1,
+        Jumbo = 2
     }
 
     public enum VeganType

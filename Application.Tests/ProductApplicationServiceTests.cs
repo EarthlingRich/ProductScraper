@@ -16,13 +16,14 @@ namespace Application.Tests
         DbContextOptions<ApplicationContext> _options;
         IMapper _mapper;
         readonly int DefaultCount = 2;
+        readonly DateTime ScrapeDate = DateTime.Now;
 
         public void AddTestData(ApplicationContext context)
         {
             var productCategory1 = new ProductCategory
             {
                 Id = 100,
-                Name = "Product category 1",
+                Name = "Product category 1"
             };
             context.ProductCategories.Add(productCategory1);
 
@@ -37,7 +38,9 @@ namespace Application.Tests
             {
                 Id = 100,
                 Name = "Product 1",
-                Url = "Product 1 Url"
+                Url = "Product 1 Url",
+                StoreType = StoreType.AlbertHeijn,
+                LastScrapeDate = ScrapeDate
             };
             product1.ProductCategories.Add(productCategory1);
             context.Products.Add(product1);
@@ -46,7 +49,9 @@ namespace Application.Tests
             {
                 Id = 101,
                 Name = "Product 2",
-                Url = "Product 2 Url"
+                Url = "Product 2 Url",
+                StoreType = StoreType.Jumbo,
+                LastScrapeDate = ScrapeDate
             };
             product2.ProductCategories.Add(productCategory2);
             context.Products.Add(product2);
@@ -209,6 +214,89 @@ namespace Application.Tests
         }
 
         [TestMethod]
+        public void ProcessAllNonVegan_Not_Vegan_AllergyInfo_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    AllergyInfo = "test, notvegan, test"
+                };
+                context.Products.Add(product);
+
+                var ingredient = new Ingredient
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    VeganType = VeganType.Not,
+                    AllergyKeywordsString = "notvegan"
+                };
+                context.Ingredients.Add(ingredient);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessAllNonVegan();
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Find(200);
+                Assert.AreEqual(VeganType.Not, product.VeganType);
+                Assert.IsTrue(product.IsProcessed);
+            }
+        }
+
+        [TestMethod]
+        public void ProcessAllNonVegan_No_Match_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    Ingredients = "test, test",
+                    AllergyInfo = "test, test",
+                    VeganType = VeganType.Unkown
+                };
+                context.Products.Add(product);
+
+                var ingredient = new Ingredient
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    VeganType = VeganType.Not,
+                    KeywordsString = "notvegan",
+                    AllergyKeywordsString = "notvegan"
+                };
+                context.Ingredients.Add(ingredient);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessAllNonVegan();
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Find(200);
+                Assert.AreEqual(VeganType.Unkown, product.VeganType);
+                Assert.IsFalse(product.IsProcessed);
+            }
+        }
+
+        [TestMethod]
         public void ProcessAllNonVegan_Not_Vegan_Ingredient_Valid()
         {
             // Arrange
@@ -281,42 +369,51 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessAllNonVegan_Not_Vegan_AllergyInfo_Valid()
+        public void RemoveOutdatedProducts_Valid()
         {
             // Arrange
             using (var context = new ApplicationContext(_options))
             {
-                var product = new Product
-                {
-                    Id = 200,
-                    Name = "Product 1",
-                    AllergyInfo = "test, notvegan, test"
-                };
-                context.Products.Add(product);
+                AddTestData(context);
 
-                var ingredient = new Ingredient
+                var product3 = new Product
                 {
                     Id = 200,
-                    Name = "Product 1",
-                    VeganType = VeganType.Not,
-                    AllergyKeywordsString = "notvegan"
+                    Name = "Product 3",
+                    StoreType = StoreType.AlbertHeijn,
+                    LastScrapeDate = ScrapeDate.AddDays(-1)
                 };
-                context.Ingredients.Add(ingredient);
+                context.Products.Add(product3);
+
+                var product4 = new Product
+                {
+                    Id = 201,
+                    Name = "Product 4",
+                    StoreType = StoreType.Jumbo,
+                    LastScrapeDate = ScrapeDate.AddDays(-1)
+                };
+                context.Products.Add(product4);
 
                 context.SaveChanges();
 
                 var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
-                productService.ProcessAllNonVegan();
+                productService.RemoveOutdatedProducts(StoreType.AlbertHeijn, ScrapeDate);
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
-                Assert.AreEqual(VeganType.Not, product.VeganType);
-                Assert.IsTrue(product.IsProcessed);
+                var productsNotOudated = context.Products.Include(p => p.WorkloadItems).Where(p => p.Id != 200);
+                foreach (var productNotOutdated in productsNotOudated)
+                {
+                    Assert.AreEqual(0, productNotOutdated.WorkloadItems.Count());
+                }
+
+                var productOudated = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
+                Assert.AreEqual(1, productOudated.WorkloadItems.Count());
+                Assert.AreEqual("Product niet gevonden", productOudated.WorkloadItems.First().Message);
             }
         }
     }

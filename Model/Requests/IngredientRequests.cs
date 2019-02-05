@@ -23,12 +23,10 @@ namespace Model.Requests
         [Display(Name = "Ingredient_VeganType", ResourceType = typeof(DomainTerms))]
         public VeganType VeganType { get; set; }
 
-        public string KeywordsString { get; set; }
         [Display(Name = "Ingredient_Keywords", ResourceType = typeof(DomainTerms))]
-        public string[] Keywords { get; set; }
+        public string KeywordsString { get; set; }
 
-        public string AllergyKeywordsString { get; set; }
         [Display(Name = "Ingredient_AllergyKeywords", ResourceType = typeof(DomainTerms))]
-        public string[] AllergyKeywords { get; set; }
+        public string AllergyKeywordsString { get; set; }
     }
 }

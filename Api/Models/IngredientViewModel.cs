@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Model.Models;
 using Model.Requests;
@@ -19,13 +20,26 @@ namespace Api.Models
     public class IngredientUpdateViewModel
     {
         public IngredientUpdateRequest Request { get; set; }
+        public List<string> Keywords { get; set; }
+        public List<string> AllergyKeywords { get; set; }
+
+        public IngredientUpdateViewModel()
+        {
+            Keywords = new List<string>();
+            AllergyKeywords = new List<string>();
+        }
 
         public static IngredientUpdateViewModel Map(Ingredient ingredient, IMapper mapper)
         {
-            return new IngredientUpdateViewModel
+            var ingredientUpdateViewModel = new IngredientUpdateViewModel
             {
                 Request = mapper.Map<IngredientUpdateRequest>(ingredient)
             };
+
+            ingredientUpdateViewModel.Keywords.AddRange(ingredient.KeyWords);
+            ingredientUpdateViewModel.AllergyKeywords.AddRange(ingredient.AllergyKeywords);
+
+            return ingredientUpdateViewModel;
         }
     }
 

@@ -9,13 +9,13 @@
 <script type="text/javascript">
     $(function() {
         var keywords = [
-            @foreach(var keyword in Model.Request.Keywords)
+            @foreach(var keyword in Model.Keywords)
             {
                 <text>{tag: '@keyword'},</text>
             }
         ];
         var allergyKeywords = [
-            @foreach(var allergyKeyword in Model.Request.AllergyKeywords)
+            @foreach(var allergyKeyword in Model.AllergyKeywords)
             {
                 <text>{tag: '@allergyKeyword'},</text>
             }
@@ -57,13 +57,13 @@
         </p>
     </div>
     <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.Keywords)</div>
+        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.KeywordsString)</div>
         <div id="keywords-chips" class="chips input-field">
             <input class="input">
         </div>
     </div>
     <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.AllergyKeywords)</div>
+        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.AllergyKeywordsString)</div>
         <div id="allergykeywords-chips" class="chips input-field">
             <input class="input">
         </div>

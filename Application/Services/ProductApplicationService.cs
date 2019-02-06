@@ -24,7 +24,6 @@ namespace Application.Services
         private void Create(ProductStoreRequest request)
         {
             var product = _mapper.Map<Product>(request);
-            product.IsNew = true;
             product.VeganType = VeganType.Unkown;
             product.ProductCategories.Add(request.ProductCategory);
 

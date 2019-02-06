@@ -95,12 +95,6 @@ namespace Model.Resources {
             }
         }
         
-        public static string Product_IsNew {
-            get {
-                return ResourceManager.GetString("Product_IsNew", resourceCulture);
-            }
-        }
-        
         public static string Product_MatchedIngredients {
             get {
                 return ResourceManager.GetString("Product_MatchedIngredients", resourceCulture);

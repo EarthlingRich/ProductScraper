@@ -27,9 +27,5 @@ namespace Model.Requests
 
         [Display(Name = "Product_IsProcessed", ResourceType = typeof(DomainTerms))]
         public bool IsProcessed { get; set; }
-
-        [Display(Name = "Product_IsNew", ResourceType = typeof(DomainTerms))]
-        public bool IsNew { get; set; }
-
     }
 }

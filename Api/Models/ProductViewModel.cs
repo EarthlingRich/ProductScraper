@@ -53,9 +53,6 @@ namespace Api.Models
         [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
         public string VeganType { get; set; }
 
-        [Display(Name = "Product_IsNew", ResourceType = typeof(DomainTerms))]
-        public bool IsNew { get; set; }
-
         [Display(Name = "Product_ProductCategories", ResourceType = typeof(DomainTerms))]
         public string ProductCategories { get; set; } 
     }
@@ -68,6 +65,5 @@ namespace Api.Models
         public string Ingredients { get; set; }
         public int VeganType { get; set; }
         public bool IsProcessed { get; set; }
-        public bool IsNew { get; set; }
     }
 }

@@ -28,7 +28,6 @@ namespace Model.Models
         public VeganType VeganType { get; set; }
         public bool StoreAdvertisedVegan { get; set; }
         public bool IsProcessed { get; set; }
-        public bool IsNew { get; set; }
         public ProductCategory Category { get; set; }
         public DateTime LastScrapeDate { get; set; }
 

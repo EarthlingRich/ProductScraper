@@ -36,9 +36,6 @@
     <data name="Product_IsProcessed" xml:space="preserve">
         <value>Verwerkt</value>
     </data>
-    <data name="Product_IsNew" xml:space="preserve">
-        <value>Nieuw</value>
-    </data>
     <data name="Product_MatchedIngredients" xml:space="preserve">
         <value>Product bevat</value>
     </data>

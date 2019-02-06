@@ -169,8 +169,7 @@ namespace Application.Tests
             {
                 Id = 100,
                 VeganType = VeganType.Vegan,
-                IsProcessed = true,
-                IsNew = true
+                IsProcessed = true
             };
 
             using (var context = new ApplicationContext(_options))
@@ -188,7 +187,6 @@ namespace Application.Tests
                 var product = context.Products.Find(100);
                 Assert.AreEqual(request.VeganType, product.VeganType);
                 Assert.AreEqual(request.IsProcessed, product.IsProcessed);
-                Assert.AreEqual(request.IsNew, product.IsNew);
             }
         }
 

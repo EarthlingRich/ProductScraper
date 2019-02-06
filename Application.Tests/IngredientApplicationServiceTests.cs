@@ -11,7 +11,7 @@ using Model.Requests;
 namespace Application.Tests
 {
     [TestClass]
-    public class IngredientServiceApplicationTests
+    public class IngredientApplicationServiceTests
     {
         DbContextOptions<ApplicationContext> _options;
         IMapper _mapper;

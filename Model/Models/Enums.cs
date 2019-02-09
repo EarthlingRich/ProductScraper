@@ -17,5 +17,6 @@
     {
         IngredientAdded = 1,
         IngredientRemoved = 2,
+        VeganTypeChanged = 3
     }
 }

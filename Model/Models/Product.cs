@@ -17,6 +17,8 @@ namespace Model.Models
                 _ => _.ProductCategory,
                 productCategory => new ProductProductCategory { Product = this, ProductCategory = productCategory }
             );
+            WorkloadItems = new List<WorkloadItem>();
+            ProductActivities = new List<ProductActivity>();
         }
 
         public int Id { get; set; }

@@ -14,11 +14,13 @@ namespace Application.Services
     {
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
+        readonly DateTime _productActivityDate;
 
         public ProductApplicationService(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _productActivityDate = DateTime.Now;
         }
 
         private void Create(ProductStoreRequest request)
@@ -103,21 +105,28 @@ namespace Application.Services
 
         public void ProcessAllNonVegan()
         {
-            var products = _context.Products.Include(p => p.WorkloadItems).Include("ProductIngredients.Ingredient").Where(_ => !_.IsProcessed);
+            var products = _context.Products
+                    .Include(p => p.WorkloadItems)
+                    .Include(p => p.ProductActivities)
+                    .Include("ProductIngredients.Ingredient")
+                    .Where(_ => !_.IsProcessed);
             var ingredients = _context.Ingredients.ToList();
 
             foreach(var product in products)
             {
+                var typeChanged = false;
+
                 SetMatchedIngredients(product, ingredients);
 
                 if (product.StoreAdvertisedVegan)
                 {
-                    break;
+                    continue;
                 }
 
                 if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
                 {
                     product.VeganType = VeganType.Not;
+                    typeChanged = true;
                     if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))
                     {
                         product.IsProcessed = true;
@@ -126,6 +135,7 @@ namespace Application.Services
                 else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
                 {
                     product.VeganType = VeganType.Unsure;
+                    typeChanged = true;
                     if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Unsure).Any(_ => _.NeedsReview))
                     {
                         product.IsProcessed = true;
@@ -139,6 +149,16 @@ namespace Application.Services
                     {
                         workloadItem.IsProcessed = true;
                     }
+                }
+
+                if (typeChanged)
+                {
+                    product.ProductActivities.Add(new ProductActivity
+                    {
+                        Type = ProductActivityType.VeganTypeChanged,
+                        Detail = product.VeganType.ToString(),
+                        CreatedOn = _productActivityDate
+                    });
                 }
             }
 
@@ -177,8 +197,7 @@ namespace Application.Services
 
         private void SetMatchedIngredients(Product product, List<Ingredient> ingredients)
         {
-            product.MatchedIngredients.Clear();
-
+            var foundIngredients = new List<Ingredient>();
             foreach (var ingredient in ingredients)
             {
                 var foundMatch = false;
@@ -192,7 +211,35 @@ namespace Application.Services
 
                 if (foundMatch)
                 {
-                    product.MatchedIngredients.Add(ingredient);
+                    foundIngredients.Add(ingredient);
+                }
+            }
+
+            foreach(var foundIngredient in foundIngredients)
+            {
+                if (!product.MatchedIngredients.Contains(foundIngredient))
+                {
+                    product.MatchedIngredients.Add(foundIngredient);
+                    product.ProductActivities.Add(new ProductActivity
+                    {
+                        Type = ProductActivityType.IngredientAdded,
+                        Detail = foundIngredient.Name,
+                        CreatedOn = _productActivityDate
+                    });
+                }
+            }
+
+            foreach (var matchedIngredient in product.MatchedIngredients)
+            {
+                if (!foundIngredients.Contains(matchedIngredient))
+                {
+                    product.MatchedIngredients.Remove(matchedIngredient);
+                    product.ProductActivities.Add(new ProductActivity
+                    {
+                        Type = ProductActivityType.IngredientRemoved,
+                        Detail = matchedIngredient.Name,
+                        CreatedOn = _productActivityDate
+                    });
                 }
             }
         }

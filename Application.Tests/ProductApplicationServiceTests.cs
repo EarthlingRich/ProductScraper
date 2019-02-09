@@ -43,7 +43,7 @@ namespace Application.Tests
                 StoreType = StoreType.AlbertHeijn,
                 LastScrapeDate = ScrapeDate
             };
-            product1.WorkloadItems = new List<WorkloadItem> { new WorkloadItem { Id = 100 } };
+            product1.WorkloadItems.Add(new WorkloadItem { Id = 100 });
             product1.ProductCategories.Add(productCategory1);
             context.Products.Add(product1);
 
@@ -55,7 +55,7 @@ namespace Application.Tests
                 StoreType = StoreType.Jumbo,
                 LastScrapeDate = ScrapeDate
             };
-            product2.WorkloadItems = new List<WorkloadItem> { new WorkloadItem { Id = 101 } };
+            product2.WorkloadItems.Add(new WorkloadItem { Id = 101 });
             product2.ProductCategories.Add(productCategory2);
             context.Products.Add(product2);
 
@@ -229,24 +229,25 @@ namespace Application.Tests
         public void ProcessAllNonVegan_Not_Vegan_Valid()
         {
             // Arrange
+            var product = new Product
+            {
+                Id = 200,
+                Name = "Product 1",
+                AllergyInfo = "test, notvegan, test"
+            };
+
+            var ingredient = new Ingredient
+            {
+                Id = 200,
+                Name = "Ingredient 1",
+                VeganType = VeganType.Not,
+                AllergyKeywords = new[] { "notvegan" }
+            };
+
             using (var context = new ApplicationContext(_options))
             {
-                var product = new Product
-                {
-                    Id = 200,
-                    Name = "Product 1",
-                    AllergyInfo = "test, notvegan, test"
-                };
-                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
+                product.WorkloadItems.Add(new WorkloadItem());
                 context.Products.Add(product);
-
-                var ingredient = new Ingredient
-                {
-                    Id = 200,
-                    Name = "Ingredient 1",
-                    VeganType = VeganType.Not,
-                    AllergyKeywords = new[] { "notvegan" }
-                };
                 context.Ingredients.Add(ingredient);
 
                 context.SaveChanges();
@@ -260,10 +261,19 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
-                Assert.AreEqual(VeganType.Not, product.VeganType);
-                Assert.IsTrue(product.IsProcessed);
-                Assert.IsTrue(product.WorkloadItems.First().IsProcessed);
+                var assertProduct = context.Products
+                        .Include(p => p.WorkloadItems)
+                        .Include(p => p.ProductActivities)
+                        .Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Not, assertProduct.VeganType);
+                Assert.IsTrue(assertProduct.IsProcessed);
+                Assert.IsTrue(assertProduct.WorkloadItems.First().IsProcessed);
+
+                Assert.AreEqual(2, assertProduct.ProductActivities.Count());
+                var assertProductActivityIngredientAdded = assertProduct.ProductActivities.Single(pa => pa.Type == ProductActivityType.IngredientAdded);
+                Assert.AreEqual(ingredient.Name, assertProductActivityIngredientAdded.Detail);
+                var assertProductActivityVeganTypeChanged = assertProduct.ProductActivities.Single(pa => pa.Type == ProductActivityType.VeganTypeChanged);
+                Assert.AreEqual(VeganType.Not.ToString(), assertProductActivityVeganTypeChanged.Detail);
             }
         }
 
@@ -271,24 +281,25 @@ namespace Application.Tests
         public void ProcessAllNonVegan_Unsure_Valid()
         {
             // Arrange
+            var product = new Product
+            {
+                Id = 200,
+                Name = "Product 1",
+                Ingredients = "test, notvegan, test"
+            };
+
+            var ingredient = new Ingredient
+            {
+                Id = 200,
+                Name = "Ingredient 1",
+                VeganType = VeganType.Unsure,
+                KeyWords = new[] { "notvegan" }
+            };
+
             using (var context = new ApplicationContext(_options))
             {
-                var product = new Product
-                {
-                    Id = 200,
-                    Name = "Product 1",
-                    Ingredients = "test, notvegan, test"
-                };
-                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
+                product.WorkloadItems.Add(new WorkloadItem());
                 context.Products.Add(product);
-
-                var ingredient = new Ingredient
-                {
-                    Id = 200,
-                    Name = "Ingredient 1",
-                    VeganType = VeganType.Unsure,
-                    KeyWords = new[] { "notvegan" }
-                };
                 context.Ingredients.Add(ingredient);
 
                 context.SaveChanges();
@@ -302,10 +313,19 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
-                Assert.AreEqual(VeganType.Unsure, product.VeganType);
-                Assert.IsTrue(product.IsProcessed);
-                Assert.IsTrue(product.WorkloadItems.First().IsProcessed);
+                var assertProduct = context.Products
+                        .Include(p => p.WorkloadItems)
+                        .Include(p => p.ProductActivities)
+                        .Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Unsure, assertProduct.VeganType);
+                Assert.IsTrue(assertProduct.IsProcessed);
+                Assert.IsTrue(assertProduct.WorkloadItems.First().IsProcessed);
+
+                Assert.AreEqual(2, assertProduct.ProductActivities.Count());
+                var assertProductActivityIngredientAdded = assertProduct.ProductActivities.Single(pa => pa.Type == ProductActivityType.IngredientAdded);
+                Assert.AreEqual(ingredient.Name, assertProductActivityIngredientAdded.Detail);
+                var assertProductActivityVeganTypeChanged = assertProduct.ProductActivities.Single(pa => pa.Type == ProductActivityType.VeganTypeChanged);
+                Assert.AreEqual(VeganType.Unsure.ToString(), assertProductActivityVeganTypeChanged.Detail);
             }
         }
 
@@ -313,25 +333,25 @@ namespace Application.Tests
         public void ProcessAllNonVegan_Unsure_NeedsReview_Valid()
         {
             // Arrange
+            var product = new Product
+            {
+                Id = 200,
+                Name = "Product 1",
+                Ingredients = "test, notvegan, test"
+            };
+
+            var ingredient = new Ingredient
+            {
+                Id = 200,
+                Name = "Ingredient 1",
+                VeganType = VeganType.Unsure,
+                NeedsReview = true,
+                KeyWords = new[] { "notvegan" }
+            };
             using (var context = new ApplicationContext(_options))
             {
-                var product = new Product
-                {
-                    Id = 200,
-                    Name = "Product 1",
-                    Ingredients = "test, notvegan, test"
-                };
-                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
+                product.WorkloadItems.Add(new WorkloadItem());
                 context.Products.Add(product);
-
-                var ingredient = new Ingredient
-                {
-                    Id = 200,
-                    Name = "Ingredient 1",
-                    VeganType = VeganType.Unsure,
-                    NeedsReview = true,
-                    KeyWords = new[] { "notvegan" }
-                };
                 context.Ingredients.Add(ingredient);
 
                 context.SaveChanges();
@@ -345,10 +365,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
-                Assert.AreEqual(VeganType.Unsure, product.VeganType);
-                Assert.IsFalse(product.IsProcessed);
-                Assert.IsFalse(product.WorkloadItems.First().IsProcessed);
+                var assertProduct = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Unsure, assertProduct.VeganType);
+                Assert.IsFalse(assertProduct.IsProcessed);
+                Assert.IsFalse(assertProduct.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -366,7 +386,7 @@ namespace Application.Tests
                     AllergyInfo = "test, test",
                     VeganType = VeganType.Unkown
                 };
-                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
+                product.WorkloadItems.Add(new WorkloadItem());
                 context.Products.Add(product);
 
                 var ingredient = new Ingredient
@@ -390,10 +410,15 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
-                Assert.AreEqual(VeganType.Unkown, product.VeganType);
-                Assert.IsFalse(product.IsProcessed);
-                Assert.IsFalse(product.WorkloadItems.First().IsProcessed);
+                var assertProduct = context.Products
+                        .Include(p => p.WorkloadItems)
+                        .Include(p => p.ProductActivities)
+                        .Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Unkown, assertProduct.VeganType);
+                Assert.IsFalse(assertProduct.IsProcessed);
+                Assert.AreEqual(1, assertProduct.WorkloadItems.Count());
+                Assert.IsFalse(assertProduct.WorkloadItems.First().IsProcessed);
+                Assert.AreEqual(0, assertProduct.ProductActivities.Count());
             }
         }
 
@@ -410,7 +435,7 @@ namespace Application.Tests
                     VeganType = VeganType.Unkown,
                     StoreAdvertisedVegan = true
                 };
-                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
+                product.WorkloadItems.Add(new WorkloadItem());
                 context.Products.Add(product);
 
                 context.SaveChanges();
@@ -424,10 +449,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
-                Assert.AreEqual(VeganType.Unkown, product.VeganType);
-                Assert.IsFalse(product.IsProcessed);
-                Assert.IsFalse(product.WorkloadItems.First().IsProcessed);
+                var assertProduct = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Unkown, assertProduct.VeganType);
+                Assert.IsFalse(assertProduct.IsProcessed);
+                Assert.IsFalse(assertProduct.WorkloadItems.First().IsProcessed);
             }
         }
 

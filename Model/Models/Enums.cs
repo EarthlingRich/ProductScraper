@@ -12,4 +12,10 @@
         Not = 3,
         Unkown = 4
     }
+
+    public enum ProductActivityType
+    {
+        IngredientAdded = 1,
+        IngredientRemoved = 2,
+    }
 }

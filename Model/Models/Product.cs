@@ -40,6 +40,7 @@ namespace Model.Models
         public ICollection<ProductCategory> ProductCategories { get; }
 
         public ICollection<WorkloadItem> WorkloadItems { get; set; }
+        public ICollection<ProductActivity> ProductActivities { get; set; }
     }
 
     public class ProductIngredient

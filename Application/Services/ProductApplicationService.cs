@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -130,6 +130,11 @@ namespace Application.Services
                     {
                         product.IsProcessed = true;
                     }
+                }
+
+                if (product.IsProcessed)
+                {
+                    product.WorkloadItems.Where(_ => _.IsProcessed = true);
                 }
             }
 

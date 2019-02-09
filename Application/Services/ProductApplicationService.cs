@@ -42,7 +42,7 @@ namespace Application.Services
 
         public void Update(ProductUpdateRequest request)
         {
-            var product = _context.Products.Include(_ => _.WorkloadItems).Single(_ => _.Id == request.Id);
+            var product = _context.Products.Include(p => p.WorkloadItems).Single(_ => _.Id == request.Id);
             _mapper.Map(request, product);
             _context.SaveChanges();
         }
@@ -103,7 +103,7 @@ namespace Application.Services
 
         public void ProcessAllNonVegan()
         {
-            var products = _context.Products.Include(_ => _.WorkloadItems).Include("ProductIngredients.Ingredient").Where(_ => !_.IsProcessed);
+            var products = _context.Products.Include(p => p.WorkloadItems).Include("ProductIngredients.Ingredient").Where(_ => !_.IsProcessed);
             var ingredients = _context.Ingredients.ToList();
 
             foreach(var product in products)
@@ -134,7 +134,11 @@ namespace Application.Services
 
                 if (product.IsProcessed)
                 {
-                    product.WorkloadItems.Where(_ => _.IsProcessed = true);
+                    var workloadItems = product.WorkloadItems.Where(_ => !_.IsProcessed);
+                    foreach (var workloadItem in workloadItems)
+                    {
+                        workloadItem.IsProcessed = true;
+                    }
                 }
             }
 

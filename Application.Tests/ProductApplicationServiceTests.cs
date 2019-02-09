@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Application.Services;
 using AutoMapper;
@@ -42,6 +43,7 @@ namespace Application.Tests
                 StoreType = StoreType.AlbertHeijn,
                 LastScrapeDate = ScrapeDate
             };
+            product1.WorkloadItems = new List<WorkloadItem> { new WorkloadItem { Id = 100 } };
             product1.ProductCategories.Add(productCategory1);
             context.Products.Add(product1);
 
@@ -53,6 +55,7 @@ namespace Application.Tests
                 StoreType = StoreType.Jumbo,
                 LastScrapeDate = ScrapeDate
             };
+            product2.WorkloadItems = new List<WorkloadItem> { new WorkloadItem { Id = 101 } };
             product2.ProductCategories.Add(productCategory2);
             context.Products.Add(product2);
 
@@ -112,7 +115,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.StoreAdvertisedVegan, product.StoreAdvertisedVegan);
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
                 Assert.AreEqual(request.ProductCategory.Name, product.ProductCategories.First().Name);
-                Assert.AreEqual(1, product.WorkloadItems.Count(_ => _.Message == "Nieuw product gevonden"));
+                Assert.AreEqual(1, product.WorkloadItems.Count(p => p.Message == "Nieuw product gevonden"));
                 Assert.IsFalse(product.IsProcessed);
             }
         }
@@ -156,7 +159,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.AllergyInfo, product.AllergyInfo);
                 Assert.AreEqual(request.StoreAdvertisedVegan, product.StoreAdvertisedVegan);
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
-                Assert.AreEqual(1, product.ProductCategories.Count(_ => _.Name == request.ProductCategory.Name));
+                Assert.AreEqual(1, product.ProductCategories.Count(p => p.Name == request.ProductCategory.Name));
                 Assert.IsFalse(product.IsProcessed);
             }
         }
@@ -169,7 +172,15 @@ namespace Application.Tests
             {
                 Id = 100,
                 VeganType = VeganType.Vegan,
-                IsProcessed = true
+                IsProcessed = true,
+                WorkloadItems = new List<ProductWorkloadItemRequest>
+                {
+                    new ProductWorkloadItemRequest
+                    {
+                        Id = 100,
+                        IsProcessed = true
+                    }
+                }
             };
 
             using (var context = new ApplicationContext(_options))
@@ -184,9 +195,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(100);
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 100);
                 Assert.AreEqual(request.VeganType, product.VeganType);
                 Assert.AreEqual(request.IsProcessed, product.IsProcessed);
+                Assert.AreEqual(request.WorkloadItems.First().IsProcessed, product.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -225,6 +237,7 @@ namespace Application.Tests
                     Name = "Product 1",
                     AllergyInfo = "test, notvegan, test"
                 };
+                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
                 context.Products.Add(product);
 
                 var ingredient = new Ingredient
@@ -247,9 +260,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Not, product.VeganType);
                 Assert.IsTrue(product.IsProcessed);
+                Assert.IsTrue(product.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -265,6 +279,7 @@ namespace Application.Tests
                     Name = "Product 1",
                     Ingredients = "test, notvegan, test"
                 };
+                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
                 context.Products.Add(product);
 
                 var ingredient = new Ingredient
@@ -287,9 +302,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Unsure, product.VeganType);
                 Assert.IsTrue(product.IsProcessed);
+                Assert.IsTrue(product.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -305,6 +321,7 @@ namespace Application.Tests
                     Name = "Product 1",
                     Ingredients = "test, notvegan, test"
                 };
+                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
                 context.Products.Add(product);
 
                 var ingredient = new Ingredient
@@ -328,9 +345,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Unsure, product.VeganType);
                 Assert.IsFalse(product.IsProcessed);
+                Assert.IsFalse(product.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -348,6 +366,7 @@ namespace Application.Tests
                     AllergyInfo = "test, test",
                     VeganType = VeganType.Unkown
                 };
+                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
                 context.Products.Add(product);
 
                 var ingredient = new Ingredient
@@ -371,9 +390,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Unkown, product.VeganType);
                 Assert.IsFalse(product.IsProcessed);
+                Assert.IsFalse(product.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -390,6 +410,7 @@ namespace Application.Tests
                     VeganType = VeganType.Unkown,
                     StoreAdvertisedVegan = true
                 };
+                product.WorkloadItems = new List<WorkloadItem> { new WorkloadItem() };
                 context.Products.Add(product);
 
                 context.SaveChanges();
@@ -403,9 +424,10 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Unkown, product.VeganType);
                 Assert.IsFalse(product.IsProcessed);
+                Assert.IsFalse(product.WorkloadItems.First().IsProcessed);
             }
         }
 
@@ -641,7 +663,7 @@ namespace Application.Tests
                 var productsNotOudated = context.Products.Include(p => p.WorkloadItems).Where(p => p.Id != 200);
                 foreach (var productNotOutdated in productsNotOudated)
                 {
-                    Assert.AreEqual(0, productNotOutdated.WorkloadItems.Count());
+                    Assert.AreEqual(0, productNotOutdated.WorkloadItems.Count(w => w.Message == "Product niet gevonden"));
                 }
 
                 var productOudated = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);

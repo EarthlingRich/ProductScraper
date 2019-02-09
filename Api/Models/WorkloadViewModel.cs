@@ -10,10 +10,10 @@ namespace Api.Models
         [Display(Name = "Product_Name", ResourceType = typeof(DomainTerms))]
         public string ProductName { get; set; }
 
-        [Display(Name = "WorkLoadItem_Message", ResourceType = typeof(DomainTerms))]
+        [Display(Name = "WorkloadItem_Message", ResourceType = typeof(DomainTerms))]
         public string Message { get; set; }
 
-        [Display(Name = "WorkLoadItem_CreatedOn", ResourceType = typeof(DomainTerms))]
+        [Display(Name = "WorkloadItem_CreatedOn", ResourceType = typeof(DomainTerms))]
         public string CreatedOn { get; set; }
     }
 }

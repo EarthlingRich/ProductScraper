@@ -1,5 +1,6 @@
 ﻿export function initLayout() {
     initSidenav();
+    Utils.fixSelectBoxes();
 }
 
 function initSidenav() {

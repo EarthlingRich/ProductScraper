@@ -125,15 +125,21 @@ namespace Model.Resources {
             }
         }
         
-        public static string WorkLoadItem_CreatedOn {
+        public static string WorkloadItem_CreatedOn {
             get {
-                return ResourceManager.GetString("WorkLoadItem_CreatedOn", resourceCulture);
+                return ResourceManager.GetString("WorkloadItem_CreatedOn", resourceCulture);
             }
         }
         
-        public static string WorkLoadItem_Message {
+        public static string WorkloadItem_IsProcessed {
             get {
-                return ResourceManager.GetString("WorkLoadItem_Message", resourceCulture);
+                return ResourceManager.GetString("WorkloadItem_IsProcessed", resourceCulture);
+            }
+        }
+        
+        public static string WorkloadItem_Message {
+            get {
+                return ResourceManager.GetString("WorkloadItem_Message", resourceCulture);
             }
         }
     }

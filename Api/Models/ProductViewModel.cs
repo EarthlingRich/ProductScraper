@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Model.Models;
@@ -27,10 +28,10 @@ namespace Api.Models
         [Display(Name = "Product_MatchedIngredients", ResourceType = typeof(DomainTerms))]
         public List<Ingredient> MatchedIngredients { get; set; }
 
-        public List<WorkloadItem> WorkloadItems { get; set; }
-
         [Display(Name = "Product_ProductCategories", ResourceType = typeof(DomainTerms))]
         public List<string> ProductCategories { get; set; }
+
+        public List<ProductUpdateWorkloadItemViewModel> WorkloadItems { get; set; }
 
         public ProductUpdateRequest Request { get; set; }
 
@@ -38,9 +39,21 @@ namespace Api.Models
         {
             var viewModel = mapper.Map<ProductUpdateViewModel>(product);
             viewModel.Request = mapper.Map<ProductUpdateRequest>(product);
+            viewModel.WorkloadItems = mapper.Map<List<ProductUpdateWorkloadItemViewModel>>(product.WorkloadItems);
 
             return viewModel;
         }
+    }
+
+    public class ProductUpdateWorkloadItemViewModel
+    {
+        public int Id { get; set; }
+
+        [Display(Name = "WorkloadItem_Message", ResourceType = typeof(DomainTerms))]
+        public string Message { get; set; }
+
+        [Display(Name = "WorkloadItem_CreatedOn", ResourceType = typeof(DomainTerms))]
+        public DateTime CreatedOn { get; set; }
     }
 
     public class ProductListViewModel

@@ -53,6 +53,16 @@ export function initDatatables() {
 }
 
 export function initSelect() {
-    var elems = document.querySelectorAll('select');
-    M.FormSelect.init(elems);
+    var selectElements = document.querySelectorAll('select');
+    M.FormSelect.init(selectElements);
+}
+
+export function fixSelectBoxes() {
+    var checkboxElements = document.querySelectorAll('input[type=checkbox]');
+    checkboxElements.forEach(function(checkBoxElement) {
+        var nextElement = checkBoxElement.nextElementSibling;
+        if (nextElement.tagName.toLowerCase() === 'input' && nextElement.getAttribute('type') === 'hidden') {
+            checkBoxElement.prepend(nextElement);
+        }
+    });
 }

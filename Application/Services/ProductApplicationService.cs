@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -42,7 +42,7 @@ namespace Application.Services
 
         public void Update(ProductUpdateRequest request)
         {
-            var product = _context.Products.Find(request.Id);
+            var product = _context.Products.Include(_ => _.WorkloadItems).Single(_ => _.Id == request.Id);
             _mapper.Map(request, product);
             _context.SaveChanges();
         }
@@ -103,7 +103,7 @@ namespace Application.Services
 
         public void ProcessAllNonVegan()
         {
-            var products = _context.Products.Include("ProductIngredients.Ingredient").ToList();
+            var products = _context.Products.Include(_ => _.WorkloadItems).Include("ProductIngredients.Ingredient").Where(_ => !_.IsProcessed);
             var ingredients = _context.Ingredients.ToList();
 
             foreach(var product in products)

@@ -27,5 +27,15 @@ namespace Model.Requests
 
         [Display(Name = "Product_IsProcessed", ResourceType = typeof(DomainTerms))]
         public bool IsProcessed { get; set; }
+
+        public List<ProductWorkloadItemRequest> WorkloadItems { get; set; }
+    }
+
+    public class ProductWorkloadItemRequest
+    {
+        public int Id { get; set; }
+
+        [Display(Name = "WorkloadItem_IsProcessed", ResourceType = typeof(DomainTerms))]
+        public bool IsProcessed { get; set; }
     }
 }

@@ -31,13 +31,22 @@ namespace Application.Services
 
             _context.Products.Add(product);
 
-            var workloadItem = new WorkloadItem
+            var workloadItemNew = new WorkloadItem
             {
-                Product = product,
                 Message = "Nieuw product gevonden",
                 CreatedOn = product.LastScrapeDate
             };
-            _context.WorkloadItems.Add(workloadItem);
+            product.WorkloadItems.Add(workloadItemNew);
+
+            if (product.StoreAdvertisedVegan)
+            {
+                var workloadItemVegan = new WorkloadItem
+                {
+                    Message = "Product is wel vegan volgens winkel",
+                    CreatedOn = request.LastScrapeDate
+                };
+                product.WorkloadItems.Add(workloadItemVegan);
+            }
 
             _context.SaveChanges();
         }

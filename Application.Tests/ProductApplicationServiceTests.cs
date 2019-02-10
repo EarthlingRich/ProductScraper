@@ -116,6 +116,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
                 Assert.AreEqual(request.ProductCategory.Name, product.ProductCategories.First().Name);
                 Assert.AreEqual(1, product.WorkloadItems.Count(p => p.Message == "Nieuw product gevonden"));
+                Assert.AreEqual(1, product.WorkloadItems.Count(p => p.Message == "Product is wel vegan volgens winkel"));
                 Assert.IsFalse(product.IsProcessed);
             }
         }
@@ -150,7 +151,7 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Include("ProductProductCategories.ProductCategory").Single(p => p.Name == request.Name);
+                var product = context.Products.Include("ProductProductCategories.ProductCategory").Single(p => p.Id == 100);
                 Assert.AreEqual(DefaultCount, context.Products.Count());
                 Assert.AreEqual(request.Name, product.Name);
                 Assert.AreEqual(request.StoreType, product.StoreType);

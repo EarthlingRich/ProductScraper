@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Model.Models
 {
     public class WorkloadItem

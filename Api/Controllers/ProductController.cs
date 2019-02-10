@@ -53,6 +53,7 @@ namespace Api.Controllers
         {
             var product = _context.Products
                     .Include(_ => _.WorkloadItems)
+                    .Include(_ => _.ProductActivities)
                     .Include("ProductIngredients.Ingredient")
                     .Include("ProductProductCategories.ProductCategory")
                     .First(_ => _.Id == id);

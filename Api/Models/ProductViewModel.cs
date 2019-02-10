@@ -31,6 +31,10 @@ namespace Api.Models
         [Display(Name = "Product_ProductCategories", ResourceType = typeof(DomainTerms))]
         public List<string> ProductCategories { get; set; }
 
+        [Display(Name = "Product_ProductActivities", ResourceType = typeof(DomainTerms))]
+        public List<ProductActivity> ProductActivities { get; set; }
+
+        [Display(Name = "Product_WorkloadItems", ResourceType = typeof(DomainTerms))]
         public List<ProductUpdateWorkloadItemViewModel> WorkloadItems { get; set; }
 
         public ProductUpdateRequest Request { get; set; }

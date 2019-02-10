@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
@@ -27,6 +27,9 @@
     <data name="Ingredient_VeganType" xml:space="preserve">
         <value>Vegan type</value>
     </data>
+    <data name="Product_ProductActivities" xml:space="preserve">
+        <value>Activiteiten</value>
+    </data>
     <data name="Product_AllergyInfo" xml:space="preserve">
         <value>Allergiën</value>
     </data>
@@ -47,6 +50,9 @@
     </data>
     <data name="Product_VeganType" xml:space="preserve">
         <value>Vegan type</value>
+    </data>
+    <data name="Product_WorkloadItems" xml:space="preserve">
+        <value>Werklijst</value>
     </data>
     <data name="ProductCategory_Name" xml:space="preserve">
         <value>Naam</value>

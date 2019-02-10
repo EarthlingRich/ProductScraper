@@ -77,6 +77,12 @@ namespace Model.Resources {
             }
         }
         
+        public static string Product_ProductActivities {
+            get {
+                return ResourceManager.GetString("Product_ProductActivities", resourceCulture);
+            }
+        }
+        
         public static string Product_AllergyInfo {
             get {
                 return ResourceManager.GetString("Product_AllergyInfo", resourceCulture);
@@ -116,6 +122,12 @@ namespace Model.Resources {
         public static string Product_VeganType {
             get {
                 return ResourceManager.GetString("Product_VeganType", resourceCulture);
+            }
+        }
+        
+        public static string Product_WorkloadItems {
+            get {
+                return ResourceManager.GetString("Product_WorkloadItems", resourceCulture);
             }
         }
         

@@ -226,10 +226,10 @@ namespace Application.Tests
             }
         }
 
-        #region ProcessAllNonVegan
+        #region ProcessAll
 
         [TestMethod]
-        public void ProcessAllNonVegan_Not_Vegan_Valid()
+        public void ProcessAll_Not_Vegan_Valid()
         {
             // Arrange
             var product = new Product
@@ -258,7 +258,7 @@ namespace Application.Tests
                 var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
-                productService.ProcessAllNonVegan();
+                productService.ProcessAll();
             }
 
             //Assert
@@ -281,7 +281,7 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessAllNonVegan_Unsure_Valid()
+        public void ProcessAll_Unsure_Valid()
         {
             // Arrange
             var product = new Product
@@ -310,7 +310,7 @@ namespace Application.Tests
                 var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
-                productService.ProcessAllNonVegan();
+                productService.ProcessAll();
             }
 
             //Assert
@@ -333,7 +333,7 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessAllNonVegan_Unsure_NeedsReview_Valid()
+        public void ProcessAll_Unsure_NeedsReview_Valid()
         {
             // Arrange
             var product = new Product
@@ -362,7 +362,7 @@ namespace Application.Tests
                 var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
-                productService.ProcessAllNonVegan();
+                productService.ProcessAll();
             }
 
             //Assert
@@ -376,7 +376,7 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessAllNonVegan_No_Match_Valid()
+        public void ProcessAll_No_Match_Valid()
         {
             // Arrange
             using (var context = new ApplicationContext(_options))
@@ -407,7 +407,7 @@ namespace Application.Tests
                 var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
-                productService.ProcessAllNonVegan();
+                productService.ProcessAll();
             }
 
             //Assert
@@ -426,18 +426,19 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessAllNonVegan_StoreAdvertisedVegan_Ignore_Valid()
+        public void ProcessAll_StoreAdvertisedVegan_Ignore_Valid()
         {
             // Arrange
+            var product = new Product
+            {
+                Id = 200,
+                Name = "Product 1",
+                VeganType = VeganType.Unkown,
+                StoreAdvertisedVegan = true
+            };
+
             using (var context = new ApplicationContext(_options))
             {
-                var product = new Product
-                {
-                    Id = 200,
-                    Name = "Product 1",
-                    VeganType = VeganType.Unkown,
-                    StoreAdvertisedVegan = true
-                };
                 product.WorkloadItems.Add(new WorkloadItem());
                 context.Products.Add(product);
 
@@ -446,16 +447,23 @@ namespace Application.Tests
                 var productService = new ProductApplicationService(context, _mapper);
 
                 // Act
-                productService.ProcessAllNonVegan();
+                productService.ProcessAll();
             }
 
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var assertProduct = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
-                Assert.AreEqual(VeganType.Unkown, assertProduct.VeganType);
-                Assert.IsFalse(assertProduct.IsProcessed);
-                Assert.IsFalse(assertProduct.WorkloadItems.First().IsProcessed);
+                var assertProduct = context.Products
+                        .Include(p => p.WorkloadItems)
+                        .Include(p => p.ProductActivities)
+                        .Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Vegan, assertProduct.VeganType);
+                Assert.IsTrue(assertProduct.IsProcessed);
+                Assert.IsTrue(assertProduct.WorkloadItems.First().IsProcessed);
+
+                Assert.AreEqual(1, assertProduct.ProductActivities.Count());
+                var assertProductActivityVeganTypeChanged = assertProduct.ProductActivities.Single(pa => pa.Type == ProductActivityType.VeganTypeChanged);
+                Assert.AreEqual(VeganType.Vegan.ToString(), assertProductActivityVeganTypeChanged.Detail);
             }
         }
 

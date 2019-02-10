@@ -76,7 +76,7 @@ namespace Api.Controllers
 
         public IActionResult ProcessAll()
         {
-            _productService.ProcessAllNonVegan();
+            _productService.ProcessAll();
 
             return Redirect("Index");
         }

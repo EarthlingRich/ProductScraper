@@ -112,7 +112,7 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void ProcessAllNonVegan()
+        public void ProcessAll()
         {
             var productIds = _context.Products
                     .Where(_ => !_.IsProcessed)
@@ -121,7 +121,6 @@ namespace Application.Services
 
             foreach(var productId in productIds)
             {
-                var typeChanged = false;
                 var product = _context.Products
                         .Include(p => p.WorkloadItems)
                         .Include(p => p.ProductActivities)
@@ -129,30 +128,7 @@ namespace Application.Services
                         .Single(_ => _.Id == productId);
 
                 SetMatchedIngredients(product, ingredients);
-
-                if (product.StoreAdvertisedVegan)
-                {
-                    continue;
-                }
-
-                if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
-                {
-                    product.VeganType = VeganType.Not;
-                    typeChanged = true;
-                    if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))
-                    {
-                        product.IsProcessed = true;
-                    }
-                }
-                else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
-                {
-                    product.VeganType = VeganType.Unsure;
-                    typeChanged = true;
-                    if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Unsure).Any(_ => _.NeedsReview))
-                    {
-                        product.IsProcessed = true;
-                    }
-                }
+                SetVeganType(product);
 
                 if (product.IsProcessed)
                 {
@@ -163,15 +139,6 @@ namespace Application.Services
                     }
                 }
 
-                if (typeChanged)
-                {
-                    product.ProductActivities.Add(new ProductActivity
-                    {
-                        Type = ProductActivityType.VeganTypeChanged,
-                        Detail = product.VeganType.ToString(),
-                        CreatedOn = _productActivityDate
-                    });
-                }
                 _context.SaveChanges();
             }
         }
@@ -252,6 +219,43 @@ namespace Application.Services
                         CreatedOn = _productActivityDate
                     });
                 }
+            }
+        }
+
+        private void SetVeganType(Product product)
+        {
+            var oldVeganType = product.VeganType;
+
+            if (product.StoreAdvertisedVegan)
+            {
+                product.VeganType = VeganType.Vegan;
+                product.IsProcessed = true;
+            }
+            else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
+            {
+                product.VeganType = VeganType.Not;
+                if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))
+                {
+                    product.IsProcessed = true;
+                }
+            }
+            else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
+            {
+                product.VeganType = VeganType.Unsure;
+                if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Unsure).Any(_ => _.NeedsReview))
+                {
+                    product.IsProcessed = true;
+                }
+            }
+
+            if (oldVeganType != product.VeganType)
+            {
+                product.ProductActivities.Add(new ProductActivity
+                {
+                    Type = ProductActivityType.VeganTypeChanged,
+                    Detail = product.VeganType.ToString(),
+                    CreatedOn = _productActivityDate
+                });
             }
         }
 

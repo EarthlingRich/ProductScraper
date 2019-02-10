@@ -114,16 +114,19 @@ namespace Application.Services
 
         public void ProcessAllNonVegan()
         {
-            var products = _context.Products
-                    .Include(p => p.WorkloadItems)
-                    .Include(p => p.ProductActivities)
-                    .Include("ProductIngredients.Ingredient")
-                    .Where(_ => !_.IsProcessed);
+            var productIds = _context.Products
+                    .Where(_ => !_.IsProcessed)
+                    .Select(_ => _.Id);
             var ingredients = _context.Ingredients.ToList();
 
-            foreach(var product in products)
+            foreach(var productId in productIds)
             {
                 var typeChanged = false;
+                var product = _context.Products
+                        .Include(p => p.WorkloadItems)
+                        .Include(p => p.ProductActivities)
+                        .Include("ProductIngredients.Ingredient")
+                        .Single(_ => _.Id == productId);
 
                 SetMatchedIngredients(product, ingredients);
 
@@ -176,7 +179,7 @@ namespace Application.Services
 
         public Product ProcessVeganType(int productId)
         {
-            var product =  _context.Products.Include("ProductIngredients.Ingredient").Single(_ => _.Id == productId);
+            var product = _context.Products.Include("ProductIngredients.Ingredient").Single(_ => _.Id == productId);
             var ingredients = _context.Ingredients.ToList();
 
             SetMatchedIngredients(product, ingredients);

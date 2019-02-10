@@ -33,6 +33,11 @@ namespace Model
                 .HasMany(_ => _.WorkloadItems)
                 .WithOne(_ => _.Product)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasMany(_ => _.ProductActivities)
+                .WithOne(_ => _.Product)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

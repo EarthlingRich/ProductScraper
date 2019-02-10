@@ -44,6 +44,7 @@ namespace Application.Tests
                 LastScrapeDate = ScrapeDate
             };
             product1.WorkloadItems.Add(new WorkloadItem { Id = 100 });
+            product1.ProductActivities.Add(new ProductActivity { Id = 100 });
             product1.ProductCategories.Add(productCategory1);
             context.Products.Add(product1);
 
@@ -56,6 +57,7 @@ namespace Application.Tests
                 LastScrapeDate = ScrapeDate
             };
             product2.WorkloadItems.Add(new WorkloadItem { Id = 101 });
+            product2.ProductActivities.Add(new ProductActivity { Id = 101 });
             product2.ProductCategories.Add(productCategory2);
             context.Products.Add(product2);
 

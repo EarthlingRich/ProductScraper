@@ -172,9 +172,8 @@ namespace Application.Services
                         CreatedOn = _productActivityDate
                     });
                 }
+                _context.SaveChanges();
             }
-
-            _context.SaveChanges();
         }
 
         public Product ProcessVeganType(int productId)

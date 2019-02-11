@@ -253,7 +253,7 @@ namespace ProductScraper.Scrapers
         {
             var replaceRegex = new List<string> {
                 @"bevat: ",
-                @"kan bevatten.*"
+                @"kan .* bevatten.*"
             };
 
             var allergyInfo = "";

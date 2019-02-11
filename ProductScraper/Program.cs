@@ -33,7 +33,7 @@ namespace ProductScraper
             using (var driver = new ChromeDriver())
             using (var streamWriter = new StreamWriter(file))
             {
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
                 var scraper = GetProductScraper(args[0], driver, context, mapper, streamWriter);
                 if (args.Length == 2)

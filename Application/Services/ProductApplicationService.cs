@@ -53,14 +53,19 @@ namespace Application.Services
 
         public void Update(ProductUpdateRequest request)
         {
-            var product = _context.Products.Include(p => p.WorkloadItems).Single(_ => _.Id == request.Id);
+            var product = _context.Products
+                    .Include(p => p.WorkloadItems)
+                    .Single(_ => _.Id == request.Id);
             _mapper.Map(request, product);
             _context.SaveChanges();
         }
 
         private void Update(ProductStoreRequest request)
         {
-            var product = _context.Products.Single(_ => _.Url == request.Url);
+            var product = _context.Products
+                    .Include(p => p.WorkloadItems)
+                    .Include(p => p.ProductProductCategories)
+                    .Single(_ => _.Url == request.Url);
 
             if (request.Ingredients != product.Ingredients || request.AllergyInfo != product.AllergyInfo)
             {

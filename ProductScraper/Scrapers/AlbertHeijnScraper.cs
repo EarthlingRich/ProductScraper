@@ -58,6 +58,7 @@ namespace ProductScraper.Scrapers
             }
 
             //Get product data
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
             foreach (var productsUrlsForCategory in productUrlDictonary)
             {
                 var productCateogry = _context.ProductCategories.Find(productsUrlsForCategory.Key);

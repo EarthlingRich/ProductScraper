@@ -150,7 +150,9 @@ namespace Application.Services
 
         public Product ProcessVeganType(int productId)
         {
-            var product = _context.Products.Include("ProductIngredients.Ingredient").Single(_ => _.Id == productId);
+            var product = _context.Products
+                    .Include("ProductIngredients.Ingredient")
+                    .Single(_ => _.Id == productId);
             var ingredients = _context.Ingredients.ToList();
 
             SetMatchedIngredients(product, ingredients);
@@ -212,18 +214,24 @@ namespace Application.Services
                 }
             }
 
+            var outdatedIngredients = new List<Ingredient>();
             foreach (var matchedIngredient in product.MatchedIngredients)
             {
                 if (!foundIngredients.Contains(matchedIngredient))
                 {
-                    product.MatchedIngredients.Remove(matchedIngredient);
-                    product.ProductActivities.Add(new ProductActivity
-                    {
-                        Type = ProductActivityType.IngredientRemoved,
-                        Detail = matchedIngredient.Name,
-                        CreatedOn = _productActivityDate
-                    });
+                    outdatedIngredients.Remove(matchedIngredient);
                 }
+            }
+
+            foreach (var outdatedIngredient in outdatedIngredients)
+            {
+                product.MatchedIngredients.Remove(outdatedIngredient);
+                product.ProductActivities.Add(new ProductActivity
+                {
+                    Type = ProductActivityType.IngredientRemoved,
+                    Detail = outdatedIngredient.Name,
+                    CreatedOn = _productActivityDate
+                });
             }
         }
 

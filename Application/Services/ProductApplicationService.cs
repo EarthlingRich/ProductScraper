@@ -219,7 +219,7 @@ namespace Application.Services
             {
                 if (!foundIngredients.Contains(matchedIngredient))
                 {
-                    outdatedIngredients.Remove(matchedIngredient);
+                    outdatedIngredients.Add(matchedIngredient);
                 }
             }
 

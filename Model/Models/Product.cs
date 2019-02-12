@@ -43,6 +43,16 @@ namespace Model.Models
 
         public ICollection<WorkloadItem> WorkloadItems { get; set; }
         public ICollection<ProductActivity> ProductActivities { get; set; }
+
+        public void AddProductActivityVeganTypeChanged(DateTime createdOn)
+        {
+            ProductActivities.Add(new ProductActivity
+            {
+                Type = ProductActivityType.VeganTypeChanged,
+                Detail = VeganType.ToString(),
+                CreatedOn = createdOn
+            });
+        }
     }
 
     public class ProductIngredient

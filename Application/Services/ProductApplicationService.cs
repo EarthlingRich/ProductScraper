@@ -56,7 +56,16 @@ namespace Application.Services
             var product = _context.Products
                     .Include(p => p.WorkloadItems)
                     .Single(_ => _.Id == request.Id);
+
+            var oldVeganType = product.VeganType;
+
             _mapper.Map(request, product);
+
+            if (oldVeganType != product.VeganType)
+            {
+                product.AddProductActivityVeganTypeChanged(_productActivityDate);
+            }
+
             _context.SaveChanges();
         }
 
@@ -133,7 +142,7 @@ namespace Application.Services
                         .Single(_ => _.Id == productId);
 
                 SetMatchedIngredients(product, ingredients);
-                SetVeganType(product);
+                SetVeganType(product, true);
 
                 if (product.IsProcessed)
                 {
@@ -153,6 +162,7 @@ namespace Application.Services
             var product = _context.Products
                     .Include("ProductIngredients.Ingredient")
                     .Single(_ => _.Id == productId);
+            var oldVeganType = product.VeganType;
             var ingredients = _context.Ingredients.ToList();
 
             SetMatchedIngredients(product, ingredients);
@@ -172,6 +182,11 @@ namespace Application.Services
             else
             {
                 product.VeganType = VeganType.Vegan;
+            }
+
+            if (oldVeganType != product.VeganType)
+            {
+                product.AddProductActivityVeganTypeChanged(_productActivityDate);
             }
 
             product.IsProcessed = true;
@@ -235,7 +250,7 @@ namespace Application.Services
             }
         }
 
-        private void SetVeganType(Product product)
+        private void SetVeganType(Product product, bool shouldAddProductActivity)
         {
             var oldVeganType = product.VeganType;
 
@@ -261,14 +276,9 @@ namespace Application.Services
                 }
             }
 
-            if (oldVeganType != product.VeganType)
+            if (shouldAddProductActivity && oldVeganType != product.VeganType)
             {
-                product.ProductActivities.Add(new ProductActivity
-                {
-                    Type = ProductActivityType.VeganTypeChanged,
-                    Detail = product.VeganType.ToString(),
-                    CreatedOn = _productActivityDate
-                });
+                product.AddProductActivityVeganTypeChanged(_productActivityDate);
             }
         }
 

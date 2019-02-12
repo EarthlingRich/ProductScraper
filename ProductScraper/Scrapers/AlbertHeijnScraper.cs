@@ -228,7 +228,9 @@ namespace ProductScraper.Scrapers
                 @"dit product.*",
                 @"kan sporen.*",
                 @"allergiewijzer.*",
-                @"allergie info:.*",
+                @"allergie info.*",
+                @"allergie informatie.*",
+                @"allergie-informatie.*",
                 @"kan.*bevatten.*"
             };
 

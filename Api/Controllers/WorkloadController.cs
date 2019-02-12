@@ -31,7 +31,7 @@ namespace Api.Controllers
 
         public IActionResult ProductList(IDataTablesRequest dataTablesRequest)
         {
-            var workLoadItemsQuery = _context.WorkloadItems.Include("Product");
+            var workLoadItemsQuery = _context.WorkloadItems.Include("Product").Where(_ => !_.IsProcessed);
             var totalCount = workLoadItemsQuery.Count();
 
             if (dataTablesRequest.Search.Value != null)

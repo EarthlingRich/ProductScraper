@@ -279,7 +279,14 @@ namespace ProductScraper.Scrapers
 
         private bool GetStoreAdvertisedVegan(ChromeDriver driver)
         {
-            return driver.PageSource.Contains("icon--ah_vegan");
+            var isVegan = driver.PageSource.Contains("icon--ah_vegan");
+
+            if (!isVegan)
+            {
+                isVegan = driver.FindElementsByXPath("//p[contains(@class, 'product__summary')]//*[contains(text(), 'vegan')]").Any();
+            }
+
+            return isVegan;
         }
     }
 }

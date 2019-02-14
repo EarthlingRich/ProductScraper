@@ -224,7 +224,7 @@ namespace ProductScraper.Scrapers
 
         private string GetIngredients(ChromeDriver driver) {
             var replaceRegex = new List<string> {
-                @"ingrediënten: ",
+                @"ingrediënten:",
                 @"dit product.*",
                 @"kan sporen.*",
                 @"allergiewijzer.*",

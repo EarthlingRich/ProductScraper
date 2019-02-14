@@ -92,7 +92,7 @@ namespace Application.Services
                 var workloadItem = new WorkloadItem
                 {
                     Product = product,
-                    Message = $"Product is { (product.StoreAdvertisedVegan ? "wel" : "niet")} vegan volgens winkel",
+                    Message = $"Product is { (request.StoreAdvertisedVegan ? "wel" : "niet")} vegan volgens winkel",
                     CreatedOn = request.LastScrapeDate
                 };
                 _context.WorkloadItems.Add(workloadItem);

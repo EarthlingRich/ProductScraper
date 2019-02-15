@@ -672,7 +672,7 @@ namespace Application.Tests
                     Id = 200,
                     Name = "Product 3",
                     StoreType = StoreType.AlbertHeijn,
-                    LastScrapeDate = ScrapeDate.AddDays(-1)
+                    LastScrapeDate = ScrapeDate.AddDays(-8)
                 };
                 context.Products.Add(product3);
 
@@ -681,7 +681,7 @@ namespace Application.Tests
                     Id = 201,
                     Name = "Product 4",
                     StoreType = StoreType.Jumbo,
-                    LastScrapeDate = ScrapeDate.AddDays(-1)
+                    LastScrapeDate = ScrapeDate.AddDays(-8)
                 };
                 context.Products.Add(product4);
 

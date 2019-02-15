@@ -36,6 +36,9 @@
     <data name="Product_Ingredients" xml:space="preserve">
         <value>Ingrediënten</value>
     </data>
+    <data name="Product_IsManufacturerAdvertisedVegan" xml:space="preserve">
+        <value>Vegan volgens fabrikant</value>
+    </data>
     <data name="Product_IsProcessed" xml:space="preserve">
         <value>Verwerkt</value>
     </data>
@@ -47,6 +50,9 @@
     </data>
     <data name="Product_ProductCategories" xml:space="preserve">
         <value>Categorieën</value>
+    </data>
+    <data name="Product_VeganDescription" xml:space="preserve">
+        <value>Vegan omschrijving</value>
     </data>
     <data name="Product_VeganType" xml:space="preserve">
         <value>Vegan type</value>

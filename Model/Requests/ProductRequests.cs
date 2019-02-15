@@ -25,6 +25,12 @@ namespace Model.Requests
         [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
         public VeganType VeganType { get; set; }
 
+        [Display(Name = "Product_VeganDescription", ResourceType = typeof(DomainTerms))]
+        public string VeganDescription { get; set; }
+
+        [Display(Name = "Product_IsManufacturerAdvertisedVegan", ResourceType = typeof(DomainTerms))]
+        public bool IsManufacturerAdvertisedVegan { get; set; }
+
         [Display(Name = "Product_IsProcessed", ResourceType = typeof(DomainTerms))]
         public bool IsProcessed { get; set; }
 

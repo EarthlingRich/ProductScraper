@@ -95,6 +95,12 @@ namespace Model.Resources {
             }
         }
         
+        public static string Product_IsManufacturerAdvertisedVegan {
+            get {
+                return ResourceManager.GetString("Product_IsManufacturerAdvertisedVegan", resourceCulture);
+            }
+        }
+        
         public static string Product_IsProcessed {
             get {
                 return ResourceManager.GetString("Product_IsProcessed", resourceCulture);
@@ -116,6 +122,12 @@ namespace Model.Resources {
         public static string Product_ProductCategories {
             get {
                 return ResourceManager.GetString("Product_ProductCategories", resourceCulture);
+            }
+        }
+        
+        public static string Product_VeganDescription {
+            get {
+                return ResourceManager.GetString("Product_VeganDescription", resourceCulture);
             }
         }
         

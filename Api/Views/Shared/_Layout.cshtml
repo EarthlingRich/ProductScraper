@@ -23,8 +23,6 @@
             </li>
             <li class="@(controller == HomeController.RouteName && action == nameof(HomeController.Index) ? "active" : "")"><a href="@Url.Action(nameof(HomeController.Index), HomeController.RouteName)">@CommonTerms.Home_Index</a></li>
             <li class="@(controller == WorkloadController.RouteName && action == nameof(WorkloadController.Index) ? "active" : "")"><a href="@Url.Action(nameof(WorkloadController.Index), WorkloadController.RouteName)">@CommonTerms.Product_Workload</a></li>
-            <li class="@(controller == IngredientController.RouteName && action == nameof(IngredientController.Index) ? "active" : "")"><a href="@Url.Action(nameof(IngredientController.Index), IngredientController.RouteName)">@CommonTerms.Ingredient_Index</a></li>
-            <li class="@(controller == ProductCategoryController.RouteName && action == nameof(ProductCategoryController.Index) ? "active" : "")"><a href="@Url.Action(nameof(ProductCategoryController.Index), ProductCategoryController.RouteName)">@CommonTerms.ProductCategory_Index</a></li>
             <li>
                 <ul class="collapsible collapsible-accordion">
                     <li class="@(controller == ProductController.RouteName ? "active" : "")">
@@ -34,7 +32,7 @@
                                 <li class="@(controller == ProductController.RouteName && action == nameof(ProductController.Index) ? "active" : "")">
                                     <a href="@Url.Action(nameof(ProductController.Index), ProductController.RouteName)">@CommonTerms.Product_Index</a>
                                 </li>
-                                <li class="@(controller == ProductController.RouteName && action == nameof(ProductController.ProductActivityList) ? "" : "")">
+                                <li class="@(controller == ProductController.RouteName && action == nameof(ProductController.ProductActivityList) ? "active" : "")">
                                     <a href="@Url.Action(nameof(ProductController.ProductActivityList), ProductController.RouteName)">@CommonTerms.ProductActivities_Index</a>
                                 </li>
                             </ul>
@@ -42,6 +40,8 @@
                     </li>
                 </ul>
             </li>
+            <li class="@(controller == IngredientController.RouteName && action == nameof(IngredientController.Index) ? "active" : "")"><a href="@Url.Action(nameof(IngredientController.Index), IngredientController.RouteName)">@CommonTerms.Ingredient_Index</a></li>
+            <li class="@(controller == ProductCategoryController.RouteName && action == nameof(ProductCategoryController.Index) ? "active" : "")"><a href="@Url.Action(nameof(ProductCategoryController.Index), ProductCategoryController.RouteName)">@CommonTerms.ProductCategory_Index</a></li>
         </ul>
         <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
     </header>

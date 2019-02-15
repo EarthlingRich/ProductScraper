@@ -5,6 +5,8 @@ $sidenav-bg-color: #37474f;
 $sidenav-font-color: #fff;
 $sidenav-width: 200px;
 
+$collapsible-header-color: #37474f;
+
 $primary-color: #43a047 !default;
 $secondary-color: #43a047 !default;
 
@@ -51,4 +53,18 @@ td {
 
 .custom-form-label {
     font-weight: bold;
+}
+
+// Fix collapsible in sidenav https://github.com/Dogfalo/materialize/issues/928
+.sidenav li > a {
+    padding: 0 ($sidenav-padding);
+}
+
+// Fix colors for collapsible in sidenav
+.sidenav .collapsible-body > ul:not(.collapsible) > li.active,
+.sidenav.sidenav-fixed .collapsible-body > ul:not(.collapsible) > li.active {
+    background-color: rgba(0, 0, 0, 0.05);
+    a {
+        color: $sidenav-font-color;
+    }
 }

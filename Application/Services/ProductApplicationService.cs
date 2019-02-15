@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -284,7 +284,7 @@ namespace Application.Services
 
         public void RemoveOutdatedProducts(StoreType storeType, DateTime scrapeDate)
         {
-            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < scrapeDate);
+            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < scrapeDate.AddDays(-7));
 
             foreach (var outdatedProduct in outdatedProducts)
             {

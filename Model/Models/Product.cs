@@ -28,7 +28,7 @@ namespace Model.Models
         public string Ingredients { get; set; }
         public string AllergyInfo { get; set; }
         public VeganType VeganType { get; set; }
-        public bool StoreAdvertisedVegan { get; set; }
+        public bool IsStoreAdvertisedVegan { get; set; }
         public bool IsProcessed { get; set; }
         public ProductCategory Category { get; set; }
         public DateTime LastScrapeDate { get; set; }

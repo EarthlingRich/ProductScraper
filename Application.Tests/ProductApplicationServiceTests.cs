@@ -94,7 +94,7 @@ namespace Application.Tests
                     Url = "Product new url",
                     Ingredients = "Ingredients",
                     AllergyInfo = "Allergy info",
-                    StoreAdvertisedVegan = true,
+                    IsStoreAdvertisedVegan = true,
                     LastScrapeDate = DateTime.Now,
                     ProductCategory = context.ProductCategories.Find(100)
                 };
@@ -114,7 +114,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.Url, product.Url);
                 Assert.AreEqual(request.Ingredients, product.Ingredients);
                 Assert.AreEqual(request.AllergyInfo, product.AllergyInfo);
-                Assert.AreEqual(request.StoreAdvertisedVegan, product.StoreAdvertisedVegan);
+                Assert.AreEqual(request.IsStoreAdvertisedVegan, product.IsStoreAdvertisedVegan);
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
                 Assert.AreEqual(request.ProductCategory.Name, product.ProductCategories.First().Name);
                 Assert.AreEqual(1, product.WorkloadItems.Count(p => p.Message == "Nieuw product gevonden"));
@@ -140,7 +140,7 @@ namespace Application.Tests
                     Url = "Product 1 Url",
                     Ingredients = "Ingredients",
                     AllergyInfo = "Allergy info",
-                    StoreAdvertisedVegan = true,
+                    IsStoreAdvertisedVegan = true,
                     LastScrapeDate = DateTime.Now,
                     ProductCategory = context.ProductCategories.Find(101)
                 };
@@ -160,7 +160,7 @@ namespace Application.Tests
                 Assert.AreEqual(request.Url, product.Url);
                 Assert.AreEqual(request.Ingredients, product.Ingredients);
                 Assert.AreEqual(request.AllergyInfo, product.AllergyInfo);
-                Assert.AreEqual(request.StoreAdvertisedVegan, product.StoreAdvertisedVegan);
+                Assert.AreEqual(request.IsStoreAdvertisedVegan, product.IsStoreAdvertisedVegan);
                 Assert.AreEqual(request.LastScrapeDate, product.LastScrapeDate);
                 Assert.AreEqual(1, product.ProductCategories.Count(p => p.Name == request.ProductCategory.Name));
                 Assert.IsFalse(product.IsProcessed);
@@ -426,7 +426,7 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessAll_StoreAdvertisedVegan_Ignore_Valid()
+        public void ProcessAll_IsStoreAdvertisedVegan_Ignore_Valid()
         {
             // Arrange
             var product = new Product
@@ -434,7 +434,7 @@ namespace Application.Tests
                 Id = 200,
                 Name = "Product 1",
                 VeganType = VeganType.Unkown,
-                StoreAdvertisedVegan = true
+                IsStoreAdvertisedVegan = true
             };
 
             using (var context = new ApplicationContext(_options))
@@ -630,7 +630,7 @@ namespace Application.Tests
         }
 
         [TestMethod]
-        public void ProcessVeganType_StoreAdvertisedVegan_Valid()
+        public void ProcessVeganType_IsStoreAdvertisedVegan_Valid()
         {
             // Arrange
             using (var context = new ApplicationContext(_options))
@@ -639,7 +639,7 @@ namespace Application.Tests
                 {
                     Id = 200,
                     Name = "Product 1",
-                    StoreAdvertisedVegan = true
+                    IsStoreAdvertisedVegan = true
                 };
                 context.Products.Add(product);
 

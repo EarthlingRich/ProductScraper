@@ -38,7 +38,7 @@ namespace Application.Services
             };
             product.WorkloadItems.Add(workloadItemNew);
 
-            if (product.StoreAdvertisedVegan)
+            if (product.IsStoreAdvertisedVegan)
             {
                 var workloadItemVegan = new WorkloadItem
                 {
@@ -87,12 +87,12 @@ namespace Application.Services
                 _context.WorkloadItems.Add(workloadItem);
             }
 
-            if (product.StoreAdvertisedVegan != request.StoreAdvertisedVegan)
+            if (product.IsStoreAdvertisedVegan != request.IsStoreAdvertisedVegan)
             {
                 var workloadItem = new WorkloadItem
                 {
                     Product = product,
-                    Message = $"Product is { (request.StoreAdvertisedVegan ? "wel" : "niet")} vegan volgens winkel",
+                    Message = $"Product is { (request.IsStoreAdvertisedVegan ? "wel" : "niet")} vegan volgens winkel",
                     CreatedOn = request.LastScrapeDate
                 };
                 _context.WorkloadItems.Add(workloadItem);
@@ -167,7 +167,7 @@ namespace Application.Services
 
             SetMatchedIngredients(product, ingredients);
 
-            if (product.StoreAdvertisedVegan)
+            if (product.IsStoreAdvertisedVegan)
             {
                 product.VeganType = VeganType.Vegan;
             }
@@ -254,7 +254,7 @@ namespace Application.Services
         {
             var oldVeganType = product.VeganType;
 
-            if (product.StoreAdvertisedVegan)
+            if (product.IsStoreAdvertisedVegan)
             {
                 product.VeganType = VeganType.Vegan;
                 product.IsProcessed = true;

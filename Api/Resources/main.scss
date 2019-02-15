@@ -37,6 +37,11 @@ $secondary-color: #43a047 !default;
         & .paginate_button.disabled:hover {
             @extend .btn.disabled;
         }
+
+        .ellipsis {
+            margin-left: 0.25rem;
+            font-size: 12px;
+        }
     }
 }
 

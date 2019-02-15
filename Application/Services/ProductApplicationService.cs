@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -262,7 +262,7 @@ namespace Application.Services
             else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
             {
                 product.VeganType = VeganType.Not;
-                if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).Any(_ => _.NeedsReview))
+                if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Not).All(_ => _.NeedsReview))
                 {
                     product.IsProcessed = true;
                 }
@@ -270,7 +270,7 @@ namespace Application.Services
             else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Unsure))
             {
                 product.VeganType = VeganType.Unsure;
-                if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Unsure).Any(_ => _.NeedsReview))
+                if (!product.MatchedIngredients.Where(_ => _.VeganType == VeganType.Unsure).All(_ => _.NeedsReview))
                 {
                     product.IsProcessed = true;
                 }

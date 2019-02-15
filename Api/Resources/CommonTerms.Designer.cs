@@ -101,6 +101,12 @@ namespace Api.Resources {
             }
         }
         
+        public static string ProductActivities_Index {
+            get {
+                return ResourceManager.GetString("ProductActivities_Index", resourceCulture);
+            }
+        }
+        
         public static string Product_Index {
             get {
                 return ResourceManager.GetString("Product_Index", resourceCulture);

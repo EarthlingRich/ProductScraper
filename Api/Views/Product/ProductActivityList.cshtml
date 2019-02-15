@@ -1,0 +1,21 @@
+﻿@model ProductActivityListViewModel
+
+@{
+    ViewData["Title"] = CommonTerms.ProductActivities_Index;
+}
+
+<script type="text/javascript">
+$(function() {
+        Product.initProductActivityList();
+    });</script>
+
+<h3 class="page-title">@CommonTerms.ProductActivities_Index</h3>
+<table id="productactivity-table" class="striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(_ => _.ProductName)</th>
+            <th>@Html.DisplayNameFor(_ => _.Type)</th>
+            <th>@Html.DisplayNameFor(_ => _.Detail)</th>
+        </tr>
+    </thead>
+</table>

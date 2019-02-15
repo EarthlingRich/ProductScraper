@@ -74,6 +74,20 @@ namespace Api.Models
         public string ProductCategories { get; set; } 
     }
 
+    public class ProductActivityListViewModel
+    {
+        public int ProductId { get; set; }
+
+        [Display(Name = "Product_Name", ResourceType = typeof(DomainTerms))]
+        public string ProductName { get; set; }
+
+        [Display(Name = "ProductActivity_ProductActivityType", ResourceType = typeof(DomainTerms))]
+        public string Type { get; set; }
+
+        [Display(Name = "ProductActivity_Detail", ResourceType = typeof(DomainTerms))]
+        public string Detail { get; set; }
+    }
+
     public class ProductApiViewModel
     {
         public int Id { get; set; }

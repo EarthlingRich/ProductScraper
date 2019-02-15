@@ -131,6 +131,18 @@ namespace Model.Resources {
             }
         }
         
+        public static string ProductActivity_ProductActivityType {
+            get {
+                return ResourceManager.GetString("ProductActivity_ProductActivityType", resourceCulture);
+            }
+        }
+        
+        public static string ProductActivity_Detail {
+            get {
+                return ResourceManager.GetString("ProductActivity_Detail", resourceCulture);
+            }
+        }
+        
         public static string ProductCategory_Name {
             get {
                 return ResourceManager.GetString("ProductCategory_Name", resourceCulture);

@@ -10,11 +10,12 @@ namespace Model
             : base(options)
         { }
 
-        public DbSet<Product> Products { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<WorkloadItem> WorkloadItems { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductActivity> ProductActivities { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<StoreCategory> StoreCategories { get; set; }
+        public DbSet<WorkloadItem> WorkloadItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

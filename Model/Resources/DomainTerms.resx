@@ -54,6 +54,12 @@
     <data name="Product_WorkloadItems" xml:space="preserve">
         <value>Werklijst</value>
     </data>
+    <data name="ProductActivity_ProductActivityType" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="ProductActivity_Detail" xml:space="preserve">
+        <value>Detail</value>
+    </data>
     <data name="ProductCategory_Name" xml:space="preserve">
         <value>Naam</value>
     </data>

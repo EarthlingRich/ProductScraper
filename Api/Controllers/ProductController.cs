@@ -88,5 +88,34 @@ namespace Api.Controllers
             _productService.Delete(id);
             return Redirect("Index");
         }
+
+        public IActionResult ProductActivityList()
+        {
+            return View();
+        }
+
+        public IActionResult ProductActivities(IDataTablesRequest dataTablesRequest)
+        {
+            var productActivitiesQuery = _context.ProductActivities
+                    .Include(_ => _.Product)
+                    .Take(1000)
+                    .OrderByDescending(_ => _.CreatedOn)
+                    .AsQueryable();
+            var totalCount = productActivitiesQuery.Count();
+
+            if (dataTablesRequest.Search.Value != null)
+            {
+                productActivitiesQuery = productActivitiesQuery.Where(_ => _.Product.Name.Contains(dataTablesRequest.Search.Value));
+            }
+
+            var filteredCount = productActivitiesQuery.Count();
+            var products = productActivitiesQuery.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
+
+            var data = products.Select(_ => _mapper.Map<ProductActivityListViewModel>(_));
+
+            var response = DataTablesResponse.Create(dataTablesRequest, totalCount, filteredCount, data);
+
+            return new DataTablesJsonResult(response, true);
+        }
     }
 }

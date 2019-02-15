@@ -39,6 +39,9 @@
     <data name="Ingredient_Index" xml:space="preserve">
         <value>Ingrediënten</value>
     </data>
+    <data name="ProductActivities_Index" xml:space="preserve">
+        <value>Activiteiten</value>
+    </data>
     <data name="Product_Index" xml:space="preserve">
         <value>Producten</value>
     </data>

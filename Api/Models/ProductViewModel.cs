@@ -90,14 +90,4 @@ namespace Api.Models
         [Display(Name = "ProductActivity_CreatedOn", ResourceType = typeof(DomainTerms))]
         public string CreatedOn { get; set; }
     }
-
-    public class ProductApiViewModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Url { get; set; }
-        public string Ingredients { get; set; }
-        public int VeganType { get; set; }
-        public bool IsProcessed { get; set; }
-    }
 }

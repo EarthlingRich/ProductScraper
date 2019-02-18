@@ -86,6 +86,9 @@ namespace Api.Models
 
         [Display(Name = "ProductActivity_Detail", ResourceType = typeof(DomainTerms))]
         public string Detail { get; set; }
+
+        [Display(Name = "ProductActivity_CreatedOn", ResourceType = typeof(DomainTerms))]
+        public string CreatedOn { get; set; }
     }
 
     public class ProductApiViewModel

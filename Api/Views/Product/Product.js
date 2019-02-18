@@ -34,7 +34,8 @@ export function initProductActivityList() {
             [
                 { data: 'productName' },
                 { data: 'type' },
-                { data: 'detail' }
+                { data: 'detail' },
+                { data: 'createdOn' }
             ],
         columnDefs: [
             {

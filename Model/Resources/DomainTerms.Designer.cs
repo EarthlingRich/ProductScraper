@@ -149,6 +149,12 @@ namespace Model.Resources {
             }
         }
         
+        public static string ProductActivity_CreatedOn {
+            get {
+                return ResourceManager.GetString("ProductActivity_CreatedOn", resourceCulture);
+            }
+        }
+        
         public static string ProductActivity_Detail {
             get {
                 return ResourceManager.GetString("ProductActivity_Detail", resourceCulture);

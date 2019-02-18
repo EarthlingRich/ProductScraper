@@ -63,6 +63,9 @@
     <data name="ProductActivity_ProductActivityType" xml:space="preserve">
         <value>Type</value>
     </data>
+    <data name="ProductActivity_CreatedOn" xml:space="preserve">
+        <value>Datum</value>
+    </data>
     <data name="ProductActivity_Detail" xml:space="preserve">
         <value>Detail</value>
     </data>

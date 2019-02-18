@@ -98,8 +98,8 @@ namespace Api.Controllers
         {
             var productActivitiesQuery = _context.ProductActivities
                     .Include(_ => _.Product)
-                    .Take(1000)
                     .OrderByDescending(_ => _.CreatedOn)
+                    .Take(1000)
                     .AsQueryable();
             var totalCount = productActivitiesQuery.Count();
 

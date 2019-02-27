@@ -128,9 +128,7 @@ namespace Application.Services
 
         public void ProcessAll()
         {
-            var productIds = _context.Products
-                    .Where(_ => !_.IsProcessed)
-                    .Select(_ => _.Id);
+            var productIds = _context.Products.Select(_ => _.Id);
             var ingredients = _context.Ingredients.ToList();
 
             foreach(var productId in productIds)
@@ -145,37 +143,6 @@ namespace Application.Services
                 SetVeganType(product);
 
                 if (product.IsProcessed)
-                {
-                    var workloadItems = product.WorkloadItems.Where(_ => !_.IsProcessed);
-                    foreach (var workloadItem in workloadItems)
-                    {
-                        workloadItem.IsProcessed = true;
-                    }
-                }
-
-                _context.SaveChanges();
-            }
-        }
-
-        public void ProcessAllForIngredient(int ingredientId)
-        {
-            var productIds = _context.Products.Select(_ => _.Id);
-            var ingredients = _context.Ingredients.Where(_ => _.Id == ingredientId).ToList();
-
-            foreach (var productId in productIds)
-            {
-                var product = _context.Products
-                        .Include(p => p.WorkloadItems)
-                        .Include(p => p.ProductActivities)
-                        .Include("ProductIngredients.Ingredient")
-                        .Single(_ => _.Id == productId);
-
-                var oldproductIsProcessed = product.IsProcessed;
-
-                SetMatchedIngredients(product, ingredients);
-                SetVeganType(product, false);
-
-                if (oldproductIsProcessed == product.IsProcessed)
                 {
                     var workloadItems = product.WorkloadItems.Where(_ => !_.IsProcessed);
                     foreach (var workloadItem in workloadItems)
@@ -263,7 +230,7 @@ namespace Application.Services
             var outdatedIngredients = new List<Ingredient>();
             foreach (var matchedIngredient in product.MatchedIngredients)
             {
-                if (!foundIngredients.Contains(matchedIngredient) && ingredients.Contains(matchedIngredient))
+                if (!foundIngredients.Contains(matchedIngredient))
                 {
                     outdatedIngredients.Add(matchedIngredient);
                 }
@@ -281,11 +248,11 @@ namespace Application.Services
             }
         }
 
-        private void SetVeganType(Product product, bool shouldCheckIsStoreAdvertisedVegan = true)
+        private void SetVeganType(Product product)
         {
             var oldVeganType = product.VeganType;
 
-            if (shouldCheckIsStoreAdvertisedVegan && product.IsStoreAdvertisedVegan)
+            if (product.IsStoreAdvertisedVegan)
             {
                 product.VeganType = VeganType.Vegan;
                 product.IsProcessed = true;

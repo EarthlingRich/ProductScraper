@@ -16,14 +16,12 @@ namespace Api.Controllers
         readonly IMapper _mapper;
         readonly ApplicationContext _context;
         readonly IngredientApplicationService _ingredientService;
-        readonly ProductApplicationService _productService;
 
         public IngredientController(ApplicationContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
             _ingredientService = new IngredientApplicationService(_context, _mapper);
-            _productService = new ProductApplicationService(_context, _mapper);
         }
 
         public IActionResult Index()
@@ -93,12 +91,6 @@ namespace Api.Controllers
             }
 
             return Redirect(nameof(Index));
-        }
-
-        public IActionResult Process(int id)
-        {
-            _productService.ProcessAllForIngredient(id);
-            return Update(id);
         }
     }
 }

@@ -199,12 +199,20 @@ namespace ProductScraper.Scrapers
             var allergyInfo = GetAllergyInfo(driver);
             var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
+            var code = "";
+            var codeMatch = Regex.Match(@"(?:https:\/\/www\.ah\.nl\/producten\/product\/)(\w*)", url);
+            if (codeMatch.Success)
+            {
+                code = codeMatch.Groups[1].Value;
+            }
+
             try
             {
                 var request = new ProductStoreRequest
                 {
                     StoreType = StoreType.AlbertHeijn,
                     Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
+                    Code = code,
                     Url = url,
                     Ingredients = ingredients,
                     AllergyInfo = allergyInfo,

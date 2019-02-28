@@ -252,7 +252,7 @@ namespace Application.Services
         {
             var oldVeganType = product.VeganType;
 
-            if (product.IsStoreAdvertisedVegan)
+            if (product.IsStoreAdvertisedVegan || product.IsManufacturerAdvertisedVegan)
             {
                 product.VeganType = VeganType.Vegan;
                 product.IsProcessed = true;

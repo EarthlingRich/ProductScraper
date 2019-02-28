@@ -74,7 +74,7 @@ namespace Application.Services
             var product = _context.Products
                     .Include(p => p.WorkloadItems)
                     .Include(p => p.ProductProductCategories)
-                    .Single(_ => _.Url == request.Url);
+                    .Single(_ => _.Code == request.Code);
 
             if (request.Ingredients != product.Ingredients || request.AllergyInfo != product.AllergyInfo)
             {
@@ -110,7 +110,7 @@ namespace Application.Services
 
         public void CreateOrUpdate(ProductStoreRequest request)
         {
-            var existingProduct = _context.Products.Any(_ => _.Url == request.Url);
+            var existingProduct = _context.Products.Any(_ => _.Code == request.Code);
             if (!existingProduct)
             {
                 Create(request);

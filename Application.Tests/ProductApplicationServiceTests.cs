@@ -39,6 +39,7 @@ namespace Application.Tests
             {
                 Id = 100,
                 Name = "Product 1",
+                Code = "1",
                 Url = "Product 1 Url",
                 StoreType = StoreType.AlbertHeijn,
                 LastScrapeDate = ScrapeDate
@@ -52,6 +53,7 @@ namespace Application.Tests
             {
                 Id = 101,
                 Name = "Product 2",
+                Code = "2",
                 Url = "Product 2 Url",
                 StoreType = StoreType.Jumbo,
                 LastScrapeDate = ScrapeDate
@@ -91,6 +93,7 @@ namespace Application.Tests
                 {
                     Name = "Product new",
                     StoreType = StoreType.AlbertHeijn,
+                    Code = "new",
                     Url = "Product new url",
                     Ingredients = "Ingredients",
                     AllergyInfo = "Allergy info",
@@ -137,6 +140,7 @@ namespace Application.Tests
                 {
                     Name = "Product new",
                     StoreType = StoreType.AlbertHeijn,
+                    Code = "1",
                     Url = "Product 1 Url",
                     Ingredients = "Ingredients",
                     AllergyInfo = "Allergy info",

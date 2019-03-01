@@ -200,7 +200,7 @@ namespace ProductScraper.Scrapers
             var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
             var code = "";
-            var codeMatch = Regex.Match(@"(?:https:\/\/www\.ah\.nl\/producten\/product\/)(\w*)", url);
+            var codeMatch = Regex.Match(url, @"(?:https:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
             if (codeMatch.Success)
             {
                 code = codeMatch.Groups[1].Value;
@@ -208,6 +208,11 @@ namespace ProductScraper.Scrapers
 
             try
             {
+                if (code == "")
+                {
+                    throw new ArgumentException("Product code is empty");
+                }
+
                 var request = new ProductStoreRequest
                 {
                     StoreType = StoreType.AlbertHeijn,

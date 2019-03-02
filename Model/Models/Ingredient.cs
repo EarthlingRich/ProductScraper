@@ -20,6 +20,15 @@ namespace Model.Models
             set { KeywordsString = string.Join(";", value).ToLower(); }
         }
 
+        [Column("IgnoreKeywords")]
+        public string IgnoreKeywordsString { get; set; }
+        [NotMapped]
+        public string[] IgnoreKeywords
+        {
+            get { return !string.IsNullOrEmpty(IgnoreKeywordsString) ? IgnoreKeywordsString.Split(";") : new string[0]; }
+            set { IgnoreKeywordsString = string.Join(";", value).ToLower(); }
+        }
+
         [Column("AllergyKeywords")]
         public string AllergyKeywordsString { get; set; }
         [NotMapped]

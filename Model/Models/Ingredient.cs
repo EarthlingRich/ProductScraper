@@ -14,19 +14,19 @@ namespace Model.Models
         [Column("Keywords")]
         public string KeywordsString { get; set; }
         [NotMapped]
-        public string[] KeyWords
+        public string[] Keywords
         {
             get { return !string.IsNullOrEmpty(KeywordsString) ? KeywordsString.Split(";") : new string[0]; }
-            set { KeywordsString = string.Join(";", value); }
+            set { KeywordsString = string.Join(";", value).ToLower(); }
         }
 
-        [Column("AllergyKeyWords")]
+        [Column("AllergyKeywords")]
         public string AllergyKeywordsString { get; set; }
         [NotMapped]
         public string[] AllergyKeywords
         {
             get { return !string.IsNullOrEmpty(AllergyKeywordsString) ? AllergyKeywordsString.Split(";") : new string[0]; }
-            set { AllergyKeywordsString = string.Join(";", value); }
+            set { AllergyKeywordsString = string.Join(";", value).ToLower(); }
         }
 
         public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>

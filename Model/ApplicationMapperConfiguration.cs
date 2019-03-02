@@ -11,7 +11,7 @@ namespace Model
         {
             //Ingredient
             CreateMap<IngredientUpdateRequest, Ingredient>(MemberList.Source)
-                .ForMember(_ => _.KeyWords, opt => opt.Ignore())
+                .ForMember(_ => _.Keywords, opt => opt.Ignore())
                 .ForMember(_ => _.AllergyKeywords, opt => opt.Ignore());
             CreateMap<IngredientCreateRequest, Ingredient>(MemberList.Source);
 

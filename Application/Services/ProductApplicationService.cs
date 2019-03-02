@@ -314,7 +314,7 @@ namespace Application.Services
 
         private bool DetectKeyword(Ingredient ingredient, Product product)
         {
-            foreach (var keyWord in ingredient.KeyWords)
+            foreach (var keyWord in ingredient.Keywords)
             {
                 var match = Regex.Match(" " + product.Ingredients + " ", @"[\s\W]" + keyWord + @"[\s\W]");
                 if (match.Success)

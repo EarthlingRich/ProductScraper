@@ -36,7 +36,7 @@ namespace Api.Models
                 Request = mapper.Map<IngredientUpdateRequest>(ingredient)
             };
 
-            ingredientUpdateViewModel.Keywords.AddRange(ingredient.KeyWords);
+            ingredientUpdateViewModel.Keywords.AddRange(ingredient.Keywords);
             ingredientUpdateViewModel.AllergyKeywords.AddRange(ingredient.AllergyKeywords);
 
             return ingredientUpdateViewModel;

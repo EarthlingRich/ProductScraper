@@ -300,7 +300,7 @@ namespace Application.Tests
                 Id = 200,
                 Name = "Ingredient 1",
                 VeganType = VeganType.Unsure,
-                KeyWords = new[] { "notvegan" }
+                Keywords = new[] { "notvegan" }
             };
 
             using (var context = new ApplicationContext(_options))
@@ -353,7 +353,7 @@ namespace Application.Tests
                 Name = "Ingredient 1",
                 VeganType = VeganType.Unsure,
                 NeedsReview = true,
-                KeyWords = new[] { "notvegan" }
+                Keywords = new[] { "notvegan" }
             };
             using (var context = new ApplicationContext(_options))
             {
@@ -401,7 +401,7 @@ namespace Application.Tests
                     Id = 200,
                     Name = "Ingredient 1",
                     VeganType = VeganType.Not,
-                    KeyWords = new[] { "notvegan" },
+                    Keywords = new[] { "notvegan" },
                     AllergyKeywords = new[] { "notvegan" }
                 };
                 context.Ingredients.Add(ingredient);
@@ -492,7 +492,7 @@ namespace Application.Tests
                     Id = 200,
                     Name = "Ingredient 1",
                     VeganType = VeganType.Not,
-                    KeyWords = new[] { "notvegan" }
+                    Keywords = new[] { "notvegan" }
                 };
                 context.Ingredients.Add(ingredient);
 
@@ -571,7 +571,7 @@ namespace Application.Tests
                     Id = 200,
                     Name = "Ingredient 1",
                     VeganType = VeganType.Unsure,
-                    KeyWords = new[] { "notvegan" },
+                    Keywords = new[] { "notvegan" },
                     AllergyKeywords= new[] { "notvegan" }
                 };
                 context.Ingredients.Add(ingredient);
@@ -612,7 +612,7 @@ namespace Application.Tests
                     Id = 200,
                     Name = "Ingredient 1",
                     VeganType = VeganType.Not,
-                    KeyWords = new[] { "notvegan" },
+                    Keywords = new[] { "notvegan" },
                     AllergyKeywords = new[] { "notvegan" }
                 };
                 context.Ingredients.Add(ingredient);

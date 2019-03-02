@@ -79,7 +79,7 @@ namespace Application.Tests
             {
                 Id = 100,
                 Name = "Ingredient Update",
-                KeywordsString = "KeyWord1;KeyWord2",
+                KeywordsString = "Keyword1;Keyword2",
                 AllergyKeywordsString = "Allergy1;Allergy2"
             };
 
@@ -98,7 +98,7 @@ namespace Application.Tests
                 var ingredient = context.Ingredients.Find(100);
                 Assert.AreEqual(request.Name, ingredient.Name);
                 Assert.AreEqual(request.KeywordsString, ingredient.KeywordsString);
-                CollectionAssert.AreEqual(new string[] { "KeyWord1", "KeyWord2" }, ingredient.KeyWords);
+                CollectionAssert.AreEqual(new string[] { "Keyword1", "Keyword2" }, ingredient.Keywords);
                 Assert.AreEqual(request.AllergyKeywordsString, ingredient.AllergyKeywordsString);
                 CollectionAssert.AreEqual(new string[] { "Allergy1", "Allergy2" }, ingredient.AllergyKeywords);
             }

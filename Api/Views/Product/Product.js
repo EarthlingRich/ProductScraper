@@ -48,3 +48,13 @@ export function initProductActivityList() {
         ]
     });
 }
+
+export function deleteProductActivity(productActivityId) {
+    $.ajax({
+        type: "POST",
+        url: Utils.getBaseUrl() + "/Product/DeleteProductActivity",
+        data: {
+            productActivityId: productActivityId
+        }
+    });
+}

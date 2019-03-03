@@ -89,6 +89,13 @@ namespace Api.Controllers
             return Redirect("Index");
         }
 
+        [HttpPost]
+        public IActionResult DeleteProductActivity(int productActivityId)
+        {
+            _productService.DeleteProdictActivity(productActivityId);
+            return new OkObjectResult("");
+        }
+
         public IActionResult ProductActivityList()
         {
             return View();

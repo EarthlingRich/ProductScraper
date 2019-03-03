@@ -128,17 +128,21 @@
                     <th>@DomainTerms.WorkloadItem_Message</th>
                     <th>@DomainTerms.WorkloadItem_Message</th>
                     <th>@DomainTerms.WorkloadItem_CreatedOn</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var productActivity in Model.ProductActivities)
-            {
-                <tr>
-                    <td>@productActivity.Type</td>
-                    <td>@productActivity.Detail</td>
-                    <td>@productActivity.CreatedOn</td>
-                </tr>
-        }
+                {
+                    <tr>
+                        <td>@productActivity.Type</td>
+                        <td>@productActivity.Detail</td>
+                        <td>@productActivity.CreatedOn</td>
+                        <td>
+                            <i class="material-icons" aria-hidden="true" onclick="Product.deleteProductActivity(@productActivity.Id)">delete</i>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

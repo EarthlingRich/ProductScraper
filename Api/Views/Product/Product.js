@@ -61,3 +61,16 @@ export function deleteProductActivity(productActivityId) {
         }
     });
 }
+
+export function deleteWorkloadItem(workloadItemId) {
+    $.ajax({
+        type: "POST",
+        url: Utils.getBaseUrl() + "/Product/DeleteWorkloadItem",
+        data: {
+            workloadItemId: workloadItemId
+        },
+        success: function () {
+            $("#workload-item-row-" + workloadItemId).remove();
+        }
+    });
+}

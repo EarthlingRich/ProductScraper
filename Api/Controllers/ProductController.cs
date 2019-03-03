@@ -96,6 +96,13 @@ namespace Api.Controllers
             return new OkObjectResult("");
         }
 
+        [HttpPost]
+        public IActionResult DeleteWorkloadItem(int workloadItemId)
+        {
+            _productService.DeleteWorkloadItem(workloadItemId);
+            return new OkObjectResult("");
+        }
+
         public IActionResult ProductActivityList()
         {
             return View();

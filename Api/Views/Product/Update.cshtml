@@ -92,13 +92,14 @@
                         <th>@DomainTerms.WorkloadItem_Message</th>
                         <th>@DomainTerms.WorkloadItem_CreatedOn</th>
                         <th>@DomainTerms.WorkloadItem_IsProcessed</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (var i = 0; i < Model.WorkloadItems.Count; i++)
                     {
                         var viewModel = @Model.WorkloadItems.Single(_ => _.Id == Model.Request.WorkloadItems[i].Id);
-                        <tr>
+                        <tr id="workload-item-row-@Model.Request.WorkloadItems[i].Id">
                             <td>
                                 @viewModel.Message
                                 @Html.HiddenFor(_ => _.Request.WorkloadItems[i].Id)
@@ -111,6 +112,9 @@
                                         <span></span>
                                     </label>
                                 </p>
+                            </td>
+                            <td>
+                                <a class="btn-flat waves-effect waves-light" onclick="Product.deleteWorkloadItem(@Model.Request.WorkloadItems[i].Id)"><i class="material-icons" aria-hidden="true">delete</i></a>
                             </td>
                         </tr>
                     }

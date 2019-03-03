@@ -305,6 +305,13 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
+        public void DeleteWorkloadItem(int workloadItemId)
+        {
+            var workloadItem = _context.WorkloadItems.Find(workloadItemId);
+            _context.WorkloadItems.Remove(workloadItem);
+            _context.SaveChanges();
+        }
+
         private bool DetectAllergyKeyword(Ingredient ingredient, Product product)
         {
             foreach (var keyWord in ingredient.AllergyKeywords)

@@ -134,12 +134,12 @@
             <tbody>
                 @foreach (var productActivity in Model.ProductActivities)
                 {
-                    <tr>
+                    <tr id="product-activity-row-@productActivity.Id">
                         <td>@productActivity.Type</td>
                         <td>@productActivity.Detail</td>
                         <td>@productActivity.CreatedOn</td>
                         <td>
-                            <i class="material-icons" aria-hidden="true" onclick="Product.deleteProductActivity(@productActivity.Id)">delete</i>
+                            <a class="btn-flat waves-effect waves-light" onclick="Product.deleteProductActivity(@productActivity.Id)"><i class="material-icons" aria-hidden="true">delete</i></a>
                         </td>
                     </tr>
                 }

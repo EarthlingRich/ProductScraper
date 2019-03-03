@@ -55,6 +55,9 @@ export function deleteProductActivity(productActivityId) {
         url: Utils.getBaseUrl() + "/Product/DeleteProductActivity",
         data: {
             productActivityId: productActivityId
+        },
+        success: function () {
+            $("#product-activity-row-" + productActivityId).remove();
         }
     });
 }

@@ -298,6 +298,13 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
+        public void DeleteProdictActivity(int productActivityId)
+        {
+            var productActivity = _context.ProductActivities.Find(productActivityId);
+            _context.ProductActivities.Remove(productActivity);
+            _context.SaveChanges();
+        }
+
         private bool DetectAllergyKeyword(Ingredient ingredient, Product product)
         {
             foreach (var keyWord in ingredient.AllergyKeywords)

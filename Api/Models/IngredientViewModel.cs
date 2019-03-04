@@ -20,13 +20,15 @@ namespace Api.Models
     public class IngredientUpdateViewModel
     {
         public IngredientUpdateRequest Request { get; set; }
-        public List<string> Keywords { get; set; }
         public List<string> AllergyKeywords { get; set; }
+        public List<string> IgnoreKeywords { get; set; }
+        public List<string> Keywords { get; set; }
 
         public IngredientUpdateViewModel()
         {
-            Keywords = new List<string>();
             AllergyKeywords = new List<string>();
+            IgnoreKeywords = new List<string>();
+            Keywords = new List<string>();
         }
 
         public static IngredientUpdateViewModel Map(Ingredient ingredient, IMapper mapper)
@@ -36,8 +38,9 @@ namespace Api.Models
                 Request = mapper.Map<IngredientUpdateRequest>(ingredient)
             };
 
-            ingredientUpdateViewModel.Keywords.AddRange(ingredient.KeyWords);
             ingredientUpdateViewModel.AllergyKeywords.AddRange(ingredient.AllergyKeywords);
+            ingredientUpdateViewModel.IgnoreKeywords.AddRange(ingredient.IgnoreKeywords);
+            ingredientUpdateViewModel.Keywords.AddRange(ingredient.Keywords);
 
             return ingredientUpdateViewModel;
         }

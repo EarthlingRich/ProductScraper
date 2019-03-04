@@ -9,6 +9,7 @@ using System;
 using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using Api.Controllers;
+using Api.Models;
 
 namespace Api
 {
@@ -27,7 +28,7 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(ApiMapperConfiguration), typeof(ApplicationMapperConfiguration));
             services.RegisterDataTables();
 
             IConfigurationRoot configuration = new ConfigurationBuilder()

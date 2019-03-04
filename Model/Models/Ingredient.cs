@@ -14,28 +14,25 @@ namespace Model.Models
         [Column("Keywords")]
         public string KeywordsString { get; set; }
         [NotMapped]
-        public string[] KeyWords
+        public string[] Keywords
         {
             get { return !string.IsNullOrEmpty(KeywordsString) ? KeywordsString.Split(";") : new string[0]; }
-            set { KeywordsString = string.Join(";", value); }
         }
 
-        [Column("AllergyKeyWords")]
+        [Column("IgnoreKeywords")]
+        public string IgnoreKeywordsString { get; set; }
+        [NotMapped]
+        public string[] IgnoreKeywords
+        {
+            get { return !string.IsNullOrEmpty(IgnoreKeywordsString) ? IgnoreKeywordsString.Split(";") : new string[0]; }
+        }
+
+        [Column("AllergyKeywords")]
         public string AllergyKeywordsString { get; set; }
         [NotMapped]
         public string[] AllergyKeywords
         {
             get { return !string.IsNullOrEmpty(AllergyKeywordsString) ? AllergyKeywordsString.Split(";") : new string[0]; }
-            set { AllergyKeywordsString = string.Join(";", value); }
-        }
-
-        public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
-        {
-            public void Configure(EntityTypeBuilder<Ingredient> builder)
-            {
-                builder.Property(_ => _.KeywordsString);
-                builder.Property(_ => _.AllergyKeywordsString);
-            }
         }
     }
 }

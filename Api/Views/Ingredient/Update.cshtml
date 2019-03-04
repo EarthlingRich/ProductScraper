@@ -8,19 +8,25 @@
 
 <script type="text/javascript">
     $(function() {
-        var keywords = [
-            @foreach(var keyword in Model.Keywords)
-            {
-                <text>{tag: '@keyword'},</text>
-            }
-        ];
         var allergyKeywords = [
             @foreach(var allergyKeyword in Model.AllergyKeywords)
             {
                 <text>{tag: '@allergyKeyword'},</text>
             }
         ];
-        Ingredient.initUpdate(keywords, allergyKeywords);
+        var ignoreKeywords = [
+            @foreach(var ignoreKeyword in Model.IgnoreKeywords)
+            {
+                <text>{tag: '@ignoreKeyword'},</text>
+            }
+        ];
+        var keywords = [
+            @foreach(var keyword in Model.Keywords)
+            {
+                <text>{tag: '@keyword'},</text>
+            }
+        ];
+        Ingredient.initUpdate(allergyKeywords, ignoreKeywords, keywords);
     });
 </script>
 
@@ -36,8 +42,9 @@
 {
 <div class="row">
     @Html.HiddenFor(_ => _.Request.Id)
-    @Html.HiddenFor(_ => _.Request.KeywordsString)
     @Html.HiddenFor(_ => _.Request.AllergyKeywordsString)
+    @Html.HiddenFor(_ => _.Request.IgnoreKeywordsString)
+    @Html.HiddenFor(_ => _.Request.KeywordsString)
     <div class="clearfix">
         <div class="input-field col s4">
             @Html.TextBoxFor(_ => _.Request.Name)
@@ -63,8 +70,14 @@
         </div>
     </div>
     <div class="col s12">
+        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.IgnoreKeywordsString)</div>
+        <div id="ignoreKeywords-chips" class="chips input-field">
+            <input class="input">
+        </div>
+    </div>
+    <div class="col s12">
         <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.AllergyKeywordsString)</div>
-        <div id="allergykeywords-chips" class="chips input-field">
+        <div id="allergyKeywords-chips" class="chips input-field">
             <input class="input">
         </div>
     </div>

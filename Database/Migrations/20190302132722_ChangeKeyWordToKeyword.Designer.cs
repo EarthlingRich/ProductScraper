@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Model;
 
 namespace Database.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20190302132722_ChangeKeyWordToKeyword")]
+    partial class ChangeKeyWordToKeyword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +29,6 @@ namespace Database.Migrations
 
                     b.Property<string>("AllergyKeywordsString")
                         .HasColumnName("AllergyKeywords");
-
-                    b.Property<string>("IgnoreKeywordsString")
-                        .HasColumnName("IgnoreKeywords");
 
                     b.Property<string>("KeywordsString")
                         .HasColumnName("Keywords");

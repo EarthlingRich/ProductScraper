@@ -53,6 +53,12 @@ namespace Model.Resources {
             }
         }
         
+        public static string Ingredient_IgnoreKeywords {
+            get {
+                return ResourceManager.GetString("Ingredient_IgnoreKeywords", resourceCulture);
+            }
+        }
+        
         public static string Ingredient_Keywords {
             get {
                 return ResourceManager.GetString("Ingredient_Keywords", resourceCulture);

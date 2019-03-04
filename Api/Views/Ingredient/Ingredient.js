@@ -20,26 +20,11 @@
     });
 }
 
-export function initUpdate(keywords, allergyKeywords) {
+export function initUpdate(allergyKeywords, ignoreKeywords, keywords) {
     Utils.initSelect();
 
-    var keywordsChipsElement = document.querySelector('#keywords-chips');
-    var options = {
-        data: keywords,
-        placeholder: 'Ingrediënten',
-        secondaryPlaceholder: 'ingrediënt',
-        onChipAdd: function() {
-            UpdateKeywordsString('Request_KeywordsString', this);
-        },
-        onChipDelete: function() {
-            UpdateKeywordsString('Request_KeywordsString', this);
-        }
-    }
-
-    M.Chips.init(keywordsChipsElement, options);
-
-    var allergykeywordsChipsElement = document.querySelector('#allergykeywords-chips');
-    var optionsAllergy = {
+    var allergyKeywordsChipsElement = document.querySelector('#allergyKeywords-chips');
+    var optionsAllergyKeywords = {
         data: allergyKeywords,
         placeholder: 'Allergiën',
         secondaryPlaceholder: 'allergie',
@@ -51,7 +36,37 @@ export function initUpdate(keywords, allergyKeywords) {
         }
     }
 
-    M.Chips.init(allergykeywordsChipsElement, optionsAllergy);
+    M.Chips.init(allergyKeywordsChipsElement, optionsAllergyKeywords);
+
+    var ignoreKeywordsChipsElement = document.querySelector('#ignoreKeywords-chips');
+    var optionsIgnoreKeywords = {
+        data: ignoreKeywords,
+        placeholder: 'Negeren',
+        secondaryPlaceholder: 'negeren',
+        onChipAdd: function() {
+            UpdateKeywordsString('Request_IgnoreKeywordsString', this);
+        },
+        onChipDelete: function() {
+            UpdateKeywordsString('Request_IgnoreKeywordsString', this);
+        }
+    }
+
+    M.Chips.init(ignoreKeywordsChipsElement, optionsIgnoreKeywords);
+
+    var keywordsChipsElement = document.querySelector('#keywords-chips');
+    var optionsKeywords = {
+        data: keywords,
+        placeholder: 'Ingrediënten',
+        secondaryPlaceholder: 'ingrediënt',
+        onChipAdd: function() {
+            UpdateKeywordsString('Request_KeywordsString', this);
+        },
+        onChipDelete: function() {
+            UpdateKeywordsString('Request_KeywordsString', this);
+        }
+    }
+
+    M.Chips.init(keywordsChipsElement, optionsKeywords);
 }
 
 function UpdateKeywordsString(id, chips) {

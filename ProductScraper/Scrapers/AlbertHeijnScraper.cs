@@ -58,7 +58,7 @@ namespace ProductScraper.Scrapers
             }
 
             //Lower scraping wait time
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //Get product data
             foreach (var productsUrlsForCategory in productUrlDictonary)

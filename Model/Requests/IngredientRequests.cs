@@ -26,6 +26,9 @@ namespace Model.Requests
         [Display(Name = "Ingredient_Keywords", ResourceType = typeof(DomainTerms))]
         public string KeywordsString { get; set; }
 
+        [Display(Name = "Ingredient_IgnoreKeywords", ResourceType = typeof(DomainTerms))]
+        public string IgnoreKeywordsString { get; set; }
+
         [Display(Name = "Ingredient_AllergyKeywords", ResourceType = typeof(DomainTerms))]
         public string AllergyKeywordsString { get; set; }
     }

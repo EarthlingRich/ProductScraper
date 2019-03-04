@@ -15,8 +15,11 @@
     <data name="Ingredient_AllergyKeywords" xml:space="preserve">
         <value>Allergiën</value>
     </data>
+    <data name="Ingredient_IgnoreKeywords" xml:space="preserve">
+        <value>Ingrediënt negeren</value>
+    </data>
     <data name="Ingredient_Keywords" xml:space="preserve">
-        <value>Ingrediënten</value>
+        <value>Ingrediënt</value>
     </data>
     <data name="Ingredient_Name" xml:space="preserve">
         <value>Naam</value>

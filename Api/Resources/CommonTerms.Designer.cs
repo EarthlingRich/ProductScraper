@@ -89,6 +89,12 @@ namespace Api.Resources {
             }
         }
         
+        public static string Home_BackgroundJobs {
+            get {
+                return ResourceManager.GetString("Home_BackgroundJobs", resourceCulture);
+            }
+        }
+        
         public static string Ingredient_Create {
             get {
                 return ResourceManager.GetString("Ingredient_Create", resourceCulture);

@@ -33,5 +33,10 @@ namespace Api.Controllers
         {
             return View();
         }
+
+        public IActionResult BackgroundJobs()
+        {
+            return View();
+        }
     }
 }

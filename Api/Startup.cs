@@ -61,7 +61,7 @@ namespace Api
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions { AppPath = null });
             app.UseHangfireServer();
 
             app.UseMvc(routes =>

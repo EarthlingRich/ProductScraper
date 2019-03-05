@@ -96,7 +96,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (var i = 0; i < Model.WorkloadItems.Count; i++)
+                    @for (var i = 0; i < Model.Request.WorkloadItems.Count; i++)
                     {
                         var viewModel = @Model.WorkloadItems.Single(_ => _.Id == Model.Request.WorkloadItems[i].Id);
                         <tr id="workload-item-row-@Model.Request.WorkloadItems[i].Id">

@@ -17,6 +17,8 @@ namespace Model
             CreateMap<IngredientCreateRequest, Ingredient>(MemberList.Source);
 
             //Product
+            CreateMap<Product, ProductUpdateRequest>(MemberList.Destination)
+                .ForMember(_ => _.WorkloadItems, opt => opt.MapFrom(wi => wi.WorkloadItems.OrderByDescending(_ => _.CreatedOn)));
             CreateMap<ProductUpdateRequest, Product>(MemberList.Source)
                 .ForMember(_ => _.WorkloadItems, opt => opt.Ignore())
                 .AfterMap(UpdateList);

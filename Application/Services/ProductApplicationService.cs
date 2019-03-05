@@ -329,9 +329,9 @@ namespace Application.Services
         private bool DetectKeyword(Ingredient ingredient, Product product)
         {
             var ingredients = product.Ingredients;
-            foreach (var regex in ingredient.IgnoreKeywords)
+            foreach (var ignoreKeyword in ingredient.IgnoreKeywords)
             {
-                ingredients = Regex.Replace(ingredients, regex, "");
+                ingredients = ingredients.Replace(ignoreKeyword, "");
             }
 
             foreach (var keyWord in ingredient.Keywords)

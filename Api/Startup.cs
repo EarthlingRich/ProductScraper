@@ -10,6 +10,8 @@ using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using Api.Controllers;
 using Api.Models;
+using Hangfire;
+using Api.Application;
 
 namespace Api
 {
@@ -27,7 +29,7 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddAutoMapper(typeof(ApiMapperConfiguration), typeof(ApplicationMapperConfiguration));
             services.RegisterDataTables();
 
@@ -37,8 +39,10 @@ namespace Api
                 .AddJsonFile($"appsettings.{HostingEnvironment.EnvironmentName}.json", optional: true)
                 .Build();
 
-            services.AddDbContext<ApplicationContext>
-                (options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationContext>(_ => _.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddHangfire(_ => _.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +60,9 @@ namespace Api
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
 
             app.UseMvc(routes =>
             {

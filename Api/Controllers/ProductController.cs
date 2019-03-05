@@ -76,6 +76,7 @@ namespace Api.Controllers
             return Update(id);
         }
 
+        [HttpPost]
         public IActionResult ProcessAll()
         {
             BackgroundJob.Enqueue(() => _productService.ProcessAll());

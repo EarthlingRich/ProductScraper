@@ -4,6 +4,7 @@ using Application.Services;
 using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using DataTables.AspNet.Core;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
@@ -77,7 +78,7 @@ namespace Api.Controllers
 
         public IActionResult ProcessAll()
         {
-            _productService.ProcessAll();
+            BackgroundJob.Enqueue(() => _productService.ProcessAll());
 
             return Redirect("Index");
         }

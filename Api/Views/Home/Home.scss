@@ -3,3 +3,9 @@
         color: $primary-color;
     }
 }
+
+.background-jobs-frame {
+    height: calc(100vh - 15px);
+    width: calc(100% + 1.5rem);
+    margin: -0.75rem;
+}

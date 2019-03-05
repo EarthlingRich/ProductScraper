@@ -42,6 +42,7 @@
             </li>
             <li class="@(controller == IngredientController.RouteName && action == nameof(IngredientController.Index) ? "active" : "")"><a href="@Url.Action(nameof(IngredientController.Index), IngredientController.RouteName)">@CommonTerms.Ingredient_Index</a></li>
             <li class="@(controller == ProductCategoryController.RouteName && action == nameof(ProductCategoryController.Index) ? "active" : "")"><a href="@Url.Action(nameof(ProductCategoryController.Index), ProductCategoryController.RouteName)">@CommonTerms.ProductCategory_Index</a></li>
+            <li class="@(controller == HomeController.RouteName && action == nameof(HomeController.BackgroundJobs) ? "active" : "")"><a href="@Url.Action(nameof(HomeController.BackgroundJobs), HomeController.RouteName)">@CommonTerms.Home_BackgroundJobs</a></li>
         </ul>
         <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
     </header>

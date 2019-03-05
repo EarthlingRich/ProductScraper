@@ -20,3 +20,10 @@
         ]
     });
 }
+
+export function processAll() {
+    $.ajax({
+        type: "POST",
+        url: Utils.getBaseUrl() + "/Product/ProcessAll",
+    });
+}

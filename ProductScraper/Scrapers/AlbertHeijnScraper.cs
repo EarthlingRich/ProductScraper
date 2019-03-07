@@ -16,7 +16,6 @@ namespace ProductScraper.Scrapers
 {
     public class AlbertHeijnScraper : IProductScraper
     {
-        static readonly string URL = "https://www.ah.nl/producten/";
         readonly ApplicationContext _context;
         readonly ChromeDriver _driver;
         readonly ProductApplicationService _productService;
@@ -38,12 +37,14 @@ namespace ProductScraper.Scrapers
             var productUrlDictonary = new Dictionary<int, List<string>>();
 
             //Get main categorie url's
-            var productCategories = _context.ProductCategories.Include(_ => _.StoreCategories).Where(_ => _.StoreCategories.Any(sc => sc.StoreType == StoreType.AlbertHeijn));
+            var productCategories = _context.ProductCategories
+                    .Include(_ => _.StoreCategories)
+                    .Where(_ => _.StoreCategories.Any(sc => sc.StoreType == StoreType.AlbertHeijn));
 
             //Get product url's from main categories
             foreach (var productCategorie in productCategories)
             {
-                var productCategorieUrls = productCategorie.StoreCategories.Select(_ => _.Url);
+                var productCategorieUrls = productCategorie.StoreCategories.Where(_ => _.StoreType == StoreType.AlbertHeijn).Select(_ => _.Url);
                 foreach (var productCategorieUrl in productCategorieUrls)
                 {
                     if (productUrlDictonary.ContainsKey(productCategorie.Id))
@@ -76,86 +77,28 @@ namespace ProductScraper.Scrapers
             _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn, _scrapeDate);
         }
 
-        public void ScrapeCategory(string url)
+        public void ScrapeCategory(string scrapeCategoryName)
         {
             var productUrls = new List<string>();
-            var productCategorie = _context.ProductCategories.First(_ => _.StoreCategories.Any(sc => sc.Url == url));
+            var productCategorie = _context.ProductCategories
+                .Include(_ => _.StoreCategories)
+                .Single(_ => _.Name.ToLower() == scrapeCategoryName.ToLower());
 
             //Get product url's from category
-            productUrls.AddRange(GetProductUrls(url, _driver));
+            var productCategorieUrls = productCategorie.StoreCategories.Where(_ => _.StoreType == StoreType.AlbertHeijn).Select(_ => _.Url);
+            foreach (var productCategorieUrl in productCategorieUrls)
+            {
+                productUrls.AddRange(GetProductUrls(productCategorieUrl, _driver));
+            }
+
+            //Lower scraping wait time
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //Get product data
             foreach (string productUrl in productUrls)
             {
                 HandleProduct(productUrl, productCategorie, _driver);
             }
-        }
-
-        public void ScrapeAllCategories()
-        {
-            var productCategoryUrls = new List<string>();
-            var mainCategoryUrls = GetMainCategories(URL, _driver);
-
-            foreach(var mainCategoryUrl in mainCategoryUrls)
-            {
-                productCategoryUrls.AddRange(GetProductCategoryUrls(mainCategoryUrl, _driver));
-            }
-
-            productCategoryUrls = productCategoryUrls.Distinct().ToList();
-
-            foreach (var productCategoryUrl in productCategoryUrls)
-            {
-                if (!_context.StoreCategories.Any(_ => _.Url == productCategoryUrl))
-                {
-                    var storeCategory = new StoreCategory
-                    {
-                        Url = productCategoryUrl,
-                        StoreType = StoreType.AlbertHeijn
-                    };
-                    _context.StoreCategories.Add(storeCategory);
-                    _context.SaveChanges();
-                }
-            }
-        }
-
-        static List<string> GetMainCategories(string url, ChromeDriver driver)
-        {
-            driver.Navigate().GoToUrl(url);
-
-            return driver.FindElementsByXPath("//div[contains(@class, 'product-category-navigation-lane')]//a[contains(@class, 'category-link')]")
-                         .Select(_ => _.GetAttribute("href"))
-                         .ToList();
-        }
-
-        static List<string> GetProductCategoryUrls(string url, ChromeDriver driver)
-        {
-            var productCategoryUrls = new List<string>();
-
-            driver.Navigate().GoToUrl(url);
-
-            //Scroll to footer to load all categories and products
-            var footer = driver.FindElementByXPath("//footer");
-            Actions actions = new Actions(driver);
-            actions.MoveToElement(footer);
-            actions.Perform();
-
-            //Get product category url's, keep try loading sub categories unitl no categories are found
-            var productCategoryUrlsForPage = driver.FindElementsByXPath("//div[contains(@class, 'product-lane')]//div[contains(@class, 'legend')]//a[contains(@class, 'grid-item__content')]")
-                                            .Select(_ => _.GetAttribute("href"))
-                                            .Where(_ => _.StartsWith("https://www.ah.nl/producten/", StringComparison.InvariantCulture))
-                                            .ToList();
-
-            productCategoryUrls.AddRange(productCategoryUrlsForPage);
-
-            if (productCategoryUrlsForPage.Any())
-            {
-                foreach (string productCategoryUrl in productCategoryUrlsForPage)
-                {
-                    productCategoryUrls.AddRange(GetProductUrls(productCategoryUrl, driver));
-                }
-            }
-
-            return productCategoryUrls;
         }
 
         static List<string> GetProductUrls(string url, ChromeDriver driver)

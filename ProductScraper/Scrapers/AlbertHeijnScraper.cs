@@ -238,7 +238,16 @@ namespace ProductScraper.Scrapers
 
         private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)
         {
-            var isVegan = driver.PageSource.Contains("icon--ah_vegan");
+            var isVegan = false;
+            var icons = driver.FindElementsByXPath("//li[contains(@class, 'list__item set--icon')]");
+
+            foreach(var icon in icons)
+            {
+                if (icon.Text.ToLower().Contains("vegan"))
+                {
+                    isVegan = true;
+                }
+            }
 
             if (!isVegan)
             {

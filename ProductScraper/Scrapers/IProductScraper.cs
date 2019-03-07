@@ -4,6 +4,5 @@
     {
         void ScrapeAll();
         void ScrapeCategory(string url);
-        void ScrapeAllCategories();
     }
 }

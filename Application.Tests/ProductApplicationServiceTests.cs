@@ -507,8 +507,50 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include("ProductIngredients.Ingredient").Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Not, product.VeganType);
+                Assert.AreEqual(1, product.MatchedIngredients.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ProcessVeganType_Do_Not_Match_IgnoreKeyword_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    Ingredients = "test, notvegan ignore, test"
+                };
+                context.Products.Add(product);
+
+                var ingredient = new Ingredient
+                {
+                    Id = 200,
+                    Name = "Ingredient 1",
+                    VeganType = VeganType.Not,
+                    KeywordsString = "notvegan",
+                    IgnoreKeywordsString = "notvegan ignore",
+                };
+                context.Ingredients.Add(ingredient);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessVeganType(200);
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Include("ProductIngredients.Ingredient").Single(p => p.Id == 200);
+                Assert.AreEqual(VeganType.Vegan, product.VeganType);
+                Assert.AreEqual(0, product.MatchedIngredients.Count());
             }
         }
 
@@ -546,8 +588,9 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include("ProductIngredients.Ingredient").Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Not, product.VeganType);
+                Assert.AreEqual(1, product.MatchedIngredients.Count());
             }
         }
 
@@ -587,8 +630,9 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include("ProductIngredients.Ingredient").Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Unsure, product.VeganType);
+                Assert.AreEqual(1, product.MatchedIngredients.Count());
             }
         }
 
@@ -628,8 +672,9 @@ namespace Application.Tests
             //Assert
             using (var context = new ApplicationContext(_options))
             {
-                var product = context.Products.Find(200);
+                var product = context.Products.Include("ProductIngredients.Ingredient").Single(p => p.Id == 200);
                 Assert.AreEqual(VeganType.Vegan, product.VeganType);
+                Assert.AreEqual(0, product.MatchedIngredients.Count());
             }
         }
 
@@ -660,6 +705,45 @@ namespace Application.Tests
             {
                 var product = context.Products.Find(200);
                 Assert.AreEqual(VeganType.Vegan, product.VeganType);
+            }
+        }
+
+
+        [TestMethod]
+        public void ProcessVeganType_Remove_Outdated_Ingredients_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                var ingredient = new Ingredient
+                {
+                    Id = 200,
+                    Name = "Ingredient 1"
+                };
+                context.Ingredients.Add(ingredient);
+
+                var product = new Product
+                {
+                    Id = 200,
+                    Name = "Product 1",
+                    IsStoreAdvertisedVegan = true
+                };
+                product.MatchedIngredients.Add(ingredient);
+                context.Products.Add(product);
+
+                context.SaveChanges();
+
+                var productService = new ProductApplicationService(context, _mapper);
+
+                // Act
+                productService.ProcessVeganType(200);
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Include("ProductIngredients.Ingredient").Single(p => p.Id == 200);
+                Assert.AreEqual(0, product.MatchedIngredients.Count());
             }
         }
 
@@ -709,6 +793,48 @@ namespace Application.Tests
                 var productOudated = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 200);
                 Assert.AreEqual(1, productOudated.WorkloadItems.Count());
                 Assert.AreEqual("Product niet gevonden", productOudated.WorkloadItems.First().Message);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteProductActivity_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                AddTestData(context);
+
+                // Act
+                var productService = new ProductApplicationService(context, _mapper);
+                productService.DeleteProductActivity(100);
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Include(p => p.ProductActivities).Single(p => p.Id == 100);
+                Assert.AreEqual(0, product.ProductActivities.Count());
+            }
+        }
+
+        [TestMethod]
+        public void DeleteWorkloadItem_Valid()
+        {
+            // Arrange
+            using (var context = new ApplicationContext(_options))
+            {
+                AddTestData(context);
+
+                // Act
+                var productService = new ProductApplicationService(context, _mapper);
+                productService.DeleteWorkloadItem(100);
+            }
+
+            //Assert
+            using (var context = new ApplicationContext(_options))
+            {
+                var product = context.Products.Include(p => p.WorkloadItems).Single(p => p.Id == 100);
+                Assert.AreEqual(0, product.WorkloadItems.Count());
             }
         }
     }

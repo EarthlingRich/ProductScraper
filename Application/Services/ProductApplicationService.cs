@@ -159,7 +159,7 @@ namespace Application.Services
         {
             var product = _context.Products
                     .Include("ProductIngredients.Ingredient")
-                    .Single(_ => _.Id == productId);
+                    .Single(p => p.Id == productId);
             var oldVeganType = product.VeganType;
             var ingredients = _context.Ingredients.ToList();
 
@@ -298,7 +298,7 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void DeleteProdictActivity(int productActivityId)
+        public void DeleteProductActivity(int productActivityId)
         {
             var productActivity = _context.ProductActivities.Find(productActivityId);
             _context.ProductActivities.Remove(productActivity);

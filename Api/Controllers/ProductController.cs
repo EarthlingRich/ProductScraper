@@ -94,7 +94,7 @@ namespace Api.Controllers
         [HttpPost]
         public IActionResult DeleteProductActivity(int productActivityId)
         {
-            _productService.DeleteProdictActivity(productActivityId);
+            _productService.DeleteProductActivity(productActivityId);
             return new OkObjectResult("");
         }
 

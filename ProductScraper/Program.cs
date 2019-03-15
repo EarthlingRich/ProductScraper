@@ -30,7 +30,10 @@ namespace ProductScraper
             );
             var mapper = new Mapper(config);
 
-            using (var driver = new ChromeDriver())
+            var options = new ChromeOptions();
+            options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
+
+            using (var driver = new ChromeDriver(options))
             using (var streamWriter = new StreamWriter(file))
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
@@ -54,6 +57,8 @@ namespace ProductScraper
             {
                 case StoreType.AlbertHeijn:
                     return new AlbertHeijnScraper(driver, context, mapper, streamWriter, DateTime.Now);
+                case StoreType.Jumbo:
+                    return new JumboScraper(driver, context, mapper, streamWriter, DateTime.Now);
                 default:
                     throw new ArgumentException("Product scraper for store not found.");
             }

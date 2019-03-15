@@ -146,6 +146,12 @@ namespace ProductScraper.Scrapers
         {
             driver.Navigate().GoToUrl(url);
 
+            //Skip product sets
+            if (driver.FindElementsByXPath("//button//span[contains(text(), 'Voeg set toe aan lijst')]").Any())
+            {
+                return;
+            }
+
             var ingredients = GetIngredients(driver);
             var allergyInfo = GetAllergyInfo(driver);
             var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
@@ -220,7 +226,7 @@ namespace ProductScraper.Scrapers
 
         private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)
         {
-            return driver.FindElementsByXPath("//div[contains(@class, 'jum-product-info-item')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any(); ;
+            return driver.FindElementsByXPath("//div[contains(@class, 'jum-product-info-item')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
         }
     }
 }

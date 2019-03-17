@@ -3,3 +3,23 @@
         margin-left: $size-xs;
     }
 }
+
+.store-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-weight: bold;
+    text-align: center;
+    line-height: 25px;
+
+    &--ah {
+        background-color: #3b9fe2;
+        color: white;
+        font-size: 13px;
+    }
+
+    &--jumbo {
+        background-color: #fdc513;
+        color: white;
+    }
+}

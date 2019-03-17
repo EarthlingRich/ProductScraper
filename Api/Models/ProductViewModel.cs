@@ -67,6 +67,9 @@ namespace Api.Models
         [Display(Name = "Product_Name", ResourceType = typeof(DomainTerms))]
         public string Name { get; set; }
 
+        [Display(Name = "Product_StoreType", ResourceType = typeof(DomainTerms))]
+        public StoreType StoreType { get; set; }
+
         [Display(Name = "Product_VeganType", ResourceType = typeof(DomainTerms))]
         public string VeganType { get; set; }
 
@@ -80,6 +83,9 @@ namespace Api.Models
 
         [Display(Name = "Product_Name", ResourceType = typeof(DomainTerms))]
         public string ProductName { get; set; }
+
+        [Display(Name = "Product_StoreType", ResourceType = typeof(DomainTerms))]
+        public StoreType StoreType { get; set; }
 
         [Display(Name = "ProductActivity_ProductActivityType", ResourceType = typeof(DomainTerms))]
         public string Type { get; set; }

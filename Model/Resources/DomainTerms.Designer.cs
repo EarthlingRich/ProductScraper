@@ -131,6 +131,12 @@ namespace Model.Resources {
             }
         }
         
+        public static string Product_StoreType {
+            get {
+                return ResourceManager.GetString("Product_StoreType", resourceCulture);
+            }
+        }
+        
         public static string Product_VeganDescription {
             get {
                 return ResourceManager.GetString("Product_VeganDescription", resourceCulture);

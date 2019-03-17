@@ -6,6 +6,7 @@
         columns:
             [
                 { data: 'name' },
+                { data: 'storeType' },
                 { data: 'veganType' },
                 { data: 'productCategories' }
             ],
@@ -15,6 +16,12 @@
                 render(data, type, row) {
                     var url = Utils.getBaseUrl() + "/Product/Update/" + row["id"];
                     return `<a href=\"${url}\"})">${data}</a>`;
+                }
+            },
+            {
+                targets: 1,
+                render(data, type, row) {
+                    return Utils.getStoreIcon(data);
                 }
             }
         ]
@@ -33,6 +40,7 @@ export function initProductActivityList() {
         columns:
             [
                 { data: 'productName' },
+                { data: 'storeType' },
                 { data: 'type' },
                 { data: 'detail' },
                 { data: 'createdOn' }
@@ -43,6 +51,12 @@ export function initProductActivityList() {
                 render(data, type, row) {
                     var url = Utils.getBaseUrl() + "/Product/Update/" + row["productId"];
                     return `<a href=\"${url}\"})">${data}</a>`;
+                }
+            },
+            {
+                targets: 1,
+                render(data, type, row) {
+                    return Utils.getStoreIcon(data);
                 }
             }
         ]

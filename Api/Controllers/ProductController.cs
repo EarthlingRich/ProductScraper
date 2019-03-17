@@ -37,7 +37,7 @@ namespace Api.Controllers
 
             if (dataTablesRequest.Search.Value != null)
             {
-                productsQuery = productsQuery.Where(_ => _.Name.Contains(dataTablesRequest.Search.Value));
+                productsQuery = productsQuery.Where(_ => EF.Functions.Contains(_.Name, $"\"{dataTablesRequest.Search.Value}*\""));
             }
 
             var filteredCount = productsQuery.Count();
@@ -121,7 +121,7 @@ namespace Api.Controllers
 
             if (dataTablesRequest.Search.Value != null)
             {
-                productActivitiesQuery = productActivitiesQuery.Where(_ => _.Product.Name.Contains(dataTablesRequest.Search.Value));
+                productActivitiesQuery = productActivitiesQuery.Where(_ => EF.Functions.Contains(_.Product.Name, $"\"{dataTablesRequest.Search.Value}*\""));
             }
 
             var filteredCount = productActivitiesQuery.Count();

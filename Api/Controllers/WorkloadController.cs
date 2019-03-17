@@ -36,7 +36,7 @@ namespace Api.Controllers
 
             if (dataTablesRequest.Search.Value != null)
             {
-                workLoadItemsQuery = workLoadItemsQuery.Where(_ => _.Product.Name.Contains(dataTablesRequest.Search.Value));
+                workLoadItemsQuery = workLoadItemsQuery.Where(_ => EF.Functions.Contains(_.Product.Name, $"\"{dataTablesRequest.Search.Value}*\""));
             }
 
             var filteredCount = workLoadItemsQuery.Count();

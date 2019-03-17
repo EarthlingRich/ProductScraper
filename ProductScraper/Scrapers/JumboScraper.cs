@@ -170,10 +170,13 @@ namespace ProductScraper.Scrapers
                     throw new ArgumentException("Product code is empty");
                 }
 
+                //Remove soft hypens from name
+                var name = Regex.Replace(_driver.FindElementByXPath("//h1[@data-dynamic-block-name='Title']").Text, @"[\u00AD]", "");
+
                 var request = new ProductStoreRequest
                 {
                     StoreType = StoreType.Jumbo,
-                    Name = driver.FindElementByXPath("//h1[@data-dynamic-block-name='Title']").Text,
+                    Name = name,
                     Code = code,
                     Url = url,
                     Ingredients = ingredients,

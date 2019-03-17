@@ -159,10 +159,13 @@ namespace ProductScraper.Scrapers
                     throw new ArgumentException("Product code is empty");
                 }
 
+                //Remove soft hypens from name
+                var name = Regex.Replace(_driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text, @"[\u00AD]", "");
+
                 var request = new ProductStoreRequest
                 {
                     StoreType = StoreType.AlbertHeijn,
-                    Name = driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text,
+                    Name = name,
                     Code = code,
                     Url = url,
                     Ingredients = ingredients,

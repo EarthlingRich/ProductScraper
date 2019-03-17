@@ -15,11 +15,6 @@ namespace Api.Models
                 .ForMember(_ => _.Request, opt => opt.Ignore())
                 .ForMember(_ => _.ProductCategories, opt => opt.MapFrom(p => p.ProductCategories.Select(pc => pc.Name).OrderBy(_ => _)));
             CreateMap<WorkloadItem, ProductUpdateWorkloadItemViewModel>(MemberList.Destination);
-
-            //WorkLoadItem
-            CreateMap<WorkloadItem, WorkloadItemListViewModel>(MemberList.Source)
-                .ForMember(_ => _.ProductId, opt => opt.MapFrom(_ => _.Product.Id))
-                .ForMember(_ => _.ProductName, opt => opt.MapFrom(_ => _.Product.Name));
         }
     }
 }

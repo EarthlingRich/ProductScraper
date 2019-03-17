@@ -6,7 +6,7 @@
         columns:
             [
                 { data: 'productName' },
-                { data: 'storeType' },
+                { data: 'productStoreType' },
                 { data: 'message' },
                 { data: 'createdOn' } 
             ],

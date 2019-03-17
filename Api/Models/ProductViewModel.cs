@@ -85,7 +85,7 @@ namespace Api.Models
         public string ProductName { get; set; }
 
         [Display(Name = "Product_StoreType", ResourceType = typeof(DomainTerms))]
-        public StoreType StoreType { get; set; }
+        public StoreType ProductStoreType { get; set; }
 
         [Display(Name = "ProductActivity_ProductActivityType", ResourceType = typeof(DomainTerms))]
         public string Type { get; set; }

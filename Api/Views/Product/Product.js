@@ -40,7 +40,7 @@ export function initProductActivityList() {
         columns:
             [
                 { data: 'productName' },
-                { data: 'storeType' },
+                { data: 'productStoreType' },
                 { data: 'type' },
                 { data: 'detail' },
                 { data: 'createdOn' }

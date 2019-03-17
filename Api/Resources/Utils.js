@@ -70,10 +70,10 @@ export function fixSelectBoxes() {
 export function getStoreIcon(storeType) {
     var icon = "";
     
-    if (storeType = 0) {
+    if (storeType = 1) {
         icon = "<div class='store-icon store-icon--ah'>AH</div>"
     }
-    else if (storeType = 1) {
+    else if (storeType = 2) {
         icon = "<div class='store-icon store-icon store-icon--jumbo'>J</div>"
     }
 

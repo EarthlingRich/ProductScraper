@@ -6,6 +6,7 @@ using AutoMapper;
 using DataTables.AspNet.AspNetCore;
 using DataTables.AspNet.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace Api.Controllers
@@ -36,7 +37,7 @@ namespace Api.Controllers
 
             if (dataTablesRequest.Search.Value != null)
             {
-                ingredientsQuery = ingredientsQuery.Where(_ => _.Name.Contains(dataTablesRequest.Search.Value));
+                ingredientsQuery = ingredientsQuery.Where(_ => EF.Functions.Contains(_.Name, $"\"{dataTablesRequest.Search.Value}*\""));
             }
 
             var filteredCount = ingredientsQuery.Count();

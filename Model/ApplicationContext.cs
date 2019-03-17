@@ -38,6 +38,9 @@ namespace Model
                 .HasMany(_ => _.ProductActivities)
                 .WithOne(_ => _.Product)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(_ => _.Code);
         }
     }
 }

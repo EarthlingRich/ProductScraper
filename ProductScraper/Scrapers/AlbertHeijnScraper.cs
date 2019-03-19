@@ -160,7 +160,7 @@ namespace ProductScraper.Scrapers
                 }
 
                 //Remove soft hypens from name
-                var name = Regex.Replace(_driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text, @"[\u00AD]", "");
+                var name = Regex.Replace(_driver.FindElementByXPath("//h1[contains(@class, 'product-card-header__title')]//span").Text, @"[\u00AD]", "");
 
                 var request = new ProductStoreRequest
                 {
@@ -199,7 +199,7 @@ namespace ProductScraper.Scrapers
             var ingredients = "";
             try
             {
-                ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text.ToLower();
+                ingredients = driver.FindElementByXPath("//h2[contains(text(), 'ingrediënten')]/following-sibling::p").Text.ToLower();
             }
             catch
             {
@@ -217,14 +217,14 @@ namespace ProductScraper.Scrapers
         private string GetAllergyInfo(ChromeDriver driver)
         {
             var replaceRegex = new List<string> {
-                @"bevat: ",
+                @"bevat:",
                 @"kan bevatten.*"
             };
 
             var allergyInfo = "";
             try
             {
-                allergyInfo = driver.FindElementByXPath("//h2[@id='allergie-informatie']/following-sibling::p").Text.ToLower();
+                allergyInfo = driver.FindElementByXPath("//h4[contains(text(), 'allergie-informatie')]/following-sibling::p//span[contains(text(), 'bevat:') or contains(text(), 'Bevat:')]").Text.ToLower();
             }
             catch
             {
@@ -241,20 +241,11 @@ namespace ProductScraper.Scrapers
 
         private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)
         {
-            var isVegan = false;
-            var icons = driver.FindElementsByXPath("//li[contains(@class, 'list__item set--icon')]");
-
-            foreach(var icon in icons)
-            {
-                if (icon.Text.ToLower().Contains("vegan"))
-                {
-                    isVegan = true;
-                }
-            }
+            var isVegan = driver.FindElementsByXPath("//li[contains(@class, 'productcard-info__feature')]//p[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
 
             if (!isVegan)
             {
-                isVegan = driver.FindElementsByXPath("//p[contains(@class, 'product__summary')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+                isVegan = driver.FindElementsByXPath("//div[contains(@class, 'product-summary')]//p[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
             }
 
             return isVegan;

@@ -139,6 +139,8 @@ namespace ProductScraper.Scrapers
 
         void HandleProduct(string url, ProductCategory productCategory, ChromeDriver driver)
         {
+            url = url.Replace("ah.nl/producten/product/", "ah.nl/producten2/product/");
+
             driver.Navigate().GoToUrl(url);
 
             var ingredients = GetIngredients(driver);
@@ -146,7 +148,7 @@ namespace ProductScraper.Scrapers
             var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
             var code = "";
-            var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
+            var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten2\/product\/)(\w*)");
             if (codeMatch.Success)
             {
                 code = codeMatch.Groups[1].Value;

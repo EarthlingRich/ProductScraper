@@ -69,13 +69,25 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        private void Update(ProductStoreRequest request)
+        public void CreateOrUpdate(ProductStoreRequest request)
         {
-            var product = _context.Products
+            var existingProduct = _context.Products
                     .Include(p => p.WorkloadItems)
                     .Include(p => p.ProductProductCategories)
-                    .Single(_ => _.Code == request.Code);
+                    .SingleOrDefault(_ => _.Code == request.Code);
 
+            if (existingProduct != null)
+            {
+                Update(request, existingProduct);
+            }
+            else
+            {
+                Create(request);
+            }
+        }
+
+        private void Update(ProductStoreRequest request, Product product)
+        {
             if (request.Ingredients != product.Ingredients || request.AllergyInfo != product.AllergyInfo)
             {
                 var workloadItem = new WorkloadItem
@@ -106,17 +118,6 @@ namespace Application.Services
             }
 
             _context.SaveChanges();
-        }
-
-        public void CreateOrUpdate(ProductStoreRequest request)
-        {
-            var existingProduct = _context.Products.Any(_ => _.Code == request.Code);
-            if (!existingProduct)
-            {
-                Create(request);
-            }
-
-            Update(request);
         }
 
         public void Delete(int id)

@@ -247,7 +247,7 @@ namespace ProductScraper.Scrapers
 
             if (!isVegan)
             {
-                isVegan = driver.FindElementsByXPath("//div[contains(@class, 'product-summary')]//p[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+                isVegan = driver.FindElementsByXPath("//div[contains(@class, 'product-summary')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
             }
 
             return isVegan;

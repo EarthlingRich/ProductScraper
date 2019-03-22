@@ -139,7 +139,8 @@ namespace ProductScraper.Scrapers
 
         void HandleProduct(string url, ProductCategory productCategory, ChromeDriver driver)
         {
-            url = url.Replace("ah.nl/producten/product/", "ah.nl/producten2/product/");
+            //Force loading old product page, Albert Heijn is testing with a new design.
+            url = url.Replace("ah.nl/producten2/product/", "ah.nl/producten/product/");
 
             driver.Navigate().GoToUrl(url);
 
@@ -148,7 +149,7 @@ namespace ProductScraper.Scrapers
             var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
             var code = "";
-            var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten2\/product\/)(\w*)");
+            var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
             if (codeMatch.Success)
             {
                 code = codeMatch.Groups[1].Value;
@@ -162,7 +163,7 @@ namespace ProductScraper.Scrapers
                 }
 
                 //Remove soft hypens from name
-                var name = Regex.Replace(_driver.FindElementByXPath("//h1[contains(@class, 'product-card-header__title')]//span").Text, @"[\u00AD]", "");
+                var name = Regex.Replace(_driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text, @"[\u00AD]", "");
 
                 var request = new ProductStoreRequest
                 {
@@ -201,7 +202,7 @@ namespace ProductScraper.Scrapers
             var ingredients = "";
             try
             {
-                ingredients = driver.FindElementByXPath("//h2[contains(text(), 'ingrediënten')]/following-sibling::p").Text.ToLower();
+                ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text.ToLower();
             }
             catch
             {
@@ -226,7 +227,7 @@ namespace ProductScraper.Scrapers
             var allergyInfo = "";
             try
             {
-                allergyInfo = driver.FindElementByXPath("//h4[contains(text(), 'allergie-informatie')]/following-sibling::p//span[contains(text(), 'bevat:') or contains(text(), 'Bevat:')]").Text.ToLower();
+                allergyInfo = driver.FindElementByXPath("//h2[@id='allergie-informatie']/following-sibling::p").Text.ToLower();
             }
             catch
             {
@@ -238,16 +239,26 @@ namespace ProductScraper.Scrapers
                 allergyInfo = Regex.Replace(allergyInfo, regex, "");
             }
 
+            if (!string.IsNullOrEmpty(allergyInfo) && allergyInfo.Last() == '.')
+            {
+                allergyInfo = allergyInfo.Substring(0, allergyInfo.Length - 1);
+            }
+
             return allergyInfo.Trim();
         }
 
         private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)
         {
-            var isVegan = driver.FindElementsByXPath("//li[contains(@class, 'productcard-info__feature')]//p[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+            var isVegan = driver.FindElementsByXPath("//li[contains(@class, 'list__item set--icon') and contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
 
             if (!isVegan)
             {
-                isVegan = driver.FindElementsByXPath("//div[contains(@class, 'product-summary')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+                isVegan = driver.FindElementsByXPath("//p[contains(@class, 'product__summary')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+            }
+            if (!isVegan)
+            {
+                isVegan = driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any()
+                || driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p//[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
             }
 
             return isVegan;

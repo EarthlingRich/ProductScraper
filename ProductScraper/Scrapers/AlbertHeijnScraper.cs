@@ -239,12 +239,7 @@ namespace ProductScraper.Scrapers
                 allergyInfo = Regex.Replace(allergyInfo, regex, "");
             }
 
-            if (allergyInfo.Length > 1 && allergyInfo.Last() == '.')
-            {
-                allergyInfo = allergyInfo.Substring(0, allergyInfo.Length - 2);
-            }
-
-            return allergyInfo.Trim();
+            return allergyInfo.Replace(".", "").Trim();
         }
 
         private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -253,12 +253,13 @@ namespace ProductScraper.Scrapers
 
             if (!isVegan)
             {
-                isVegan = driver.FindElementsByXPath("//p[contains(@class, 'product__summary')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+                isVegan = driver.FindElementsByXPath("//p[contains(@class, 'product__summary')][text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any()
+                 || driver.FindElementsByXPath("//p[contains(@class, 'product__summary')]//*[text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any();
             }
             if (!isVegan)
             {
-                isVegan = driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any()
-                || driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p[contains(text(), 'zacht') or contains(text(), 'Vegan')]").Any();
+                isVegan = driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p//*[text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any()
+                || driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p[text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any();
             }
 
             return isVegan;

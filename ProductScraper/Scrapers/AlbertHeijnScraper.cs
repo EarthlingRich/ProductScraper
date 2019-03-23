@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -239,9 +239,9 @@ namespace ProductScraper.Scrapers
                 allergyInfo = Regex.Replace(allergyInfo, regex, "");
             }
 
-            if (!string.IsNullOrEmpty(allergyInfo) && allergyInfo.Last() == '.')
+            if (allergyInfo.Length > 1 && allergyInfo.Last() == '.')
             {
-                allergyInfo = allergyInfo.Substring(0, allergyInfo.Length - 1);
+                allergyInfo = allergyInfo.Substring(0, allergyInfo.Length - 2);
             }
 
             return allergyInfo.Trim();

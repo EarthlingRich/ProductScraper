@@ -141,12 +141,7 @@ namespace ProductScraper.Scrapers
         {
             //Force loading old product page, Albert Heijn is testing with a new design.
             url = url.Replace("ah.nl/producten2/product/", "ah.nl/producten/product/");
-
             driver.Navigate().GoToUrl(url);
-
-            var ingredients = GetIngredients(driver);
-            var allergyInfo = GetAllergyInfo(driver);
-            var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
             var code = "";
             var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
@@ -162,8 +157,12 @@ namespace ProductScraper.Scrapers
                     throw new ArgumentException("Product code is empty");
                 }
 
-                //Remove soft hypens from name
-                var name = Regex.Replace(_driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text, @"[\u00AD]", "");
+                //Scrape product page
+                var name = _driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text;
+                name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
+                var ingredients = GetIngredients(driver);
+                var allergyInfo = GetAllergyInfo(driver);
+                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
                 var request = new ProductStoreRequest
                 {

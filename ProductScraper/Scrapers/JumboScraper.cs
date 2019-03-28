@@ -152,10 +152,6 @@ namespace ProductScraper.Scrapers
                 return;
             }
 
-            var ingredients = GetIngredients(driver);
-            var allergyInfo = GetAllergyInfo(driver);
-            var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
-
             var code = "";
             var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.jumbo.com\/[^\/.]*\/)(\w*)");
             if (codeMatch.Success)
@@ -170,8 +166,12 @@ namespace ProductScraper.Scrapers
                     throw new ArgumentException("Product code is empty");
                 }
 
-                //Remove soft hypens from name
-                var name = Regex.Replace(_driver.FindElementByXPath("//h1[@data-dynamic-block-name='Title']").Text, @"[\u00AD]", "");
+                //Scrape product page
+                var name = _driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text;
+                name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
+                var ingredients = GetIngredients(driver);
+                var allergyInfo = GetAllergyInfo(driver);
+                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
 
                 var request = new ProductStoreRequest
                 {

@@ -12,6 +12,7 @@ using Api.Controllers;
 using Api.Models;
 using Hangfire;
 using Api.Application;
+using Hangfire.SqlServer;
 
 namespace Api
 {
@@ -29,18 +30,21 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddAutoMapper(typeof(ApiMapperConfiguration), typeof(ApplicationMapperConfiguration));
-            services.RegisterDataTables();
-
-            IConfigurationRoot configuration = new ConfigurationBuilder()
+            IConfigurationRoot appSettings = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{HostingEnvironment.EnvironmentName}.json", optional: true)
                 .Build();
 
-            services.AddDbContext<ApplicationContext>(_ => _.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            services.AddHangfire(_ => _.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(typeof(ApiMapperConfiguration), typeof(ApplicationMapperConfiguration));
+            services.RegisterDataTables();
+
+            services.AddDbContext<ApplicationContext>(_ => _.UseSqlServer(appSettings.GetConnectionString("DefaultConnection")));
+            services.AddHangfire(_ => _.UseSqlServerStorage(appSettings.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
+            {
+                UsePageLocksOnDequeue = true,
+                DisableGlobalLocks = true,
+            }));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -61,6 +65,11 @@ namespace Api
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            //Hangfire
+            GlobalConfiguration.Configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions { 
                 AppPath = null,
                 Authorization = new[] { new HangfireDashboardAuthorizationFilter() }

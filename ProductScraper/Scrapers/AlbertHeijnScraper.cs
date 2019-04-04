@@ -139,19 +139,19 @@ namespace ProductScraper.Scrapers
 
         void HandleProduct(string url, ProductCategory productCategory, ChromeDriver driver)
         {
-            //Force loading old product page, Albert Heijn is testing with a new design.
-            url = url.Replace("ah.nl/producten2/product/", "ah.nl/producten/product/");
-            driver.Navigate().GoToUrl(url);
-
-            var code = "";
-            var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
-            if (codeMatch.Success)
-            {
-                code = codeMatch.Groups[1].Value;
-            }
-
             try
             {
+                //Force loading old product page, Albert Heijn is testing with a new design.
+                url = url.Replace("ah.nl/producten2/product/", "ah.nl/producten/product/");
+                driver.Navigate().GoToUrl(url);
+
+                var code = "";
+                var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
+                if (codeMatch.Success)
+                {
+                    code = codeMatch.Groups[1].Value;
+                }
+
                 if (code == "")
                 {
                     throw new ArgumentException("Product code is empty");

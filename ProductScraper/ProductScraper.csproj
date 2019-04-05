@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <LangVersion>latest</LangVersion>
+    <PublishChromeDriver>true</PublishChromeDriver>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using Application.Services;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace ProductScraper.Scrapers
             _productService = new ProductApplicationService(_context, mapper);
         }
 
-        public void ScrapeAll()
+        public async Task ScrapeAll()
         {
             var productUrlDictonary = new Dictionary<int, List<string>>();
 
@@ -78,7 +79,7 @@ namespace ProductScraper.Scrapers
             _productService.RemoveOutdatedProducts(StoreType.Jumbo, _scrapeDate);
         }
 
-        public void ScrapeCategory(string scrapeCategoryName)
+        public async Task ScrapeCategory(string scrapeCategoryName)
         {
             var productUrls = new List<string>();
             var productCategorie = _context.ProductCategories
@@ -127,7 +128,7 @@ namespace ProductScraper.Scrapers
             var trimmedUrls = new List<string>();
 
             //Clean url's 
-            foreach(var productUrl in productUrls)
+            foreach (var productUrl in productUrls)
             {
                 if (productUrl.Contains(";"))
                 {

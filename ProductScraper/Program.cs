@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ namespace ProductScraper
 {
     static class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -41,11 +42,11 @@ namespace ProductScraper
                 var scraper = GetProductScraper(args[0], driver, context, mapper, streamWriter);
                 if (args.Length == 2)
                 {
-                    scraper.ScrapeCategory(args[1]);
+                    await scraper.ScrapeCategory(args[1]);
                 }
                 else
                 {
-                    scraper.ScrapeAll();
+                    await scraper.ScrapeAll();
                 }
             }
         }

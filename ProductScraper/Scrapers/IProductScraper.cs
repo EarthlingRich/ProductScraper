@@ -1,8 +1,10 @@
-﻿namespace ProductScraper.Scrapers
+﻿using System.Threading.Tasks;
+
+namespace ProductScraper.Scrapers
 {
     public interface IProductScraper
     {
-        void ScrapeAll();
-        void ScrapeCategory(string scrapeCategoryName);
+        Task ScrapeAll();
+        Task ScrapeCategory(string scrapeCategoryName);
     }
 }

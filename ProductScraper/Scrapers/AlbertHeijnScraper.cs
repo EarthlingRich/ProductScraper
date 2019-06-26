@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using AngleSharp;
+using AngleSharp.Dom;
 using Application.Services;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +24,7 @@ namespace ProductScraper.Scrapers
         readonly ProductApplicationService _productService;
         readonly DateTime _scrapeDate;
         readonly StreamWriter _streamWriter;
+        readonly IBrowsingContext _browsingContext;
 
         public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
         {
@@ -30,9 +34,10 @@ namespace ProductScraper.Scrapers
             _scrapeDate = scrapeDate;
 
             _productService = new ProductApplicationService(_context, mapper);
+            _browsingContext = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
         }
 
-        public void ScrapeAll()
+        public async Task ScrapeAll()
         {
             var productUrlDictonary = new Dictionary<int, List<string>>();
 
@@ -69,7 +74,8 @@ namespace ProductScraper.Scrapers
 
                 foreach (var productUrl in productsUrlsForCategoryDistinct)
                 {
-                    HandleProduct(productUrl, productCateogry, _driver);
+                    Console.WriteLine(productUrl);
+                    await HandleProduct(productUrl, productCateogry);
                 }
             }
 
@@ -77,7 +83,7 @@ namespace ProductScraper.Scrapers
             _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn, _scrapeDate);
         }
 
-        public void ScrapeCategory(string scrapeCategoryName)
+        public async Task ScrapeCategory(string scrapeCategoryName)
         {
             var productUrls = new List<string>();
             var productCategorie = _context.ProductCategories
@@ -97,7 +103,7 @@ namespace ProductScraper.Scrapers
             //Get product data
             foreach (string productUrl in productUrls)
             {
-                HandleProduct(productUrl, productCategorie, _driver);
+                await HandleProduct(productUrl, productCategorie);
             }
         }
 
@@ -137,13 +143,13 @@ namespace ProductScraper.Scrapers
             return productUrls;
         }
 
-        void HandleProduct(string url, ProductCategory productCategory, ChromeDriver driver)
+        async Task HandleProduct(string url, ProductCategory productCategory)
         {
             try
             {
                 //Force loading old product page, Albert Heijn is testing with a new design.
                 url = url.Replace("ah.nl/producten2/product/", "ah.nl/producten/product/");
-                driver.Navigate().GoToUrl(url);
+                var productDocument = await _browsingContext.OpenAsync(url);
 
                 var code = "";
                 var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
@@ -158,11 +164,11 @@ namespace ProductScraper.Scrapers
                 }
 
                 //Scrape product page
-                var name = _driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text;
+                var name = productDocument.QuerySelector("div.product-hero h1 span").TextContent;
                 name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
-                var ingredients = GetIngredients(driver);
-                var allergyInfo = GetAllergyInfo(driver);
-                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
+                var ingredients = GetIngredients(productDocument);
+                var allergyInfo = GetAllergyInfo(productDocument);
+                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
 
                 var request = new ProductStoreRequest
                 {
@@ -181,12 +187,12 @@ namespace ProductScraper.Scrapers
             }
             catch(Exception ex)
             {
-                _streamWriter.WriteLine($"Error getting product: { driver.Url }");
+                _streamWriter.WriteLine($"Error getting product: { url }");
                 _streamWriter.WriteLine(ex);
             }
         }
 
-        private string GetIngredients(ChromeDriver driver) {
+        private string GetIngredients(IDocument productDocument) {
             var replaceRegex = new List<string> {
                 @"ingrediënten:",
                 @"dit product.*",
@@ -201,7 +207,11 @@ namespace ProductScraper.Scrapers
             var ingredients = "";
             try
             {
-                ingredients = driver.FindElementByXPath("//h1[@id='ingredienten']/following-sibling::p").Text.ToLower();
+                ingredients = productDocument
+                    .QuerySelectorAll("div.product-info-ingredients h2")
+                    .Where(_ => _.TextContent == "ingrediënten")
+                    .First()
+                    .NextSibling.TextContent.ToLower();
             }
             catch
             {
@@ -216,7 +226,7 @@ namespace ProductScraper.Scrapers
             return ingredients.Trim();
         }
 
-        private string GetAllergyInfo(ChromeDriver driver)
+        private string GetAllergyInfo(IDocument productDocument)
         {
             var replaceRegex = new List<string> {
                 @"bevat:",
@@ -226,7 +236,11 @@ namespace ProductScraper.Scrapers
             var allergyInfo = "";
             try
             {
-                allergyInfo = driver.FindElementByXPath("//h2[@id='allergie-informatie']/following-sibling::p").Text.ToLower();
+                allergyInfo = productDocument
+                    .QuerySelectorAll("div.product-info-ingredients h4")
+                    .Where(_ => _.TextContent == "allergie-informatie")
+                    .First()
+                    .NextSibling.TextContent.ToLower();
             }
             catch
             {
@@ -241,19 +255,15 @@ namespace ProductScraper.Scrapers
             return allergyInfo.Replace(".", "").Trim();
         }
 
-        private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)
+        private bool GetIsStoreAdvertisedVegan(IDocument productDocument)
         {
-            var isVegan = driver.FindElementsByXPath("//li[contains(@class, 'list__item set--icon') and contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+            var isVegan = productDocument.QuerySelector("li.productcard-info__feature svg--vegan") != null
+                || productDocument.QuerySelectorAll("li.productcard-info__feature p").Any(_ => _.TextContent.ToLower().Contains("vegan"));
 
             if (!isVegan)
             {
-                isVegan = driver.FindElementsByXPath("//p[contains(@class, 'product__summary')][text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any()
-                 || driver.FindElementsByXPath("//p[contains(@class, 'product__summary')]//*[text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any();
-            }
-            if (!isVegan)
-            {
-                isVegan = driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p//*[text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any()
-                || driver.FindElementsByXPath("//h1[contains(@id, 'omschrijving')]/following-sibling::p[text()[contains(.,'Vegan')] or text()[contains(.,'vegan')]]").Any();
+                var summaryNodes = productDocument.QuerySelector("div.product-hero div.product-summary");
+                isVegan = summaryNodes.TextContent.ToLower().Contains("vegan");
             }
 
             return isVegan;

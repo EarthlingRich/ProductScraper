@@ -240,6 +240,7 @@ namespace Application.Tests
             {
                 Id = 200,
                 Name = "Product 1",
+                Ingredients = "test",
                 AllergyInfo = "test, notvegan, test"
             };
 

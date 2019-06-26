@@ -258,6 +258,10 @@ namespace Application.Services
                 product.VeganType = VeganType.Vegan;
                 product.IsProcessed = true;
             }
+            else if (string.IsNullOrWhiteSpace(product.Ingredients))
+            {
+                product.VeganType = VeganType.Unkown;
+            }
             else if (product.MatchedIngredients.Any(_ => _.VeganType == VeganType.Not))
             {
                 product.VeganType = VeganType.Not;

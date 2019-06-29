@@ -74,7 +74,6 @@ namespace ProductScraper.Scrapers
 
                 foreach (var productUrl in productsUrlsForCategoryDistinct)
                 {
-                    Console.WriteLine(productUrl);
                     await HandleProduct(productUrl, productCateogry);
                 }
             }
@@ -107,7 +106,7 @@ namespace ProductScraper.Scrapers
             }
         }
 
-        static List<string> GetProductUrls(string url, ChromeDriver driver)
+        List<string> GetProductUrls(string url, ChromeDriver driver)
         {
             var productUrls = new List<string>();
 
@@ -136,10 +135,15 @@ namespace ProductScraper.Scrapers
                 }
             }
 
-            //If there are no sub categories found load get product url's
+            //If there are no sub categories found get product url's
             productUrls.AddRange(driver.FindElementsByXPath("//a[contains(@class, 'product__content--link')]")
                                  .Select(_ => _.GetAttribute("href"))
                                  .ToList());
+            #if DEBUG
+                Console.WriteLine($"Scraped category: {url}");
+            #endif
+            _streamWriter.WriteLine($"Scraped category: {url}");
+
             return productUrls;
         }
 
@@ -184,6 +188,11 @@ namespace ProductScraper.Scrapers
                 };
 
                 _productService.CreateOrUpdate(request);
+
+                #if DEBUG
+                    Console.WriteLine($"Handled product: {name}");
+                #endif
+                _streamWriter.WriteLine($"Handled product: {name}");
             }
             catch(Exception ex)
             {

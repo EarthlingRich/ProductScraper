@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -190,9 +190,9 @@ namespace ProductScraper.Scrapers
                 _productService.CreateOrUpdate(request);
 
                 #if DEBUG
-                    Console.WriteLine($"Handled product: {name}");
+                    Console.WriteLine($"Handled product: {code} {name}");
                 #endif
-                _streamWriter.WriteLine($"Handled product: {name}");
+                _streamWriter.WriteLine($"Handled product: {code} {name}");
             }
             catch(Exception ex)
             {

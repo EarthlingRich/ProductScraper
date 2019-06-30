@@ -151,8 +151,6 @@ namespace ProductScraper.Scrapers
         {
             try
             {
-                //Force loading old product page, Albert Heijn is testing with a new design.
-                url = url.Replace("ah.nl/producten2/product/", "ah.nl/producten/product/");
                 var productDocument = await _browsingContext.OpenAsync(url);
 
                 var code = "";

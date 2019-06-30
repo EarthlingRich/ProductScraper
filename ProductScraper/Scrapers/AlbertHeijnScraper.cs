@@ -78,6 +78,14 @@ namespace ProductScraper.Scrapers
                 }
             }
 
+            var notFoundProducts = _context.Products
+                .Include(p => p.ProductProductCategories)
+                .Where(_ => _.LastScrapeDate != _scrapeDate);
+            foreach (var notFoundProduct in notFoundProducts)
+            {
+                await HandleProduct(notFoundProduct.Url, notFoundProduct.ProductCategories.First());
+            }
+
             //Remove outdated products
             _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn, _scrapeDate);
         }

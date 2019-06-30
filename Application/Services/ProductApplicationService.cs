@@ -287,17 +287,22 @@ namespace Application.Services
 
         public void RemoveOutdatedProducts(StoreType storeType, DateTime scrapeDate)
         {
-            var outdatedProducts = _context.Products.Where(_ => _.StoreType == storeType && _.LastScrapeDate < scrapeDate.AddDays(-7));
+            var outdatedProducts = _context.Products
+                .Include(p => p.WorkloadItems)
+                .Where(_ => _.StoreType == storeType && _.LastScrapeDate < scrapeDate.AddDays(-7));
 
             foreach (var outdatedProduct in outdatedProducts)
             {
-                var workloadItem = new WorkloadItem
+                if (!_context.WorkloadItems.Any(_ => _.Product.Id == outdatedProduct.Id && _.Message == "Product niet gevonden"))
                 {
-                    Product = outdatedProduct,
-                    Message = "Product niet gevonden",
-                    CreatedOn = scrapeDate
-                };
-                _context.WorkloadItems.Add(workloadItem);
+                    var workloadItem = new WorkloadItem
+                    {
+                        Product = outdatedProduct,
+                        Message = "Product niet gevonden",
+                        CreatedOn = scrapeDate
+                    };
+                    _context.WorkloadItems.Add(workloadItem);
+                }
             }
 
             _context.SaveChanges();

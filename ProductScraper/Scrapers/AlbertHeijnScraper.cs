@@ -275,7 +275,7 @@ namespace ProductScraper.Scrapers
             if (!isVegan)
             {
                 var summaryNodes = productDocument.QuerySelector("div.product-hero div.product-summary");
-                isVegan = summaryNodes.TextContent.ToLower().Contains("vegan");
+                isVegan = summaryNodes != null && summaryNodes.TextContent.ToLower().Contains("vegan");
             }
 
             return isVegan;

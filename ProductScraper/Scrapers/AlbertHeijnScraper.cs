@@ -147,9 +147,8 @@ namespace ProductScraper.Scrapers
             productUrls.AddRange(driver.FindElementsByXPath("//a[contains(@class, 'product__content--link')]")
                                  .Select(_ => _.GetAttribute("href"))
                                  .ToList());
-            #if DEBUG
-                Console.WriteLine($"Scraped category: {url}");
-            #endif
+
+            Console.WriteLine($"Scraped category: {url}");
             _streamWriter.WriteLine($"Scraped category: {url}");
 
             return productUrls;
@@ -195,9 +194,7 @@ namespace ProductScraper.Scrapers
 
                 _productService.CreateOrUpdate(request);
 
-                #if DEBUG
-                    Console.WriteLine($"Handled product: {code} {name}");
-                #endif
+                Console.WriteLine($"Handled product: {code} {name}"); 
                 _streamWriter.WriteLine($"Handled product: {code} {name}");
             }
             catch(Exception ex)

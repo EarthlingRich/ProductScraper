@@ -24,6 +24,7 @@ namespace Model
                 .AfterMap(UpdateList);
             CreateMap<ProductStoreRequest, Product>(MemberList.Source)
                 .ForSourceMember(_ => _.ProductCategory, opt => opt.DoNotValidate());
+            CreateMap<WorkloadItem, ProductWorkloadItemRequest>(MemberList.Destination);
 
             //ProductCategory
             CreateMap<ProductCategoryCreateRequest, ProductCategory>(MemberList.Source);
@@ -32,10 +33,10 @@ namespace Model
 
         private void UpdateList(ProductUpdateRequest request, Product product)
         {
-            foreach(var updatedWorkloadItem in  request.WorkloadItems)
+            foreach(var updatedWorkloadItem in request.WorkloadItems)
             {
-                var exisitingWorloadItem = product.WorkloadItems.Single(_ => _.Id == updatedWorkloadItem.Id);
-                exisitingWorloadItem.IsProcessed = updatedWorkloadItem.IsProcessed;
+                var exisitingWorkloadItem = product.WorkloadItems.Single(_ => _.Id == updatedWorkloadItem.Id);
+                exisitingWorkloadItem.IsProcessed = updatedWorkloadItem.IsProcessed;
             }
         }
     }

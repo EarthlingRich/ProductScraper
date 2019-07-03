@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Api.Models;
+using AutoMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Model;
 
@@ -13,8 +14,10 @@ namespace Application.Tests
         public void Setup()
         {
             var config = new MapperConfiguration(cfg =>
-                cfg.AddProfile(new ApplicationMapperConfiguration())
-            );
+            {
+                cfg.AddProfile(new ApplicationMapperConfiguration());
+                cfg.AddProfile(new ApiMapperConfiguration());
+            });
             _mapper = new Mapper(config);
         }
 

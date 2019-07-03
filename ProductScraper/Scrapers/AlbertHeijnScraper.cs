@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
@@ -12,24 +13,23 @@ using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
 using Model.Requests;
+using Newtonsoft.Json.Linq;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
 
 namespace ProductScraper.Scrapers
 {
     public class AlbertHeijnScraper : IProductScraper
     {
         readonly ApplicationContext _context;
-        readonly ChromeDriver _driver;
         readonly ProductApplicationService _productService;
         readonly DateTime _scrapeDate;
         readonly StreamWriter _streamWriter;
         readonly IBrowsingContext _browsingContext;
+        private static HttpClient _client = new HttpClient();
 
         public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
         {
             _context = context;
-            _driver = driver;
             _streamWriter = streamWriter;
             _scrapeDate = scrapeDate;
 
@@ -54,17 +54,14 @@ namespace ProductScraper.Scrapers
                 {
                     if (productUrlDictonary.ContainsKey(productCategorie.Id))
                     {
-                        productUrlDictonary[productCategorie.Id].AddRange(GetProductUrls(productCategorieUrl, _driver));
+                        productUrlDictonary[productCategorie.Id].AddRange(await GetProductUrls(productCategorieUrl));
                     }
                     else
                     {
-                        productUrlDictonary.Add(productCategorie.Id, GetProductUrls(productCategorieUrl, _driver));
+                        productUrlDictonary.Add(productCategorie.Id, await GetProductUrls(productCategorieUrl));
                     }
                 }
             }
-
-            //Lower scraping wait time
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //Get product data
             foreach (var productsUrlsForCategory in productUrlDictonary)
@@ -101,11 +98,8 @@ namespace ProductScraper.Scrapers
             var productCategorieUrls = productCategorie.StoreCategories.Where(_ => _.StoreType == StoreType.AlbertHeijn).Select(_ => _.Url);
             foreach (var productCategorieUrl in productCategorieUrls)
             {
-                productUrls.AddRange(GetProductUrls(productCategorieUrl, _driver));
+                productUrls.AddRange(await GetProductUrls(productCategorieUrl));
             }
-
-            //Lower scraping wait time
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //Get product data
             foreach (string productUrl in productUrls)
@@ -114,42 +108,75 @@ namespace ProductScraper.Scrapers
             }
         }
 
-        List<string> GetProductUrls(string url, ChromeDriver driver)
+        async Task<List<string>> GetProductUrls(string url)
         {
             var productUrls = new List<string>();
+            var productCategoryUrls = new List<string>();
+            var productLanes = new List<JToken>();
 
-            driver.Navigate().GoToUrl(url);
+            try
+            {
+                using (var result = await _client.GetAsync("https://www.ah.nl/service/rest" + url))
+                {
+                    using (var content = result.Content)
+                    {
+                        string dataString = await content.ReadAsStringAsync();
+                        if (dataString != null)
+                        {
+                            var data = JObject.Parse(dataString);
+                            productLanes = data["_embedded"]?["lanes"]?
+                                .Where(_ => _["type"].Value<string>() == "ProductLane")
+                                .ToList();
 
-            //Scroll to footer to load all categories and products
-            var footer = driver.FindElementByXPath("//footer");
-            Actions actions = new Actions(driver);
-            actions.MoveToElement(footer);
-            actions.Perform();
+                            var legends = productLanes
+                                .SelectMany(_ => _["_embedded"]?["items"])
+                                .Where(_ => _["type"]?.Value<string>() == "Legend");
+                            if (legends.Any())
+                            {
+                                productCategoryUrls.AddRange(legends.Select(_ => _["navItem"]?["link"]?["href"].Value<string>()));
+                            }
 
-            //Get product category url's, keep try loading sub categories unitl no categories are found
-            var productCategoryUrls = driver.FindElementsByXPath("//div[contains(@class, 'product-lane')]//div[contains(@class, 'legend')]//a[contains(@class, 'grid-item__content')]")
-                                            .Select(_ => _.GetAttribute("href"))
-                                            .Where(_ => _.StartsWith("https://www.ah.nl/producten/", StringComparison.InvariantCulture))
-                                            .ToList();
-            productCategoryUrls.AddRange(driver.FindElementsByXPath("//article[contains(@class, 'see-more-lane')]//div[contains(@class, 'see-more--entry')]//a[contains(@class, 'grid-item__content')]")
-                                .Select(_ => _.GetAttribute("href"))
-                                .Where(_ => _.StartsWith("https://www.ah.nl/producten/", StringComparison.InvariantCulture))
-                                .ToList());
+                            var seeMoreItems = data["_embedded"]?["lanes"]?
+                                .Where(_ => _["type"].Value<string>() == "SeeMoreLane")
+                                .SelectMany(_ => _["_embedded"]?["items"]);
+                            if (seeMoreItems.Any())
+                            {
+                                productCategoryUrls.AddRange(seeMoreItems.Select(_ => _["navItem"]?["link"]?["href"].Value<string>()));
+                            }
+                        }
+                        else
+                        {
+                            throw new ArgumentException("No data loaded");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _streamWriter.WriteLine($"Error scraping category: {url}");
+                _streamWriter.WriteLine(ex);
+            }
+
+            //If there are sub categories found open these sub categories
             if (productCategoryUrls.Any())
             {
                 foreach (string productCategoryUrl in productCategoryUrls)
                 {
-                    productUrls.AddRange(GetProductUrls(productCategoryUrl, driver));
+                    productUrls.AddRange(await GetProductUrls(productCategoryUrl));
                 }
             }
-
             //If there are no sub categories found get product url's
-            productUrls.AddRange(driver.FindElementsByXPath("//a[contains(@class, 'product__content--link')]")
-                                 .Select(_ => _.GetAttribute("href"))
-                                 .ToList());
+            else
+            {
+                var products = productLanes
+                    .SelectMany(_ => _["_embedded"]?["items"])
+                    .Where(_ => _["type"]?.Value<string>() == "Product");
+                productUrls.AddRange(products.Select(_ => "https://www.ah.nl" + _["navItem"]?["link"]?["href"].Value<string>()));
 
-            Console.WriteLine($"Scraped category: {url}");
-            _streamWriter.WriteLine($"Scraped category: {url}");
+                var logLine = $"Scraped category: { url}. Found { productUrls.Count()} products.";
+                Console.WriteLine(logLine);
+                _streamWriter.WriteLine(logLine);
+            }
 
             return productUrls;
         }
@@ -199,7 +226,7 @@ namespace ProductScraper.Scrapers
             }
             catch(Exception ex)
             {
-                _streamWriter.WriteLine($"Error getting product: { url }");
+                _streamWriter.WriteLine($"Error scraping product: { url }");
                 _streamWriter.WriteLine(ex);
             }
         }
@@ -207,13 +234,17 @@ namespace ProductScraper.Scrapers
         private string GetIngredients(IDocument productDocument) {
             var replaceRegex = new List<string> {
                 @"ingrediënten:",
+                @"ingredienten:",
+                @"ingrediënts",
+                @"ingredients",
                 @"dit product.*",
                 @"kan sporen.*",
                 @"allergiewijzer.*",
                 @"allergie info.*",
                 @"allergie informatie.*",
                 @"allergie-informatie.*",
-                @"kan.*bevatten.*"
+                @"kan.*bevatten.*",
+                @"may contain.*"
             };
 
             var ingredients = "";

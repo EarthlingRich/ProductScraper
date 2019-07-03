@@ -173,7 +173,7 @@ namespace ProductScraper.Scrapers
                     .Where(_ => _["type"]?.Value<string>() == "Product");
                 productUrls.AddRange(products.Select(_ => "https://www.ah.nl" + _["navItem"]?["link"]?["href"].Value<string>()));
 
-                var logLine = $"Scraped category: { url}. Found { productUrls.Count()} products.";
+                var logLine = $"Scraped category: {url}. Found {productUrls.Count} products.";
                 Console.WriteLine(logLine);
                 _streamWriter.WriteLine(logLine);
             }
@@ -221,12 +221,13 @@ namespace ProductScraper.Scrapers
 
                 _productService.CreateOrUpdate(request);
 
-                Console.WriteLine($"Handled product: {code} {name}"); 
-                _streamWriter.WriteLine($"Handled product: {code} {name}");
+                var logLine = $"Handled product: {code} {name}";
+                Console.WriteLine(logLine); 
+                _streamWriter.WriteLine(logLine);
             }
             catch(Exception ex)
             {
-                _streamWriter.WriteLine($"Error scraping product: { url }");
+                _streamWriter.WriteLine($"Error scraping product: {url}");
                 _streamWriter.WriteLine(ex);
             }
         }
@@ -235,8 +236,8 @@ namespace ProductScraper.Scrapers
             var replaceRegex = new List<string> {
                 @"ingrediënten:",
                 @"ingredienten:",
-                @"ingrediënts",
-                @"ingredients",
+                @"ingrediënts:",
+                @"ingredients:",
                 @"dit product.*",
                 @"kan sporen.*",
                 @"allergiewijzer.*",
@@ -252,8 +253,7 @@ namespace ProductScraper.Scrapers
             {
                 ingredients = productDocument
                     .QuerySelectorAll("div.product-info-ingredients h2")
-                    .Where(_ => _.TextContent == "ingrediënten")
-                    .First()
+                    .First(_ => _.TextContent == "ingrediënten")
                     .NextSibling.TextContent.ToLower();
             }
             catch
@@ -281,8 +281,7 @@ namespace ProductScraper.Scrapers
             {
                 allergyInfo = productDocument
                     .QuerySelectorAll("div.product-info-ingredients h4")
-                    .Where(_ => _.TextContent == "allergie-informatie")
-                    .First()
+                    .First(_ => _.TextContent == "allergie-informatie")
                     .NextSibling.TextContent.ToLower();
             }
             catch

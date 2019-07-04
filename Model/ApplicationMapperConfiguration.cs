@@ -10,6 +10,7 @@ namespace Model
         public ApplicationMapperConfiguration()
         {
             //Ingredient
+            CreateMap<Ingredient, IngredientUpdateRequest>(MemberList.Destination);
             CreateMap<IngredientUpdateRequest, Ingredient>(MemberList.Source)
                 .ForMember(_ => _.AllergyKeywordsString, opt => opt.MapFrom(i => i.AllergyKeywordsString.ToLower()))
                 .ForMember(_ => _.IgnoreKeywordsString, opt => opt.MapFrom(i => i.IgnoreKeywordsString.ToLower()))
@@ -27,6 +28,7 @@ namespace Model
             CreateMap<WorkloadItem, ProductWorkloadItemRequest>(MemberList.Destination);
 
             //ProductCategory
+            CreateMap<ProductCategory, ProductCategoryUpdateRequest>(MemberList.Destination);
             CreateMap<ProductCategoryCreateRequest, ProductCategory>(MemberList.Source);
             CreateMap<ProductCategoryUpdateRequest, ProductCategory>(MemberList.Source);
         }

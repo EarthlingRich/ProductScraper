@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
+using AngleSharp;
+using AngleSharp.Dom;
+using AngleSharp.Io;
 using Application.Services;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
 using Model.Requests;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace ProductScraper.Scrapers
 {
     public class JumboScraper : IProductScraper
     {
+        readonly IBrowsingContext _browsingContext;
         readonly ApplicationContext _context;
-        readonly ChromeDriver _driver;
         readonly ProductApplicationService _productService;
         readonly DateTime _scrapeDate;
         readonly StreamWriter _streamWriter;
@@ -27,11 +28,13 @@ namespace ProductScraper.Scrapers
         public JumboScraper(ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
         {
             _context = context;
-            _driver = driver;
             _streamWriter = streamWriter;
             _scrapeDate = scrapeDate;
 
             _productService = new ProductApplicationService(_context, mapper);
+
+            IConfiguration config = Configuration.Default.WithDefaultLoader();
+            _browsingContext = BrowsingContext.New(config);
         }
 
         public async Task ScrapeAll()
@@ -51,17 +54,14 @@ namespace ProductScraper.Scrapers
                 {
                     if (productUrlDictonary.ContainsKey(productCategorie.Id))
                     {
-                        productUrlDictonary[productCategorie.Id].AddRange(GetProductUrls(productCategorieUrl, _driver));
+                        productUrlDictonary[productCategorie.Id].AddRange(await GetProductUrls(productCategorieUrl));
                     }
                     else
                     {
-                        productUrlDictonary.Add(productCategorie.Id, GetProductUrls(productCategorieUrl, _driver));
+                        productUrlDictonary.Add(productCategorie.Id, await GetProductUrls(productCategorieUrl));
                     }
                 }
             }
-
-            //Lower scraping wait time
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //Get product data
             foreach (var productsUrlsForCategory in productUrlDictonary)
@@ -71,7 +71,7 @@ namespace ProductScraper.Scrapers
 
                 foreach (var productUrl in productsUrlsForCategoryDistinct)
                 {
-                    HandleProduct(productUrl, productCateogry, _driver);
+                    await HandleProduct(productUrl, productCateogry);
                 }
             }
 
@@ -90,68 +90,79 @@ namespace ProductScraper.Scrapers
             var productCategorieUrls = productCategorie.StoreCategories.Where(_ => _.StoreType == StoreType.Jumbo).Select(_ => _.Url);
             foreach (var productCategorieUrl in productCategorieUrls)
             {
-                productUrls.AddRange(GetProductUrls(productCategorieUrl, _driver));
+                productUrls.AddRange(await GetProductUrls(productCategorieUrl));
             }
-
-            //Lower scraping wait time
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //Get product data
             foreach (string productUrl in productUrls)
             {
-                HandleProduct(productUrl, productCategorie, _driver);
+                await HandleProduct(productUrl, productCategorie);
             }
         }
 
-        static List<string> GetProductUrls(string url, ChromeDriver driver)
+        async Task<List<string>> GetProductUrls(string url)
         {
-            driver.Navigate().GoToUrl(url);
+            var productUrls = new List<string>();
+            var productCategoryUrls = new List<string>();
 
-            long scrollHeight = 0;
-            do
+            var request = DocumentRequest.Get(Url.Create(url));
+            request.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
+            var categoryDocument = await _browsingContext.OpenAsync(request);
+
+            if (categoryDocument.QuerySelector(".jum-has-breadcrumb-sub button").TextContent.ToLower() == "kies een schap")
             {
-                var js = (IJavaScriptExecutor)driver;
-                var newScrollHeight = (long)js.ExecuteScript("window.scrollTo(0, document.body.scrollHeight); return document.body.scrollHeight;");
-                Thread.Sleep(5000);
-
-                if (newScrollHeight == scrollHeight)
-                {
-                    break;
-                }
-                scrollHeight = newScrollHeight;
-            }
-            while (true);
-
-            var productUrls = driver.FindElementsByXPath("//li[contains(@class, 'jum-result')]//a")
-                .Select(_ => _.GetAttribute("href"))
-                .ToList();
-            var trimmedUrls = new List<string>();
-
-            //Clean url's 
-            foreach (var productUrl in productUrls)
-            {
-                if (productUrl.Contains(";"))
-                {
-                    trimmedUrls.Add(productUrl.Substring(0, productUrl.IndexOf(";", StringComparison.Ordinal)));
-                }
-                else
-                {
-                    trimmedUrls.Add(productUrl);
-                }
+                var productCategoryUrlsFound = categoryDocument
+                    .QuerySelectorAll(".jum-breadcrumb-sub .jum-breadcrumb-col a")
+                    .SelectMany(_ => _.Attributes.Where(a => a.Name == "href").Select(href => href.Value));
+                var trimmedUrls = productCategoryUrlsFound.Select(_ => _.Contains(";") ? _.Substring(0, _.IndexOf(";", StringComparison.Ordinal)) : _).ToList();
+                productCategoryUrls.AddRange(trimmedUrls);
             }
 
-            return trimmedUrls;
+            //If there are sub categories found open these sub categories
+            if (productCategoryUrls.Any())
+            {
+                foreach (string productCategoryUrl in productCategoryUrls)
+                {
+                    productUrls.AddRange(await GetProductUrls(productCategoryUrl));
+                }
+            }
+            else
+            {
+                var productsFound = 0;
+                var pageCounter = 0;
+                do
+                {
+                    var productsRequest = DocumentRequest.Get(Url.Create(url + "?PageNumber=" + pageCounter));
+                    productsRequest.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
+                    var productListDocument = await _browsingContext.OpenAsync(productsRequest);
+
+                    var productsUrlFound = productListDocument
+                        .QuerySelectorAll("div.jum-item-product")
+                        .Where(_ => !_.QuerySelectorAll("button.jum-add").Any(p => p.TextContent.ToLower() == "voeg set toe aan lijst")) //Remove product sets
+                        .SelectMany(_ => _.QuerySelector("a").Attributes.Where(a => a.Name == "href").Select(href => href.Value));
+
+                    var trimmedUrls = productsUrlFound.Select(_ => _.Contains(";") ? _.Substring(0, _.IndexOf(";", StringComparison.Ordinal)) : _).ToList();
+                    productUrls.AddRange(trimmedUrls);
+
+                    productsFound = productsUrlFound.Count();
+
+                    pageCounter++;
+                }
+                while (productsFound != 0);
+
+                var logLine = $"Scraped category: {url}. Found {productUrls.Count} products.";
+                Console.WriteLine(logLine);
+                _streamWriter.WriteLine(logLine);
+            }
+
+            return productUrls;
         }
 
-        void HandleProduct(string url, ProductCategory productCategory, ChromeDriver driver)
+        async Task HandleProduct(string url, ProductCategory productCategory)
         {
-            driver.Navigate().GoToUrl(url);
-
-            //Skip product sets
-            if (driver.FindElementsByXPath("//button//span[contains(text(), 'Voeg set toe aan lijst')]").Any())
-            {
-                return;
-            }
+            var request = DocumentRequest.Get(Url.Create(url));
+            request.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
+            var productDocument = await _browsingContext.OpenAsync(request);
 
             var code = "";
             var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.jumbo.com\/[^\/.]*\/)(\w*)");
@@ -168,13 +179,13 @@ namespace ProductScraper.Scrapers
                 }
 
                 //Scrape product page
-                var name = _driver.FindElementByXPath("//h1[contains(@class, 'product-description__title')]").Text;
+                var name = productDocument.QuerySelector(".jum-column-main h1").TextContent;
                 name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
-                var ingredients = GetIngredients(driver);
-                var allergyInfo = GetAllergyInfo(driver);
-                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(driver);
+                var ingredients = GetIngredients(productDocument);
+                var allergyInfo = GetAllergyInfo(productDocument);
+                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
 
-                var request = new ProductStoreRequest
+                var productStoreRequest = new ProductStoreRequest
                 {
                     StoreType = StoreType.Jumbo,
                     Name = name,
@@ -187,22 +198,26 @@ namespace ProductScraper.Scrapers
                     ProductCategory = productCategory
                 };
 
-                _productService.CreateOrUpdate(request);
+                _productService.CreateOrUpdate(productStoreRequest);
+
+                var logLine = $"Handled product: {code} {name}";
+                Console.WriteLine(logLine);
+                _streamWriter.WriteLine(logLine);
             }
             catch (Exception ex)
             {
-                _streamWriter.WriteLine($"Error getting product: { driver.Url }");
+                _streamWriter.WriteLine($"Error scraping product: {url}");
                 _streamWriter.WriteLine(ex);
             }
         }
 
-        private string GetIngredients(ChromeDriver driver)
+        private string GetIngredients(IDocument productDocument)
         {
             var ingredients = "";
             try
             {
-                var elements = driver.FindElementsByXPath("//div[contains(@class, 'jum-ingredients-info')]//h3[contains(text(), 'Ingrediënten')]//following-sibling::ul//li");
-                ingredients = string.Join(", ", elements.Select(_ => _.Text.Trim().ToLower()));
+                var elements = productDocument.QuerySelectorAll(".jum-ingredients-info li");
+                ingredients = string.Join(", ", elements.Select(_ => _.TextContent.Trim().ToLower()));
             }
             catch
             {
@@ -212,13 +227,13 @@ namespace ProductScraper.Scrapers
             return ingredients;
         }
 
-        private string GetAllergyInfo(ChromeDriver driver)
+        private string GetAllergyInfo(IDocument productDocument)
         {
             var allergyInfo = "";
             try
             {
-                var elements = driver.FindElementsByXPath("//div[contains(@class, 'jum-product-allergy-info')]//h3[contains(text(), 'Allergiewaarschuwing')]//following-sibling::ul//li");
-                allergyInfo = string.Join(", ", elements.Where(_ => _.Text.ToLower().StartsWith("bevat", StringComparison.Ordinal)).Select(_ => _.Text.Replace("bevat", "").Trim().ToLower()));
+                var elements = productDocument.QuerySelectorAll(".jum-product-allergy-info li");
+                allergyInfo = string.Join(", ", elements.Where(_ => _.TextContent.ToLower().StartsWith("bevat", StringComparison.Ordinal)).Select(_ => _.TextContent.Replace("bevat", "").Trim().ToLower()));
             }
             catch
             {
@@ -228,9 +243,9 @@ namespace ProductScraper.Scrapers
             return allergyInfo;
         }
 
-        private bool GetIsStoreAdvertisedVegan(ChromeDriver driver)
+        private bool GetIsStoreAdvertisedVegan(IDocument productDocument)
         {
-            return driver.FindElementsByXPath("//div[contains(@class, 'jum-product-info-item')]//*[contains(text(), 'vegan') or contains(text(), 'Vegan')]").Any();
+            return productDocument.QuerySelectorAll("jum-product-info-item").Any(_ => _.TextContent.Contains("vegan"));
         }
     }
 }

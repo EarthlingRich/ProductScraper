@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Model;
 using Model.Models;
-using OpenQA.Selenium.Chrome;
 using ProductScraper.Scrapers;
 
 namespace ProductScraper
@@ -31,15 +30,9 @@ namespace ProductScraper
             );
             var mapper = new Mapper(config);
 
-            var options = new ChromeOptions();
-            options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
-
-            using (var driver = new ChromeDriver(options))
             using (var streamWriter = new StreamWriter(file))
             {
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-                var scraper = GetProductScraper(args[0], driver, context, mapper, streamWriter);
+                var scraper = GetProductScraper(args[0], context, mapper, streamWriter);
                 if (args.Length == 2)
                 {
                     await scraper.ScrapeCategory(args[1]);
@@ -51,15 +44,15 @@ namespace ProductScraper
             }
         }
 
-        static IProductScraper GetProductScraper(string store, ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter)
+        static IProductScraper GetProductScraper(string store, ApplicationContext context, IMapper mapper, StreamWriter streamWriter)
         {
             Enum.TryParse(store, out StoreType storeType);
             switch (storeType)
             {
                 case StoreType.AlbertHeijn:
-                    return new AlbertHeijnScraper(driver, context, mapper, streamWriter, DateTime.Now);
+                    return new AlbertHeijnScraper(context, mapper, streamWriter, DateTime.Now);
                 case StoreType.Jumbo:
-                    return new JumboScraper(driver, context, mapper, streamWriter, DateTime.Now);
+                    return new JumboScraper(context, mapper, streamWriter, DateTime.Now);
                 default:
                     throw new ArgumentException("Product scraper for store not found.");
             }

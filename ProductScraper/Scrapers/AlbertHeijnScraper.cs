@@ -14,7 +14,6 @@ using Model;
 using Model.Models;
 using Model.Requests;
 using Newtonsoft.Json.Linq;
-using OpenQA.Selenium.Chrome;
 
 namespace ProductScraper.Scrapers
 {
@@ -27,7 +26,7 @@ namespace ProductScraper.Scrapers
         readonly IBrowsingContext _browsingContext;
         private static HttpClient _client = new HttpClient();
 
-        public AlbertHeijnScraper(ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
+        public AlbertHeijnScraper(ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
         {
             _context = context;
             _streamWriter = streamWriter;

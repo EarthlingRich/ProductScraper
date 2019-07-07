@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Models;
 using Model.Requests;
-using OpenQA.Selenium.Chrome;
 
 namespace ProductScraper.Scrapers
 {
@@ -25,7 +24,7 @@ namespace ProductScraper.Scrapers
         readonly DateTime _scrapeDate;
         readonly StreamWriter _streamWriter;
 
-        public JumboScraper(ChromeDriver driver, ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
+        public JumboScraper(ApplicationContext context, IMapper mapper, StreamWriter streamWriter, DateTime scrapeDate)
         {
             _context = context;
             _streamWriter = streamWriter;

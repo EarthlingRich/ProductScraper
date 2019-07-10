@@ -241,6 +241,17 @@ namespace ProductScraper.Scrapers
 
         private string GetIngredients(IDocument productDocument)
         {
+            var replaceRegex = new List<string> {
+                @"dit product.*",
+                @"kan sporen.*",
+                @"allergiewijzer.*",
+                @"allergie info.*",
+                @"allergie informatie.*",
+                @"allergie-informatie.*",
+                @"kan.*bevatten.*",
+                @"may contain.*"
+            };
+
             var ingredients = "";
             try
             {
@@ -252,7 +263,12 @@ namespace ProductScraper.Scrapers
                 return ingredients;
             }
 
-            return ingredients;
+            foreach (var regex in replaceRegex)
+            {
+                ingredients = Regex.Replace(ingredients, regex, "");
+            }
+
+            return ingredients.Trim();
         }
 
         private string GetAllergyInfo(IDocument productDocument)

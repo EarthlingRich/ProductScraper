@@ -244,7 +244,7 @@ namespace ProductScraper.Scrapers
 
         private bool GetIsStoreAdvertisedVegan(IDocument productDocument)
         {
-            return productDocument.QuerySelectorAll("jum-product-info-item").Any(_ => _.TextContent.Contains("vegan"));
+            return productDocument.QuerySelectorAll("jum-product-info-item").Any(_ => _.TextContent.ToLower().Contains("vegan"));
         }
     }
 }

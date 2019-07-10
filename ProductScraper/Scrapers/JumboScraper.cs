@@ -104,17 +104,37 @@ namespace ProductScraper.Scrapers
             var productUrls = new List<string>();
             var productCategoryUrls = new List<string>();
 
-            var request = DocumentRequest.Get(Url.Create(url));
-            request.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
-            var categoryDocument = await _browsingContext.OpenAsync(request);
+            try {
+                var request = DocumentRequest.Get(Url.Create(url));
+                request.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
 
-            if (categoryDocument.QuerySelector(".jum-has-breadcrumb-sub button").TextContent.ToLower() == "kies een schap")
+                IDocument categoryDocument;
+                var reloadCount = 0;
+                do
+                {
+                    categoryDocument = await _browsingContext.OpenAsync(request);
+
+                    reloadCount++;
+                    if(reloadCount > 4)
+                    {
+                        break;
+                    }
+                }
+                while (categoryDocument.QuerySelector(".jumbo-search-results-header") == null);
+
+                if (categoryDocument.QuerySelector(".jum-has-breadcrumb-sub button").TextContent.ToLower() == "kies een schap")
+                {
+                    var productCategoryUrlsFound = categoryDocument
+                        .QuerySelectorAll(".jum-breadcrumb-sub .jum-breadcrumb-col a")
+                        .SelectMany(_ => _.Attributes.Where(a => a.Name == "href").Select(href => href.Value));
+                    var trimmedUrls = productCategoryUrlsFound.Select(_ => _.Contains(";") ? _.Substring(0, _.IndexOf(";", StringComparison.Ordinal)) : _).ToList();
+                    productCategoryUrls.AddRange(trimmedUrls);
+                }
+            }
+            catch (Exception ex)
             {
-                var productCategoryUrlsFound = categoryDocument
-                    .QuerySelectorAll(".jum-breadcrumb-sub .jum-breadcrumb-col a")
-                    .SelectMany(_ => _.Attributes.Where(a => a.Name == "href").Select(href => href.Value));
-                var trimmedUrls = productCategoryUrlsFound.Select(_ => _.Contains(";") ? _.Substring(0, _.IndexOf(";", StringComparison.Ordinal)) : _).ToList();
-                productCategoryUrls.AddRange(trimmedUrls);
+                _streamWriter.WriteLine($"Error scraping category: {url}");
+                _streamWriter.WriteLine(ex);
             }
 
             //If there are sub categories found open these sub categories
@@ -159,19 +179,19 @@ namespace ProductScraper.Scrapers
 
         async Task HandleProduct(string url, ProductCategory productCategory)
         {
-            var request = DocumentRequest.Get(Url.Create(url));
-            request.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
-            var productDocument = await _browsingContext.OpenAsync(request);
-
-            var code = "";
-            var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.jumbo.com\/[^\/.]*\/)(\w*)");
-            if (codeMatch.Success)
-            {
-                code = codeMatch.Groups[1].Value;
-            }
-
             try
             {
+                var request = DocumentRequest.Get(Url.Create(url));
+                request.Headers.Add("User-Agent", "chrome"); //Needed to authorize request
+                var productDocument = await _browsingContext.OpenAsync(request);
+
+                var code = "";
+                var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.jumbo.com\/[^\/.]*\/)(\w*)");
+                if (codeMatch.Success)
+                {
+                    code = codeMatch.Groups[1].Value;
+                }
+
                 if (code == "")
                 {
                     throw new ArgumentException("Product code is empty");

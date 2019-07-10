@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -289,7 +289,7 @@ namespace ProductScraper.Scrapers
 
         private bool GetIsStoreAdvertisedVegan(IDocument productDocument)
         {
-            return productDocument.QuerySelectorAll("jum-product-info-item").Any(_ => _.TextContent.ToLower().Contains("vegan"));
+            return productDocument.QuerySelectorAll(".jum-product-info-item").Any(_ => _.TextContent.ToLower().Contains("vegan"));
         }
     }
 }

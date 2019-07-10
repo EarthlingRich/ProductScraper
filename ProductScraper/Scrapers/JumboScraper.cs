@@ -74,6 +74,15 @@ namespace ProductScraper.Scrapers
                 }
             }
 
+            //Scrape products that have not been found in a category
+            var notFoundProducts = _context.Products
+                .Include(p => p.ProductProductCategories)
+                .Where(_ => _.StoreType == StoreType.Jumbo && _.LastScrapeDate != _scrapeDate);
+            foreach (var notFoundProduct in notFoundProducts)
+            {
+                await HandleProduct(notFoundProduct.Url, notFoundProduct.ProductCategories.First());
+            }
+
             //Remove outdated products
             _productService.RemoveOutdatedProducts(StoreType.Jumbo, _scrapeDate);
         }
@@ -115,7 +124,7 @@ namespace ProductScraper.Scrapers
                     categoryDocument = await _browsingContext.OpenAsync(request);
 
                     reloadCount++;
-                    if(reloadCount > 4)
+                    if (reloadCount > 4)
                     {
                         break;
                     }

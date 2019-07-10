@@ -74,6 +74,7 @@ namespace ProductScraper.Scrapers
                 }
             }
 
+            //Scrape products that have not been found in a category
             var notFoundProducts = _context.Products
                 .Include(p => p.ProductProductCategories)
                 .Where(_ => _.StoreType == StoreType.AlbertHeijn && _.LastScrapeDate != _scrapeDate);

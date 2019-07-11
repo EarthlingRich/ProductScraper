@@ -12,7 +12,10 @@
 
 <h3 class="page-title">
     @CommonTerms.Product_Workload
-    <a class="waves-effect waves-light btn right" onclick="Workload.processAll()">@CommonTerms.Action_Process</a>
+    <span class="right">
+        <a class="waves-effect waves-light btn" onclick="Workload.processAll()">@CommonTerms.Action_ProcessAll</a>
+        <a class="waves-effect waves-light btn" onclick="Workload.processWorkload()">@CommonTerms.Action_ProcessWorkload</a>
+    </span>
 </h3>
 <table id="workload-table" class="striped">
     <thead>

@@ -85,6 +85,14 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        public IActionResult ProcessWorkload()
+        {
+            BackgroundJob.Enqueue(() => _productService.ProcessWorkload());
+
+            return Redirect("Index");
+        }
+
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             _productService.Delete(id);

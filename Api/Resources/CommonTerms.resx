@@ -15,6 +15,12 @@
     <data name="Action_Process" xml:space="preserve">
         <value>Verwerken</value>
     </data>
+    <data name="Action_ProcessAll" xml:space="preserve">
+        <value>Verwerk werklijst</value>
+    </data>
+    <data name="Action_ProcessWorkload" xml:space="preserve">
+        <value>Verwerk alles</value>
+    </data>
     <data name="Action_Save" xml:space="preserve">
         <value>Opslaan</value>
     </data>

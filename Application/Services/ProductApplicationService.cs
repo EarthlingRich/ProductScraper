@@ -129,17 +129,29 @@ namespace Application.Services
 
         public void ProcessAll()
         {
-            var productIds = _context.Products.Select(_ => _.Id);
-            var ingredients = _context.Ingredients.ToList();
+            var products = _context.Products
+                        .Include(p => p.WorkloadItems)
+                        .Include(p => p.ProductActivities)
+                        .Include("ProductIngredients.Ingredient");
+            Process(products);
+        }
 
-            foreach(var productId in productIds)
-            {
-                var product = _context.Products
+        public void ProcessWorkload()
+        {
+            var products = _context.Products
                         .Include(p => p.WorkloadItems)
                         .Include(p => p.ProductActivities)
                         .Include("ProductIngredients.Ingredient")
-                        .Single(_ => _.Id == productId);
+                        .Where(p => p.WorkloadItems.Any(w => !w.IsProcessed));
+            Process(products);
+        }
 
+        private void Process(IQueryable<Product> products)
+        {
+            var ingredients = _context.Ingredients.ToList();
+
+            foreach (var product in products)
+            {
                 SetMatchedIngredients(product, ingredients);
                 SetVeganType(product);
 

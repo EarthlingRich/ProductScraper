@@ -34,3 +34,10 @@ export function processAll() {
         url: Utils.getBaseUrl() + "/Product/ProcessAll",
     });
 }
+
+export function processWorkload() {
+    $.ajax({
+        type: "POST",
+        url: Utils.getBaseUrl() + "/Product/ProcessWorkload",
+    });
+}

@@ -53,6 +53,18 @@ namespace Api.Resources {
             }
         }
         
+        public static string Action_ProcessAll {
+            get {
+                return ResourceManager.GetString("Action_ProcessAll", resourceCulture);
+            }
+        }
+        
+        public static string Action_ProcessWorkload {
+            get {
+                return ResourceManager.GetString("Action_ProcessWorkload", resourceCulture);
+            }
+        }
+        
         public static string Action_Save {
             get {
                 return ResourceManager.GetString("Action_Save", resourceCulture);

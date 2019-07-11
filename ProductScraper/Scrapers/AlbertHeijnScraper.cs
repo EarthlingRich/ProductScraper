@@ -87,25 +87,12 @@ namespace ProductScraper.Scrapers
             _productService.RemoveOutdatedProducts(StoreType.AlbertHeijn, _scrapeDate);
         }
 
-        public async Task ScrapeCategory(string scrapeCategoryName)
+        public async Task ScrapeProduct(int id)
         {
-            var productUrls = new List<string>();
-            var productCategorie = _context.ProductCategories
-                .Include(_ => _.StoreCategories)
-                .Single(_ => _.Name.ToLower() == scrapeCategoryName.ToLower());
-
-            //Get product url's from category
-            var productCategorieUrls = productCategorie.StoreCategories.Where(_ => _.StoreType == StoreType.AlbertHeijn).Select(_ => _.Url);
-            foreach (var productCategorieUrl in productCategorieUrls)
-            {
-                productUrls.AddRange(await GetProductUrls(productCategorieUrl));
-            }
-
-            //Get product data
-            foreach (string productUrl in productUrls)
-            {
-                await HandleProduct(productUrl, productCategorie);
-            }
+            var product = _context.Products
+                .Include(p => p.ProductProductCategories)
+                .First(_ => _.Id == id);
+            await HandleProduct(product.Url, product.ProductCategories.First());
         }
 
         async Task<List<string>> GetProductUrls(string url)

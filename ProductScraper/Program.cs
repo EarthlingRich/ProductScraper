@@ -35,7 +35,7 @@ namespace ProductScraper
                 var scraper = GetProductScraper(args[0], context, mapper, streamWriter);
                 if (args.Length == 2)
                 {
-                    await scraper.ScrapeCategory(args[1]);
+                    await scraper.ScrapeProduct(int.Parse(args[1]));
                 }
                 else
                 {

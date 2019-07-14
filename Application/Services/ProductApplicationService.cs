@@ -74,7 +74,9 @@ namespace Application.Services
             var existingProduct = _context.Products
                     .Include(p => p.WorkloadItems)
                     .Include(p => p.ProductProductCategories)
-                    .SingleOrDefault(_ => _.Code == request.Code);
+                    .SingleOrDefault(_ => _.Code == request.Code && _.StoreType == request.StoreType);
+
+            ProcessAmmount(request);
 
             if (existingProduct != null)
             {
@@ -372,6 +374,46 @@ namespace Application.Services
             }
 
             return false;
+        }
+
+        private void ProcessAmmount(ProductStoreRequest productStoreRequest)
+        {
+            var name = productStoreRequest.Name;
+            var ammount = productStoreRequest.Ammount;
+
+            var piecesNameMatch = Regex.Match(name, @"\d+ stuks", RegexOptions.IgnoreCase);
+
+            if (piecesNameMatch.Success)
+            {
+                ammount = piecesNameMatch.Value;
+            }
+
+            var piecesWithAmmountNameMatch = Regex.Match(name, @"\d+\sx\s[\d.,\s]+[gmkl][lg]*", RegexOptions.IgnoreCase);
+            if (piecesWithAmmountNameMatch.Success)
+            {
+                ammount = piecesWithAmmountNameMatch.Value;
+            }
+
+            //Convert liter (lower then 1l) to milliliter
+            if (Regex.Match(ammount, @"0[.,]\d+\sl", RegexOptions.IgnoreCase).Success)
+            {
+                var liter = float.Parse(Regex.Match(ammount, @"(0[.,]\d+)").Groups[0].Value);
+                ammount = $"{liter * 1000} ml";
+            }
+
+            //Use correct unit symbols
+            ammount = ammount.ToLower();
+            ammount = ammount.Replace("gram", "g").Replace("gr", "g");
+            ammount = ammount.Replace(". ", ",").Replace(", ", ",");
+            ammount = ammount.Replace(" g", "g").Replace(" kg", "kg").Replace(" ml", "ml").Replace(" l", "l");
+
+            //Remove ammount info from name
+            name = Regex.Replace(name, @"\d+\sx\s[\d.,\s]+[gmkl][lg]*", string.Empty, RegexOptions.IgnoreCase);
+            name = Regex.Replace(name, @"\d+ stuks", string.Empty, RegexOptions.IgnoreCase);
+            name = Regex.Replace(name, @"[\d.,]+[gmkl][lg]*", string.Empty, RegexOptions.IgnoreCase);
+
+            productStoreRequest.Name = name.Trim();
+            productStoreRequest.Ammount = ammount.Trim();
         }
     }
 }

@@ -196,6 +196,7 @@ namespace ProductScraper.Scrapers
                 //Scrape product page
                 var name = productDocument.QuerySelector(".jum-column-main h1").TextContent;
                 name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
+                var ammount = productDocument.QuerySelector(".jum-column-main .jum-pack-size").TextContent;
                 var ingredients = GetIngredients(productDocument);
                 var allergyInfo = GetAllergyInfo(productDocument);
                 var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
@@ -204,6 +205,7 @@ namespace ProductScraper.Scrapers
                 {
                     StoreType = StoreType.Jumbo,
                     Name = name,
+                    Ammount = ammount,
                     Code = code,
                     Url = url,
                     Ingredients = ingredients,

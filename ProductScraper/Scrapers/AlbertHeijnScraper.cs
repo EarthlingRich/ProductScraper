@@ -189,6 +189,7 @@ namespace ProductScraper.Scrapers
                 //Scrape product page
                 var name = productDocument.QuerySelector("div.product-hero h1 span").TextContent;
                 name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
+                var ammount = GetAmmount(productDocument);
                 var ingredients = GetIngredients(productDocument);
                 var allergyInfo = GetAllergyInfo(productDocument);
                 var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
@@ -197,6 +198,7 @@ namespace ProductScraper.Scrapers
                 {
                     StoreType = StoreType.AlbertHeijn,
                     Name = name,
+                    Ammount = ammount,
                     Code = code,
                     Url = url,
                     Ingredients = ingredients,
@@ -282,6 +284,35 @@ namespace ProductScraper.Scrapers
             }
 
             return allergyInfo.Replace(".", "").Trim();
+        }
+
+        private string GetAmmount(IDocument productDocument)
+        {
+            var ammount = productDocument.QuerySelector("div.product-hero h1")
+                    .NextSibling
+                    .ChildNodes
+                    .OfType<IText>()
+                    .Select(m => m.Text)
+                    .FirstOrDefault();
+
+            if (!Regex.Match(ammount, @"\d+\s*x\s*[\d.,\s]+[gmkl][lg]*", RegexOptions.IgnoreCase).Success)
+            {
+                var ammountResults = productDocument.QuerySelectorAll(".product-info-content-block")
+                    .FirstOrDefault(_ => _.QuerySelector("h4").TextContent.ToLower() == "inhoud en gewicht")
+                    ?.QuerySelectorAll("p")
+                    .Select(_ => _.TextContent);
+
+                foreach (var ammountResult in ammountResults)
+                {
+                    if (Regex.Match(ammountResult, @"^\d+\s*x\s*[\d.,\s]+[gmkl][lg]*$", RegexOptions.IgnoreCase).Success)
+                    {
+                        ammount = ammountResult;
+                        break;
+                    }
+                }
+            }
+
+            return ammount;
         }
 
         private bool GetIsStoreAdvertisedVegan(IDocument productDocument)

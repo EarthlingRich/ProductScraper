@@ -17,8 +17,10 @@ namespace Api.Models
 
             //Product
             CreateMap<Product, ProductListViewModel>(MemberList.Destination)
+                .ForMember(_ => _.Name, opt => opt.MapFrom(p => $"{p.Name} {p.Ammount}"))
                 .ForMember(_ => _.ProductCategories, opt => opt.MapFrom(p => string.Join(", ", p.ProductCategories.Select(pc => pc.Name).OrderBy(_ => _))));
             CreateMap<Product, ProductUpdateViewModel>(MemberList.Destination)
+                .ForMember(_ => _.Name, opt => opt.MapFrom(p => $"{p.Name} {p.Ammount}"))
                 .ForMember(_ => _.Request, opt => opt.Ignore())
                 .ForMember(_ => _.WorkloadItems, opt => opt.MapFrom(wi => wi.WorkloadItems.OrderByDescending(_ => _.CreatedOn)))
                 .ForMember(_ => _.ProductCategories, opt => opt.MapFrom(p => p.ProductCategories.Select(pc => pc.Name).OrderBy(_ => _)));
@@ -35,7 +37,8 @@ namespace Api.Models
                 .ForMember(_ => _.Request, opt => opt.Ignore());
 
             //WorkloadItem
-            CreateMap<WorkloadItem, WorkloadItemListViewModel>(MemberList.Destination);
+            CreateMap<WorkloadItem, WorkloadItemListViewModel>(MemberList.Destination)
+                .ForMember(_ => _.ProductName, opt => opt.MapFrom(p => $"{p.Product.Name} {p.Product.Ammount}"));
         }
     }
 }

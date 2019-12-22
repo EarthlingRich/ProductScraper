@@ -78,6 +78,8 @@ namespace Application.Services
 
             ProcessAmmount(request);
 
+            request.Ingredients = request.Ingredients.Replace("\n", " ");
+
             if (existingProduct != null)
             {
                 Update(request, existingProduct);

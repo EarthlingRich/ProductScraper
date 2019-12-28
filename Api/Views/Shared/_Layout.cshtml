@@ -16,52 +16,39 @@
     <script src="~/dist/main.js"></script>
 </head>
 <body>
-    <header>
-        <ul id="sidenav" class="sidenav sidenav-fixed">
-            <li>
-
-            </li>
-            <li class="@(controller == HomeController.RouteName && action == nameof(HomeController.Index) ? "active" : "")"><a href="@Url.Action(nameof(HomeController.Index), HomeController.RouteName)">@CommonTerms.Home_Index</a></li>
-            <li class="@(controller == WorkloadController.RouteName && action == nameof(WorkloadController.Index) ? "active" : "")"><a href="@Url.Action(nameof(WorkloadController.Index), WorkloadController.RouteName)">@CommonTerms.Product_Workload</a></li>
-            <li>
-                <ul class="collapsible collapsible-accordion">
-                    <li class="@(controller == ProductController.RouteName ? "active" : "")">
-                        <a class="collapsible-header">Producten</a>
-                        <div class="collapsible-body">
-                            <ul>
-                                <li class="@(controller == ProductController.RouteName && action == nameof(ProductController.Index) ? "active" : "")">
-                                    <a href="@Url.Action(nameof(ProductController.Index), ProductController.RouteName)">@CommonTerms.Product_Index</a>
-                                </li>
-                                <li class="@(controller == ProductController.RouteName && action == nameof(ProductController.ProductActivityList) ? "active" : "")">
-                                    <a href="@Url.Action(nameof(ProductController.ProductActivityList), ProductController.RouteName)">@CommonTerms.ProductActivities_Index</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li class="@(controller == IngredientController.RouteName && action == nameof(IngredientController.Index) ? "active" : "")"><a href="@Url.Action(nameof(IngredientController.Index), IngredientController.RouteName)">@CommonTerms.Ingredient_Index</a></li>
-            <li class="@(controller == ProductCategoryController.RouteName && action == nameof(ProductCategoryController.Index) ? "active" : "")"><a href="@Url.Action(nameof(ProductCategoryController.Index), ProductCategoryController.RouteName)">@CommonTerms.ProductCategory_Index</a></li>
-            <li class="@(controller == HomeController.RouteName && action == nameof(HomeController.BackgroundJobs) ? "active" : "")"><a href="@Url.Action(nameof(HomeController.BackgroundJobs), HomeController.RouteName)">@CommonTerms.Home_BackgroundJobs</a></li>
-        </ul>
-        <a href="#" data-target="sidenav" class="sidenav-trigger hide-on-large-only">Menu</a>
-    </header>
-    <main>
+    <div class="container-fluid">
         <div class="row">
-            @if (!ViewContext.ModelState.IsValid)
-            {
-                <div class="col s12">
-                    <div class="card-panel red darken-1">
-                        <span class="white-text">
-                            @Html.ValidationSummary()
-                        </span>
+            <div id="sidebar" class="col-md-3 col-xl-2 bg-dark">
+                <div class="row">
+                     <nav class="nav flex-column">
+                         <a href="@Url.Action(nameof(HomeController.Index), HomeController.RouteName)" class="nav-link @(controller == HomeController.RouteName && action == nameof(HomeController.Index) ? "active" : "")">@CommonTerms.Home_Index</a>
+                         <a href="@Url.Action(nameof(WorkloadController.Index), WorkloadController.RouteName)" class="nav-link @(controller == WorkloadController.RouteName && action == nameof(WorkloadController.Index) ? "active" : "")">@CommonTerms.Product_Workload</a>
+                         <a href="@Url.Action(nameof(ProductController.Index), ProductController.RouteName)" class="nav-link @(controller == ProductController.RouteName && action == nameof(ProductController.Index) ? "active" : "")">@CommonTerms.Product_Index</a>
+                         <a href="@Url.Action(nameof(ProductController.ProductActivityList), ProductController.RouteName)" class="nav-link @(controller == ProductController.RouteName && action == nameof(ProductController.ProductActivityList) ? "active" : "")">@CommonTerms.ProductActivities_Index</a>
+                         <a href="@Url.Action(nameof(IngredientController.Index), IngredientController.RouteName)" class="nav-link @(controller == IngredientController.RouteName && action == nameof(IngredientController.Index) ? "active" : "")">@CommonTerms.Ingredient_Index</a>
+                         <a href="@Url.Action(nameof(ProductCategoryController.Index), ProductCategoryController.RouteName)" class="nav-link @(controller == ProductCategoryController.RouteName && action == nameof(ProductCategoryController.Index) ? "active" : "")">@CommonTerms.ProductCategory_Index</a>
+                         <a href="@Url.Action(nameof(HomeController.BackgroundJobs), HomeController.RouteName)" class="nav-link @(controller == HomeController.RouteName && action == nameof(HomeController.BackgroundJobs) ? "active" : "")">@CommonTerms.Home_BackgroundJobs</a>
+                    </nav>
+                </div>
+            </div>
+            <main class="col-md-9 col-xl-10">
+                <div class="row">
+                    @if (!ViewContext.ModelState.IsValid)
+                    {
+                        <div class="col-12">
+                            <div class="card-panel red darken-1">
+                                <span class="white-text">
+                                    @Html.ValidationSummary()
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-12 main-content">
+                        @RenderBody()
                     </div>
                 </div>
-            }
-            <div class="col s12 main-content">
-                @RenderBody()
-            </div>
+            </main>
         </div>
-    </main>
+    </div>
 </body>
 </html>

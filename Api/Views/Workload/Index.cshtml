@@ -1,6 +1,4 @@
-﻿@using Api.Controllers
-
-@model WorkloadItemListViewModel
+﻿@model WorkloadItemListViewModel
 
 @{
     ViewData["Title"] = CommonTerms.Product_Workload;
@@ -12,12 +10,12 @@
 
 <h3 class="page-title">
     @CommonTerms.Product_Workload
-    <span class="right">
-        <a class="waves-effect waves-light btn" onclick="Workload.processAll()">@CommonTerms.Action_ProcessAll</a>
-        <a class="waves-effect waves-light btn" onclick="Workload.processWorkload()">@CommonTerms.Action_ProcessWorkload</a>
+    <span class="float-right">
+        <button type="button" class="btn btn-primary" onclick="Workload.processAll()">@CommonTerms.Action_ProcessAll</button>
+        <button type="button" class="btn btn-primary" onclick="Workload.processWorkload()">@CommonTerms.Action_ProcessWorkload</button>
     </span>
 </h3>
-<table id="workload-table" class="striped">
+<table id="workload-table" class="table table-striped">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(_ => _.ProductName)</th>

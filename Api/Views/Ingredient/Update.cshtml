@@ -8,81 +8,44 @@
 
 <script type="text/javascript">
     $(function() {
-        var allergyKeywords = [
-            @foreach(var allergyKeyword in Model.AllergyKeywords)
-            {
-                <text>{tag: '@allergyKeyword'},</text>
-            }
-        ];
-        var ignoreKeywords = [
-            @foreach(var ignoreKeyword in Model.IgnoreKeywords)
-            {
-                <text>{tag: '@ignoreKeyword'},</text>
-            }
-        ];
-        var keywords = [
-            @foreach(var keyword in Model.Keywords)
-            {
-                <text>{tag: '@keyword'},</text>
-            }
-        ];
-        Ingredient.initUpdate(allergyKeywords, ignoreKeywords, keywords);
+        Ingredient.initUpdate();
     });
 </script>
 
 <h3 class="page-title">
     @Model.Request.Name
-    @using (Html.BeginForm(nameof(IngredientController.Delete), IngredientController.RouteName, FormMethod.Post, new { @class = "right" }))
+    @using (Html.BeginForm(nameof(IngredientController.Delete), IngredientController.RouteName, FormMethod.Post, new { @class = "float-right" }))
     {
         @Html.Hidden("Id", Model.Request.Id)
-        <button class="btn-floating btn-large waves-effect waves-light red darken-1 product__delete-button" type="submit"><i class="material-icons" aria-hidden="true">delete</i></button>
+        <button class="btn btn-danger product__delete-button" type="submit"><i class="material-icons" aria-hidden="true">delete</i></button>
     }
 </h3>
 @using (Html.BeginForm(nameof(IngredientController.Update), IngredientController.RouteName, FormMethod.Post))
 {
-<div class="row">
     @Html.HiddenFor(_ => _.Request.Id)
-    @Html.HiddenFor(_ => _.Request.AllergyKeywordsString)
-    @Html.HiddenFor(_ => _.Request.IgnoreKeywordsString)
-    @Html.HiddenFor(_ => _.Request.KeywordsString)
-    <div class="clearfix">
-        <div class="input-field col s4">
-            @Html.TextBoxFor(_ => _.Request.Name)
-            @Html.LabelFor(_ => _.Request.Name)
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(_ => _.Request.Name)
+        @Html.TextBoxFor(_ => _.Request.Name, new { @class = "form-control" })
     </div>
-    <div class="input-field col s4">
-        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
+    <div class="form-group">
         @Html.LabelFor(_ => _.Request.VeganType)
+        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>(), new { @class = "custom-select" })
     </div>
-    <div class="input-field col s12">
-        <p>
-            <label>
-                @Html.EditorFor(_ => _.Request.NeedsReview)
-                <span>@Html.DisplayNameFor(_ => _.Request.NeedsReview)</span>
-            </label>
-        </p>
+    <div class="form-group">
+        @Html.EditorFor(_ => _.Request.NeedsReview, new { @class = "form-check-input", id = "NeedsReview" })
+        @Html.LabelFor(_ => _.Request.NeedsReview, new { @for = "NeedsReview" })
     </div>
-    <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.KeywordsString)</div>
-        <div id="keywords-chips" class="chips input-field">
-            <input class="input">
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(_ => _.Request.KeywordsString)
+        <input id="Keywords" name="Request.KeywordsString" value="@Model.Request.KeywordsString" class="form-control">
     </div>
-    <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.IgnoreKeywordsString)</div>
-        <div id="ignoreKeywords-chips" class="chips input-field">
-            <input class="input">
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(_ => _.Request.IgnoreKeywordsString)
+        <input id="IgnoreKeywords" name="Request.IgnoreKeywordsString" value="@Model.Request.IgnoreKeywordsString" class="form-control">
     </div>
-    <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Request.AllergyKeywordsString)</div>
-        <div id="allergyKeywords-chips" class="chips input-field">
-            <input class="input">
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(_ => _.Request.AllergyKeywordsString)
+        <input id="AllergyKeywords" name="Request.AllergyKeywordsString" value="@Model.Request.AllergyKeywordsString" class="form-control">
     </div>
-    <div class="col s12">
-        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
-    </div>
-</div>
+    <button class="btn btn-primary" type="submit">@CommonTerms.Action_Save</button>
 }

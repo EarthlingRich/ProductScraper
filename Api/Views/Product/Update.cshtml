@@ -6,148 +6,124 @@
     ViewData["Title"] = Model.Name;
 }
 
-<script type="text/javascript">
-    $(function() {
-        Product.initUpdate();
-    });
-</script>
-
 <h3 class="page-title">
     @Model.Name
     @using (Html.BeginForm(nameof(ProductController.Delete), ProductController.RouteName, FormMethod.Post, new { @class = "right" }))
     {
         @Html.Hidden("Id", Model.Request.Id)
-        <button class="btn-floating btn-large waves-effect waves-light red darken-1 product__delete-button" type="submit"><i class="material-icons" aria-hidden="true">delete</i></button>
+        <button class="btn btn-danger product__delete-button float-right" type="submit"><i class="material-icons" aria-hidden="true">delete</i></button>
     }
-    <a href="@Model.Url" target="_blank" class="btn-floating btn-large waves-effect waves-light right"><i class="material-icons" aria-hidden="true">local_grocery_store</i></a>
+    <a href="@Model.Url" target="_blank" class="btn btn-primary float-right"><i class="material-icons" aria-hidden="true">local_grocery_store</i></a>
 </h3>
 @using (Html.BeginForm(nameof(ProductController.Update), ProductController.RouteName, FormMethod.Post))
 {
-<div class="row">
+
     @Html.HiddenFor(_ => _.Request.Id)
-    <div class="col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.ProductCategories)</div>
-        @foreach (var productCategorie in Model.ProductCategories)
-        {
-            <div class="chip">@productCategorie</div>
-        }
+    <div class="form-group">
+        <label>@Html.DisplayNameFor(_ => _.ProductCategories)</label>
+        <div>
+            @foreach (var productCategorie in Model.ProductCategories)
+            {
+                <span class="badge badge-primary">@productCategorie</span>
+            }
+        </div>
     </div>
-    <div class="input-field col s12">
-        <div class="custom-form-label">@Html.DisplayNameFor(_ => _.Ingredients)</div>
-        @Model.Ingredients
+    <div class="form-group">
+        <label>@Html.DisplayNameFor(_ => _.Ingredients)</label>
+        <div class="form-control-plaintext">@Model.Ingredients</div>
     </div>
     @if (!string.IsNullOrEmpty(Model.AllergyInfo))
     {
-        <div class="input-field col s12">
-            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.AllergyInfo)</div>
-            @Model.AllergyInfo
+        <div class="form-group">
+            <label>@Html.DisplayNameFor(_ => _.AllergyInfo)</label>
+            <div class="form-control-plaintext">@Model.AllergyInfo</div>
         </div>
     }
     @if (Model.MatchedIngredients.Any())
     {
-        <div class="col s12">
-            <div class="custom-form-label">@Html.DisplayNameFor(_ => _.MatchedIngredients)</div>
+        <div class="form-group">
+            <label>@Html.DisplayNameFor(_ => _.MatchedIngredients)</label>
             @foreach (var matchedIngredient in Model.MatchedIngredients)
             {
-                <div class="chip">@matchedIngredient.Name</div>
+                <span class="badge badge-primary">@matchedIngredient.Name</span>
             }
         </div>
     }
-    <div class="input-field col s4">
-        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>())
+    <div class="form-group">
         @Html.LabelFor(_ => _.Request.VeganType)
+        @Html.DropDownListFor(_ => _.Request.VeganType, Html.GetEnumSelectList<VeganType>(), new { @class = "form-control" })
     </div>
-    <div class="input-field col s12">
-        <p>
-            <label>
-                @Html.EditorFor(_ => _.Request.IsManufacturerAdvertisedVegan)
-                <span>@Html.DisplayNameFor(_ => _.Request.IsManufacturerAdvertisedVegan)</span>
-            </label>
-        </p>
+    <div class="form-group">
+        @Html.EditorFor(_ => _.Request.IsManufacturerAdvertisedVegan, new { @class = "form-check-input", id = "IsManufacturerAdvertisedVegan" })
+        @Html.LabelFor(_ => _.Request.IsManufacturerAdvertisedVegan, new { @for = "IsManufacturerAdvertisedVegan" })
     </div>
-    <div class="input-field col s12">
-        @Html.TextAreaFor(_ => _.Request.VeganDescription, new { @class = "materialize-textarea"})
+    <div class="form-group">
         @Html.LabelFor(_ => _.Request.VeganDescription)
+        @Html.TextAreaFor(_ => _.Request.VeganDescription, new { @class = "form-control"})
     </div>
-    <div class="input-field col s12">
-        <div class="custom-form-label">@CommonTerms.Common_Status</div>
-        <p>
-            <label>
-                @Html.EditorFor(_ => _.Request.IsProcessed)
-                <span>@Html.DisplayNameFor(_ => _.Request.IsProcessed)</span>
-            </label>
-        </p>
+    <div>@CommonTerms.Common_Status</div>
+    <div class="form-group">
+        @Html.EditorFor(_ => _.Request.IsProcessed, new { @class = "form-check-input", id = "IsProcessed" })
+        @Html.LabelFor(_ => _.Request.IsProcessed, new { @for = "IsProcessed" })
     </div>
-    <div class="col s12">
-        <button class="btn waves-effect waves-light" type="submit">@CommonTerms.Action_Save</button>
-        <a href="@Url.Action(nameof(ProductController.Process), ProductController.RouteName, new { id = Model.Request.Id })" class="waves-effect waves-light btn">@CommonTerms.Action_Process</a>
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit">@CommonTerms.Action_Save</button>
+        <a href="@Url.Action(nameof(ProductController.Process), ProductController.RouteName, new { id = Model.Request.Id })" class="btn btn-secondary">@CommonTerms.Action_Process</a>
     </div>
-</div>
-    <div class="row">
-        <div class="col s12">
-            <h5 class="subcontent-title">@Html.DisplayNameFor(_ => _.WorkloadItems)</h5>
-            <table>
-                <thead>
-                    <tr>
-                        <th>@DomainTerms.WorkloadItem_Message</th>
-                        <th>@DomainTerms.WorkloadItem_CreatedOn</th>
-                        <th>@DomainTerms.WorkloadItem_IsProcessed</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (var i = 0; i < Model.Request.WorkloadItems.Count; i++)
-                    {
-                        var viewModel = @Model.WorkloadItems.Single(_ => _.Id == Model.Request.WorkloadItems[i].Id);
-                        <tr id="workload-item-row-@Model.Request.WorkloadItems[i].Id">
-                            <td>
-                                @viewModel.Message
-                                @Html.HiddenFor(_ => _.Request.WorkloadItems[i].Id)
-                            </td>
-                            <td>@viewModel.CreatedOn</td>
-                            <td>
-                                <p>
-                                    <label>
-                                        @Html.CheckBoxFor(_ => _.Request.WorkloadItems[i].IsProcessed)
-                                        <span></span>
-                                    </label>
-                                </p>
-                            </td>
-                            <td>
-                                <a class="btn-flat waves-effect waves-light" onclick="Product.deleteWorkloadItem(@Model.Request.WorkloadItems[i].Id)"><i class="material-icons" aria-hidden="true">delete</i></a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
-<div class="row">
-    <div class="col s12">
-        <h5 class="subcontent-title">@Html.DisplayNameFor(_ => _.ProductActivities)</h5>
-        <table>
-            <thead>
-                <tr>
-                    <th>@DomainTerms.WorkloadItem_Message</th>
-                    <th>@DomainTerms.WorkloadItem_Message</th>
-                    <th>@DomainTerms.WorkloadItem_CreatedOn</th>
-                    <th></th>
+    <h5 class="subcontent-title">@Html.DisplayNameFor(_ => _.WorkloadItems)</h5>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@DomainTerms.WorkloadItem_Message</th>
+                <th>@DomainTerms.WorkloadItem_CreatedOn</th>
+                <th>@DomainTerms.WorkloadItem_IsProcessed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Request.WorkloadItems.Count; i++)
+            {
+                var viewModel = @Model.WorkloadItems.Single(_ => _.Id == Model.Request.WorkloadItems[i].Id);
+                <tr id="workload-item-row-@Model.Request.WorkloadItems[i].Id">
+                    <td>
+                        @viewModel.Message
+                        @Html.HiddenFor(_ => _.Request.WorkloadItems[i].Id)
+                    </td>
+                    <td>@viewModel.CreatedOn</td>
+                    <td>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(_ => _.Request.WorkloadItems[i].IsProcessed, new { @class = "form-check-input" })
+                        </div>
+                    </td>
+                    <td>
+                        <a class="btn btn-link" onclick="Product.deleteWorkloadItem(@Model.Request.WorkloadItems[i].Id)"><i class="material-icons" aria-hidden="true">delete</i></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var productActivity in Model.ProductActivities)
-                {
-                    <tr id="product-activity-row-@productActivity.Id">
-                        <td>@productActivity.Type</td>
-                        <td>@productActivity.Detail</td>
-                        <td>@productActivity.CreatedOn</td>
-                        <td>
-                            <a class="btn-flat waves-effect waves-light" onclick="Product.deleteProductActivity(@productActivity.Id)"><i class="material-icons" aria-hidden="true">delete</i></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+            }
+        </tbody>
+    </table>
+}
+<h5 class="subcontent-title">@Html.DisplayNameFor(_ => _.ProductActivities)</h5>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@DomainTerms.WorkloadItem_Message</th>
+            <th>@DomainTerms.WorkloadItem_Message</th>
+            <th>@DomainTerms.WorkloadItem_CreatedOn</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var productActivity in Model.ProductActivities)
+        {
+            <tr id="product-activity-row-@productActivity.Id">
+                <td>@productActivity.Type</td>
+                <td>@productActivity.Detail</td>
+                <td>@productActivity.CreatedOn</td>
+                <td>
+                    <a class="btn-flat waves-effect waves-light" onclick="Product.deleteProductActivity(@productActivity.Id)"><i class="material-icons" aria-hidden="true">delete</i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

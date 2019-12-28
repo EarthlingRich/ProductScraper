@@ -8,9 +8,9 @@
 
 <h3 class="page-title">
     @CommonTerms.ProductCategory_Index
-    <a class="btn-floating btn-large waves-effect waves-light right" href="@Url.Action(nameof(ProductCategoryController.Create), ProductCategoryController.RouteName)"><i class="material-icons" aria-hidden="true">add</i></a>
+    <a class="btn btn-primary float-right" href="@Url.Action(nameof(ProductCategoryController.Create), ProductCategoryController.RouteName)"><i class="material-icons" aria-hidden="true">add</i></a>
 </h3>
-<table class="striped">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(_ => _.Name)</th>

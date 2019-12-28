@@ -28,10 +28,6 @@
     });
 }
 
-export function initUpdate() {
-    Utils.initSelect();
-}
-
 export function initProductActivityList() {
     Utils.initDatatables();
 

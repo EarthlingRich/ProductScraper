@@ -16,7 +16,7 @@
     "css-loader": "^2.1.1",
     "expose-loader": "^0.7.5",
     "mini-css-extract-plugin": "^0.5.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.0",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
@@ -24,8 +24,10 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "@yaireo/tagify": "^3.2.5",
+    "bootstrap": "^4.4.1",
     "datatables.net": "^1.10.19",
-    "jquery": "^3.3.1",
-    "materialize-css": "^1.0.0"
+    "datatables.net-bs4": "^1.10.20",
+    "jquery": "^3.4.1"
   }
 }

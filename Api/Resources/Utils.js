@@ -8,7 +8,7 @@ export function initDatatables() {
         processing: true,
         serverSide: true,
         pageLength: 25,
-        dom: '<"row"<"col s4"f>>tp',
+        dom: '<"row"<"col-6"f>>tp',
         language: {
             'sProcessing': 'Bezig...',
             'sLengthMenu': '_MENU_ resultaten weergeven',
@@ -17,7 +17,7 @@ export function initDatatables() {
             'sInfoEmpty': 'Geen resultaten gevonden',
             'sInfoFiltered': ' (gefilterd uit _MAX_ resultaten)',
             'sInfoPostFix': '',
-            'sSearch': 'Zoeken',
+            'sSearch': '',
             'sEmptyTable': 'Geen resultaten gevonden',
             'sInfoThousands': '.',
             'sLoadingRecords': 'Laden...',
@@ -41,7 +41,8 @@ export function initDatatables() {
     });
 
     $.extend($.fn.dataTable.ext.classes, {
-        sFilter: "dataTables_filter input-field"
+        sFilterInput: "form-control datatables-search-input",
+        sPageButton: "paginate_button page-item"
     });
 
     $(document).on( 'preInit.dt', function() {
@@ -49,12 +50,102 @@ export function initDatatables() {
         var label = filter.find("label");
         var input = filter.find("input");
         label.before(input);
+        label.remove();
     });
-}
 
-export function initSelect() {
-    var selectElements = document.querySelectorAll('select');
-    M.FormSelect.init(selectElements);
+    $.fn.dataTable.defaults.renderer = 'bootstrap';
+    $.fn.dataTable.ext.renderer.pageButton.bootstrap = function (settings, host, idx, buttons, page, pages) {
+        var api = new $.fn.dataTable.Api(settings);
+        var classes = settings.oClasses;
+        var lang = settings.oLanguage.oPaginate;
+        var btnDisplay, btnClass;
+
+        var attach = function (container, buttons) {
+            var i, ien, node, button;
+            var clickHandler = function (e) {
+                e.preventDefault();
+                if (e.data.action !== 'ellipsis') {
+                    api.page(e.data.action).draw(false);
+                }
+            };
+
+            for (i = 0, ien = buttons.length; i < ien; i++) {
+                button = buttons[i];
+
+                if ($.isArray(button)) {
+                    attach(container, button);
+                }
+                else {
+                    btnDisplay = '';
+                    btnClass = '';
+
+                    switch (button) {
+                        case 'ellipsis':
+                            btnDisplay = '&hellip;';
+                            btnClass = 'disabled';
+                            break;
+
+                        case 'first':
+                            btnDisplay = lang.sFirst;
+                            btnClass = button + (page > 0 ?
+                                '' : ' disabled');
+                            break;
+
+                        case 'previous':
+                            btnDisplay = lang.sPrevious;
+                            btnClass = button + (page > 0 ?
+                                '' : ' disabled');
+                            break;
+
+                        case 'next':
+                            btnDisplay = lang.sNext;
+                            btnClass = button + (page < pages - 1 ?
+                                '' : ' disabled');
+                            break;
+
+                        case 'last':
+                            btnDisplay = lang.sLast;
+                            btnClass = button + (page < pages - 1 ?
+                                '' : ' disabled');
+                            break;
+
+                        default:
+                            btnDisplay = button + 1;
+                            btnClass = page === button ?
+                                'active' : '';
+                            break;
+                    }
+
+                    if (btnDisplay) {
+                        node = $('<li>', {
+                            'class': classes.sPageButton + ' ' + btnClass,
+                            'aria-controls': settings.sTableId,
+                            'tabindex': settings.iTabIndex,
+                            'id': idx === 0 && typeof button === 'string' ?
+                                settings.sTableId + '_' + button :
+                                null
+                        })
+                            .append($('<a>', {
+                                'href': '#',
+                                'class': 'page-link'
+                            })
+                                .html(btnDisplay)
+                            )
+                            .appendTo(container);
+
+                        settings.oApi._fnBindAction(
+                            node, { action: button }, clickHandler
+                        );
+                    }
+                }
+            }
+        };
+
+        attach(
+            $(host).empty().html('<ul class="pagination"/>').children('ul'),
+            buttons
+        );
+    }
 }
 
 export function fixSelectBoxes() {

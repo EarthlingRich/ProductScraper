@@ -10,23 +10,23 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "autoprefixer": "^9.5.0",
-    "babel-loader": "^8.0.5",
-    "css-loader": "^2.1.1",
+    "@babel/core": "^7.7.7",
+    "autoprefixer": "^9.7.3",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.4.0",
     "expose-loader": "^0.7.5",
-    "mini-css-extract-plugin": "^0.5.0",
+    "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.0",
     "postcss-loader": "^3.0.0",
-    "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.1.2",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
     "@yaireo/tagify": "^3.2.5",
     "bootstrap": "^4.4.1",
-    "datatables.net": "^1.10.19",
+    "datatables.net": "^1.10.20",
     "datatables.net-bs4": "^1.10.20",
     "jquery": "^3.4.1"
   }

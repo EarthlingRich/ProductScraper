@@ -40,7 +40,7 @@ namespace ProductScraper.Scrapers
 
         public async Task ScrapeAll()
         {
-            var productUrlDictonary = new Dictionary<int, List<string>>();
+            var requestDictonary = new Dictionary<int, List<ProductStoreRequest>>();
 
             //Get main categorie url's
             var productCategories = _context.ProductCategories
@@ -53,26 +53,26 @@ namespace ProductScraper.Scrapers
                 var productCategorieUrls = productCategorie.StoreCategories.Where(_ => _.StoreType == StoreType.AlbertHeijn).Select(_ => _.Url);
                 foreach (var productCategorieUrl in productCategorieUrls)
                 {
-                    if (productUrlDictonary.ContainsKey(productCategorie.Id))
+                    if (requestDictonary.ContainsKey(productCategorie.Id))
                     {
-                        productUrlDictonary[productCategorie.Id].AddRange(await GetProductUrls(productCategorieUrl, productCategorie));
+                        requestDictonary[productCategorie.Id].AddRange(await GetBareProducts(productCategorieUrl, productCategorie));
                     }
                     else
                     {
-                        productUrlDictonary.Add(productCategorie.Id, await GetProductUrls(productCategorieUrl, productCategorie));
+                        requestDictonary.Add(productCategorie.Id, await GetBareProducts(productCategorieUrl, productCategorie));
                     }
                 }
             }
 
             //Get product data
-            foreach (var productsUrlsForCategory in productUrlDictonary)
+            foreach (var productStoreRequestsForCategory in requestDictonary)
             {
-                var productCateogry = _context.ProductCategories.Find(productsUrlsForCategory.Key);
-                var productsUrlsForCategoryDistinct = productsUrlsForCategory.Value.Distinct().ToList();
+                var productCateogry = _context.ProductCategories.Find(productStoreRequestsForCategory.Key);
+                var productStoreRequestsForCategoryDistinct = productStoreRequestsForCategory.Value.Distinct().ToList();
 
-                foreach (var productUrl in productsUrlsForCategoryDistinct)
+                foreach (var productStoreRequest in productStoreRequestsForCategoryDistinct)
                 {
-                    await HandleProduct(productUrl, productCateogry);
+                    await HandleProduct(productStoreRequest, productCateogry);
                 }
             }
 
@@ -82,7 +82,7 @@ namespace ProductScraper.Scrapers
                 .Where(_ => _.StoreType == StoreType.AlbertHeijn && _.LastScrapeDate != _scrapeDate);
             foreach (var notFoundProduct in notFoundProducts)
             {
-                await HandleProduct(notFoundProduct.Url, notFoundProduct.ProductCategories.First());
+                await HandleProduct(ProductToBareRequest(notFoundProduct), notFoundProduct.ProductCategories.First());
             }
 
             //Remove outdated products
@@ -94,16 +94,16 @@ namespace ProductScraper.Scrapers
             var product = _context.Products
                 .Include(p => p.ProductProductCategories)
                 .First(_ => _.Id == id);
-            await HandleProduct(product.Url, product.ProductCategories.First());
+            await HandleProduct(ProductToBareRequest(product), product.ProductCategories.First());
         }
 
-        async Task<List<string>> GetProductUrls(string slug, ProductCategory productCategorie)
+        async Task<List<ProductStoreRequest>> GetBareProducts(string slug, ProductCategory productCategorie)
         {
             var logLineStart = $"Scraping category: {productCategorie.Name}";
             Console.WriteLine(logLineStart);
             _streamWriter.WriteLine(logLineStart);
 
-            var productUrls = new List<string>();
+            var productStoreRequests = new List<ProductStoreRequest>();
             var taxonomyIds = new List<string>();
             var url = $"{BaseUrl}/zoeken/api/products/search?taxonomySlug={slug}&size=10000";
 
@@ -129,15 +129,21 @@ namespace ProductScraper.Scrapers
                         {
                             foreach (var cards in data.RootElement.GetProperty("cards").EnumerateArray())
                             {
-                                foreach (var product in cards.GetProperty("products").EnumerateArray())
+                                foreach (var productData in cards.GetProperty("products").EnumerateArray())
                                 {
-                                    productUrls.Add(product.GetProperty("link").ToString());
+                                    var productStoreRequest = new ProductStoreRequest
+                                    {
+                                        Code = productData.GetProperty("id").ToString(),
+                                        Url = BaseUrl + productData.GetProperty("link").ToString(),
+                                        IsStoreAdvertisedVegan = productData.GetProperty("properties").GetProperty("lifestyle").EnumerateArray().Any(_ => _.ToString() == "dieet_veganistisch")
+                                    };
+                                    productStoreRequests.Add(productStoreRequest);
                                 }
                             }
                         }
                     }
                 }
-                var logLineEnd = $"Found {productUrls.Count} products.";
+                var logLineEnd = $"Found {productStoreRequests.Count} products.";
                 Console.WriteLine(logLineEnd);
                 _streamWriter.WriteLine(logLineEnd);
             }
@@ -147,59 +153,42 @@ namespace ProductScraper.Scrapers
                 _streamWriter.WriteLine(ex);
             }
 
-            return productUrls;
+            return productStoreRequests;
         }
 
-        async Task HandleProduct(string url, ProductCategory productCategory)
+        async Task HandleProduct(ProductStoreRequest request, ProductCategory productCategory)
         {
             try
             {
-                url = BaseUrl + url;
-                var productDocument = await _browsingContext.OpenAsync(url);
+                var productDocument = await _browsingContext.OpenAsync(request.Url);
 
-                var code = "";
-                var codeMatch = Regex.Match(url, @"(?:https?:\/\/www\.ah\.nl\/producten\/product\/)(\w*)");
-                if (codeMatch.Success)
-                {
-                    code = codeMatch.Groups[1].Value;
-                }
-
-                if (code == "")
-                {
-                    throw new ArgumentException("Product code is empty");
-                }
-
-                //Scrape product page
                 var name = productDocument.QuerySelector("article h1 span").TextContent;
                 name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
-                var ammount = GetAmmount(productDocument);
-                var ingredients = GetIngredients(productDocument);
-                var allergyInfo = GetAllergyInfo(productDocument);
-                var isStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
+                var isStoreAdvertisedVegan =
 
-                var request = new ProductStoreRequest
+                request.StoreType = StoreType.AlbertHeijn;
+                request.Name = name;
+                request.Ammount = GetAmmount(productDocument);
+                request.Ingredients = GetIngredients(productDocument);
+                request.AllergyInfo = GetAllergyInfo(productDocument);
+
+                if(request.IsStoreAdvertisedVegan)
                 {
-                    StoreType = StoreType.AlbertHeijn,
-                    Name = name,
-                    Ammount = ammount,
-                    Code = code,
-                    Url = url,
-                    Ingredients = ingredients,
-                    AllergyInfo = allergyInfo,
-                    IsStoreAdvertisedVegan = isStoreAdvertisedVegan,
-                    LastScrapeDate = _scrapeDate,
-                    ProductCategory = productCategory
-                };
+                    request.IsStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
+                }
+
+                request.LastScrapeDate = _scrapeDate;
+                request.ProductCategory = productCategory;
 
                 _productService.CreateOrUpdate(request);
 
-                var logLine = $"Handled product: {code} {name}";
+                var logLine = $"Handled product: {request.Code} {request.Name}";
                 Console.WriteLine(logLine); 
                 _streamWriter.WriteLine(logLine);
             }
             catch(Exception ex)
             {
-                _streamWriter.WriteLine($"Error scraping product: {url}");
+                _streamWriter.WriteLine($"Error scraping product: {request.Code}");
                 _streamWriter.WriteLine(ex);
             }
         }
@@ -307,6 +296,15 @@ namespace ProductScraper.Scrapers
             }
 
             return isVegan;
+        }
+
+        private ProductStoreRequest ProductToBareRequest(Product product)
+        {
+            return new ProductStoreRequest
+            {
+                Code = product.Code,
+                Url = product.Url
+            };
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Api.Models
                 .ForMember(_ => _.Request, opt => opt.Ignore());
 
             //Product
+            CreateMap<Product, ApiProduct>(MemberList.Destination);
             CreateMap<Product, ProductListViewModel>(MemberList.Destination)
                 .ForMember(_ => _.Name, opt => opt.MapFrom(p => $"{p.Name} {p.Ammount}"))
                 .ForMember(_ => _.ProductCategories, opt => opt.MapFrom(p => string.Join(", ", p.ProductCategories.Select(pc => pc.Name).OrderBy(_ => _))));

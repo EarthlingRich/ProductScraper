@@ -2,12 +2,17 @@
 
 namespace Database.CustomMigrations
 {
-    public partial class ProductAmmount : Migration
+    public partial class AddProductImageUrlAndAmmount : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
                 name: "Ammount",
+                table: "Products",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "ImageUrl",
                 table: "Products",
                 nullable: true);
         }
@@ -16,6 +21,10 @@ namespace Database.CustomMigrations
         {
             migrationBuilder.DropColumn(
                 name: "Ammount",
+                table: "Products");
+
+            migrationBuilder.DropColumn(
+                name: "ImageUrl",
                 table: "Products");
         }
     }

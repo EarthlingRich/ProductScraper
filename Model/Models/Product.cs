@@ -27,6 +27,7 @@ namespace Model.Models
         public StoreType StoreType { get; set; }
         public string Code { get; set; }
         public string Url { get; set; }
+        public string ImageUrl { get; set; }
         public string Ingredients { get; set; }
         public string AllergyInfo { get; set; }
         public VeganType VeganType { get; set; }

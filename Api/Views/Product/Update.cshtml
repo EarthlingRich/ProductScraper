@@ -6,8 +6,8 @@
     ViewData["Title"] = Model.Name;
 }
 
-<h3 class="page-title">
-    @Model.Name
+<h3 class="page-title clearfix">
+    <span class="float-left">@Model.Name</span>
     @using (Html.BeginForm(nameof(ProductController.Delete), ProductController.RouteName, FormMethod.Post, new { @class = "right" }))
     {
         @Html.Hidden("Id", Model.Request.Id)
@@ -15,6 +15,7 @@
     }
     <a href="@Model.Url" target="_blank" class="btn btn-primary float-right"><i class="material-icons" aria-hidden="true">local_grocery_store</i></a>
 </h3>
+<img class="float-right" src="@Model.ImageUrl" />
 @using (Html.BeginForm(nameof(ProductController.Update), ProductController.RouteName, FormMethod.Post))
 {
 

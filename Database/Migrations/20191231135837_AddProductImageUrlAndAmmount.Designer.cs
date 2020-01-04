@@ -10,14 +10,14 @@ using Model;
 namespace Database.CustomMigrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190712195720_ProductAmmount")]
-    partial class ProductAmmount
+    [Migration("20191231135837_AddProductImageUrlAndAmmount")]
+    partial class AddProductImageUrlAndAmmount
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -25,22 +25,29 @@ namespace Database.CustomMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AllergyKeywordsString")
-                        .HasColumnName("AllergyKeywords");
+                        .HasColumnName("AllergyKeywords")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IgnoreKeywordsString")
-                        .HasColumnName("IgnoreKeywords");
+                        .HasColumnName("IgnoreKeywords")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KeywordsString")
-                        .HasColumnName("Keywords");
+                        .HasColumnName("Keywords")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("NeedsReview");
+                    b.Property<bool>("NeedsReview")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("VeganType");
+                    b.Property<int>("VeganType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -51,35 +58,53 @@ namespace Database.CustomMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AllergyInfo");
+                    b.Property<string>("AllergyInfo")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ammount");
+                    b.Property<string>("Ammount")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CategoryId");
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Code");
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Ingredients");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsManufacturerAdvertisedVegan");
+                    b.Property<string>("Ingredients")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsProcessed");
+                    b.Property<bool>("IsManufacturerAdvertisedVegan")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("IsStoreAdvertisedVegan");
+                    b.Property<bool>("IsProcessed")
+                        .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastScrapeDate");
+                    b.Property<bool>("IsStoreAdvertisedVegan")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Name");
+                    b.Property<DateTime>("LastScrapeDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("StoreType");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Url");
+                    b.Property<int>("StoreType")
+                        .HasColumnType("int");
 
-                    b.Property<string>("VeganDescription");
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VeganType");
+                    b.Property<string>("VeganDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VeganType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -94,15 +119,20 @@ namespace Database.CustomMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreatedOn");
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Detail");
+                    b.Property<string>("Detail")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -115,9 +145,11 @@ namespace Database.CustomMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -126,9 +158,11 @@ namespace Database.CustomMigrations
 
             modelBuilder.Entity("Model.Models.ProductIngredient", b =>
                 {
-                    b.Property<int>("ProductId");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("IngredientId");
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductId", "IngredientId");
 
@@ -139,9 +173,11 @@ namespace Database.CustomMigrations
 
             modelBuilder.Entity("Model.Models.ProductProductCategory", b =>
                 {
-                    b.Property<int>("ProductId");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("ProductCategoryId");
+                    b.Property<int>("ProductCategoryId")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductId", "ProductCategoryId");
 
@@ -154,13 +190,17 @@ namespace Database.CustomMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ProductCategoryId");
+                    b.Property<int?>("ProductCategoryId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("StoreType");
+                    b.Property<int>("StoreType")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -173,15 +213,20 @@ namespace Database.CustomMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreatedOn");
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsProcessed");
+                    b.Property<bool>("IsProcessed")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Message");
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -210,12 +255,14 @@ namespace Database.CustomMigrations
                     b.HasOne("Model.Models.Ingredient", "Ingredient")
                         .WithMany()
                         .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Models.Product", "Product")
                         .WithMany("ProductIngredients")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Model.Models.ProductProductCategory", b =>
@@ -223,12 +270,14 @@ namespace Database.CustomMigrations
                     b.HasOne("Model.Models.ProductCategory", "ProductCategory")
                         .WithMany()
                         .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Models.Product", "Product")
                         .WithMany("ProductProductCategories")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Model.Models.StoreCategory", b =>

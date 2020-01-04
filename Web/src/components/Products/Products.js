@@ -14,7 +14,8 @@ const Products = () => {
         <div className='row row-cols-4'>
         { products.map(product => (
             <div class="col mb-3">
-                <div key={product.id} className='card'>
+                <div key={product.id} className='card productCard'>
+                    <img src={product.imageUrl} class='card-img-top'></img>
                     <div className='card-body'>{product.name}</div>
                 </div>
             </div>

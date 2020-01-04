@@ -13,6 +13,7 @@ namespace Model.Requests
         public StoreType StoreType { get; set; }
         public string Code { get; set; }
         public string Url { get; set; }
+        public string ImageUrl { get; set; }
         public string AllergyInfo { get; set; }
         public bool IsStoreAdvertisedVegan { get; set; }
         public string Ingredients { get; set; }

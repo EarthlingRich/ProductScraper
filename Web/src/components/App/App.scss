@@ -1,3 +1,15 @@
 $grid-gutter-width: 1.5rem;
 
 @import "bootstrap/scss/bootstrap.scss";
+
+.productCard {
+    .card-img-top {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        padding: 0.25rem;
+    }
+    .card-body {
+        padding-top: 0px;
+    }
+}

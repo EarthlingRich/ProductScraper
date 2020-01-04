@@ -104,7 +104,6 @@ namespace ProductScraper.Scrapers
             _streamWriter.WriteLine(logLineStart);
 
             var productStoreRequests = new List<ProductStoreRequest>();
-            var taxonomyIds = new List<string>();
             var url = $"{BaseUrl}/zoeken/api/products/search?taxonomySlug={slug}&size=10000";
 
             try
@@ -113,21 +112,20 @@ namespace ProductScraper.Scrapers
                 using (var stream = await httpResponse.Content.ReadAsStreamAsync())
                 using (var data = JsonDocument.Parse(stream))
                 {
-                    foreach (var taxonomy in data.RootElement.GetProperty("aggregation").GetProperty("taxonomies").EnumerateArray())
+                    var taxonomies = data.RootElement.GetProperty("aggregation").GetProperty("taxonomies").EnumerateArray().ToList();
+                    if (taxonomies.Any())
                     {
-                        taxonomyIds.Add(taxonomy.GetProperty("id").ToString());
-                    }
-                }
-                if (taxonomyIds.Any())
-                {
-                    foreach (string taxonomyId in taxonomyIds)
-                    {
-                        url = $"{BaseUrl}/zoeken/api/products/search?taxonomySlug={slug}&taxonomy={taxonomyId}&size=10000";
-                        using (var httpResponse = await _client.GetAsync(url))
-                        using (var stream = await httpResponse.Content.ReadAsStreamAsync())
-                        using (var data = JsonDocument.Parse(stream))
+                        foreach (var taxonomy in taxonomies)
                         {
-                            foreach (var cards in data.RootElement.GetProperty("cards").EnumerateArray())
+                            var logLineTaxonomy = $"Scraping category: {taxonomy.GetProperty("label")}";
+                            Console.WriteLine(logLineTaxonomy);
+                            _streamWriter.WriteLine(logLineTaxonomy);
+
+                            url = $"{BaseUrl}/zoeken/api/products/search?taxonomySlug={slug}&taxonomy={taxonomy.GetProperty("id")}&size=10000";
+                            using var httpResponsetaxonomy = await _client.GetAsync(url);
+                            using var streamtaxonomy = await httpResponsetaxonomy.Content.ReadAsStreamAsync();
+                            using var dataTaxonomy = JsonDocument.Parse(streamtaxonomy);
+                            foreach (var cards in dataTaxonomy.RootElement.GetProperty("cards").EnumerateArray())
                             {
                                 foreach (var productData in cards.GetProperty("products").EnumerateArray())
                                 {
@@ -143,6 +141,7 @@ namespace ProductScraper.Scrapers
                         }
                     }
                 }
+
                 var logLineEnd = $"Found {productStoreRequests.Count} products.";
                 Console.WriteLine(logLineEnd);
                 _streamWriter.WriteLine(logLineEnd);
@@ -162,17 +161,18 @@ namespace ProductScraper.Scrapers
             {
                 var productDocument = await _browsingContext.OpenAsync(request.Url);
 
-                var name = productDocument.QuerySelector("article h1 span").TextContent;
-                name = Regex.Replace(name, @"[\u00AD]", ""); //Remove soft hypens from name
-                var isStoreAdvertisedVegan =
+                var productData = JsonDocument.Parse(productDocument.QuerySelector("script[type='application/ld+json']").InnerHtml).RootElement;
 
                 request.StoreType = StoreType.AlbertHeijn;
-                request.Name = name;
-                request.Ammount = GetAmmount(productDocument);
+                request.Name = productData.GetProperty("name").GetString();
+                request.Ammount = productData.GetProperty("weight").GetString();
                 request.Ingredients = GetIngredients(productDocument);
                 request.AllergyInfo = GetAllergyInfo(productDocument);
 
-                if(request.IsStoreAdvertisedVegan)
+                var foundImageUrl = productData.TryGetProperty("image", out var imageUrl);
+                request.ImageUrl = foundImageUrl ? imageUrl.GetString() : null;
+
+                if (request.IsStoreAdvertisedVegan)
                 {
                     request.IsStoreAdvertisedVegan = GetIsStoreAdvertisedVegan(productDocument);
                 }

@@ -19,6 +19,8 @@ namespace Api.Models
 
         public string Url { get; set; }
 
+        public string ImageUrl { get; set; }
+
         [Display(Name = "Product_Ingredients", ResourceType = typeof(DomainTerms))]
         public string Ingredients { get; set; }
 

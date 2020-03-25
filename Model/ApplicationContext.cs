@@ -19,15 +19,10 @@ namespace Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProductIngredient>().HasKey(_ => new { _.ProductId, _.IngredientId });
-            modelBuilder.Entity<ProductIngredient>()
-                .HasOne(_ => _.Product)
-                .WithMany("ProductIngredients");
+            modelBuilder.HasDefaultSchema("public");
 
-            modelBuilder.Entity<ProductProductCategory>().HasKey(_ => new { _.ProductId, _.ProductCategoryId });
-            modelBuilder.Entity<ProductProductCategory>()
-                .HasOne(_ => _.Product)
-                .WithMany("ProductProductCategories");
+            modelBuilder.Entity<Product>()
+                .HasIndex(_ => _.Code);
 
             modelBuilder.Entity<Product>()
                 .HasMany(_ => _.WorkloadItems)
@@ -39,8 +34,15 @@ namespace Model
                 .WithOne(_ => _.Product)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Product>()
-                .HasIndex(_ => _.Code);
+            modelBuilder.Entity<ProductIngredient>().HasKey(_ => new { _.ProductId, _.IngredientId });
+            modelBuilder.Entity<ProductIngredient>()
+                .HasOne(_ => _.Product)
+                .WithMany("ProductIngredients");
+
+            modelBuilder.Entity<ProductProductCategory>().HasKey(_ => new { _.ProductId, _.ProductCategoryId });
+            modelBuilder.Entity<ProductProductCategory>()
+                .HasOne(_ => _.Product)
+                .WithMany("ProductProductCategories");
         }
     }
 }

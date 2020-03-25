@@ -11,8 +11,8 @@ using Api.Controllers;
 using Api.Models;
 using Hangfire;
 using Api.Application;
-using Hangfire.SqlServer;
 using Microsoft.Extensions.Hosting;
+using Hangfire.PostgreSql;
 
 namespace Api
 {
@@ -38,15 +38,22 @@ namespace Api
             services.AddAutoMapper(typeof(ApiMapperConfiguration), typeof(ApplicationMapperConfiguration));
             services.RegisterDataTables();
 
-            services.AddDbContext<ApplicationContext>(_ => _.UseSqlServer(appSettings.GetConnectionString("DefaultConnection")));
-            services.AddHangfire(_ => _.UseSqlServerStorage(appSettings.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
-            {
-                UsePageLocksOnDequeue = true,
-                DisableGlobalLocks = true,
-            }));
+            services.AddDbContext<ApplicationContext>(_ => _.UseNpgsql(appSettings.GetConnectionString("DefaultConnection")));
+            services.AddHangfire(_ => _.UsePostgreSqlStorage(appSettings.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:8080")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -61,6 +68,7 @@ namespace Api
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -37,7 +37,7 @@ namespace Api.Controllers
 
             if (dataTablesRequest.Search.Value != null)
             {
-                ingredientsQuery = ingredientsQuery.Where(_ => EF.Functions.Contains(_.Name, $"\"{dataTablesRequest.Search.Value}*\""));
+                ingredientsQuery = ingredientsQuery.Where(_ => _.Name.Contains(dataTablesRequest.Search.Value));
             }
 
             var filteredCount = ingredientsQuery.Count();

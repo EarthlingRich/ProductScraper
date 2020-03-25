@@ -32,7 +32,7 @@ namespace Database
                 .Build();
 
             var builder = new DbContextOptionsBuilder<ApplicationContext>();
-            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), _ => _.MigrationsAssembly("Database"));
+            builder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"), _ => _.MigrationsAssembly("Database"));
 
             return builder;
         }

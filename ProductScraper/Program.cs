@@ -61,7 +61,7 @@ namespace ProductScraper
         private static ApplicationContext GetApplicationContext(IConfigurationRoot configuration)
         {
             var builder = new DbContextOptionsBuilder<ApplicationContext>();
-            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            builder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
            return new ApplicationContext(builder.Options);
         }
